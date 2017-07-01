@@ -112,7 +112,8 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
-    <Compile Include="Dialogs\ChitChatDialog.cs" />
+    <Compile Include="Dialogs\GreetingDialog.cs" />
+    <Compile Include="Dialogs\WhatIsDialog.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
