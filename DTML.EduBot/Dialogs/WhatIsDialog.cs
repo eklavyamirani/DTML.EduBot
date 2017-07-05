@@ -1,14 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Builder.Luis;
-using Microsoft.Bot.Builder.Luis.Models;
-using Microsoft.Bot.Connector;
-using System.Collections.Generic;
-
-namespace DTML.EduBot.Dialogs
+﻿namespace DTML.EduBot.Dialogs
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.Bot.Builder.Dialogs;
+    using Microsoft.Bot.Builder.Luis;
+    using Microsoft.Bot.Builder.Luis.Models;
+
     [LuisModel("31511772-4f1c-4590-87a8-0d6b8a7707a1", "a88bd2b022e34d5db56a73eb2bd33726")]
     [Serializable]
     public partial class WhatIsDialog : LuisDialog<object>
