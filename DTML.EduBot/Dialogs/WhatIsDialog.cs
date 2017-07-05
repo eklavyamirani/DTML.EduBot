@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
+using Microsoft.Bot.Connector;
+using System.Collections.Generic;
 
 namespace DTML.EduBot.Dialogs
 {
@@ -13,6 +15,9 @@ namespace DTML.EduBot.Dialogs
     {
         private const string BotName = "Zelda";
 
+        // Empty string intent is a default handler
+        // for the case when an intent which is not handled.
+        [LuisIntent("")]
         [LuisIntent("None")]
         public async Task None(IDialogContext context, LuisResult result)
         {
