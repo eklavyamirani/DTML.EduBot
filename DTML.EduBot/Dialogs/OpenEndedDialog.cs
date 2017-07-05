@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Luis;
@@ -11,17 +13,11 @@ namespace DTML.EduBot.Dialogs
 {
     public partial class RootDialog : LuisDialog<object>
     {
-        [LuisIntent("Greeting")]
-        public async Task Greeting(IDialogContext context, LuisResult result)
+        [LuisIntent("OpenEndedQuestion")]
+        public async Task HandleOpenEndedQuestion(IDialogContext context, LuisResult result)
         {
-            string botresponse = BotPersonality.GetRandomGreeting(); 
+            string botresponse = BotPersonality.GetRandomGenericResponse();
             await context.PostAsync(botresponse);
-        }
-
-        [LuisIntent("Courtesy")]
-        public async Task Courtesy(IDialogContext context, LuisResult result)
-        {
-            await context.PostAsync(BotPersonality.GetRandomGenericResponse());
         }
     }
 }
