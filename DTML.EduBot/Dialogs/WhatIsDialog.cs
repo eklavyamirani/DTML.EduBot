@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
@@ -32,14 +32,14 @@ namespace DTML.EduBot.Dialogs
         [LuisIntent("WhatIs")]
         public async Task HandleBotName(IDialogContext context, LuisResult result)
         {
-            if(result.Entities.Any(e => e.Type == BotEntities.Name))
+            if (result.Entities.Any(e => e.Type == BotEntities.Name))
             {
                 await context.PostAsync($"My name is {BotName}");
             }
             else
             if (result.Entities.Any(e => e.Type == BotEntities.Time))
             {
-                await context.PostAsync($"It's always morning in the botland. So, I never need to sleep");
+                await context.PostAsync($"It's always morning in the Botland, so I never need to sleep");
             }
             else
             if (result.Entities.Any(e => e.Type == BotEntities.Date))
