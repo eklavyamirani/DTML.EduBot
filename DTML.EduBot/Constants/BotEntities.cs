@@ -13,5 +13,6 @@ namespace DTML.EduBot.Constants
         public static string Date = "date";
         public static string Color = "color";
         public static string Subject = "subject";
+        public static string encyclopediaOrganization = "builtin.encyclopedia.organization.organization";
     }
 }

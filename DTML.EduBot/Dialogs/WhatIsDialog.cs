@@ -22,16 +22,13 @@ namespace DTML.EduBot.Dialogs
         }
 
         [LuisIntent("Age")]
-        public async Task Age(IDialogContext context, LuisResult result)
+        public async Task HandleAgeIntent(IDialogContext context, LuisResult result)
         {
-            if (result.Entities.Any(e => e.Type == BotEntities.Age))
-            {
                 await context.PostAsync($"I am quite young. Just couple month old. But I am already a Professor. How about that !");
-            }
         }
 
         [LuisIntent("WhatIs")]
-        public async Task HandleBotName(IDialogContext context, LuisResult result)
+        public async Task HandleWhatIsIntent(IDialogContext context, LuisResult result)
         {
             if (result.Entities.Any(e => e.Type == BotEntities.Name))
             {
@@ -46,11 +43,17 @@ namespace DTML.EduBot.Dialogs
             if (result.Entities.Any(e => e.Type == BotEntities.Date))
             {
                 var date = DateTime.Now.ToLongDateString();
-                await context.PostAsync($"Oh, that's eary. It is {date}");
+                await context.PostAsync($"Oh, that's easy... It is {date}");
+            }
+            else
+            if (result.Entities.Any(e => e.Type == BotEntities.encyclopediaOrganization))
+            {
+                //TODO: Call Wikipedia API and provide answer
+                await context.PostAsync($"I think it is a name of some company...");
             }
             else
             {
-                await context.PostAsync("Sorry, I didn't understand that");
+                await context.PostAsync($"Sorry, I didn't understand that...");
             }
         }
     }
