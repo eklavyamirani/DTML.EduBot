@@ -15,6 +15,7 @@ namespace DTML.EduBot.Dialogs
         private const string BotName = "Professor Edword";
 
         [LuisIntent("None")]
+        [LuisIntent("")]
         public async Task None(IDialogContext context, LuisResult result)
         {
             await context.PostAsync("Sorry, this is not something I know. Ask me something else !");
