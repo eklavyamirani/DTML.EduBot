@@ -115,6 +115,7 @@
     <Compile Include="Common\BotPersonality.cs" />
     <Compile Include="Common\ChatContext.cs" />
     <Compile Include="Constants\BotEntities.cs" />
+    <Compile Include="Constants\Shared.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Dialogs\GreetingDialog.cs" />
     <Compile Include="Dialogs\IAmDialog.cs" />

@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using DTML.EduBot.Constants;
 
 namespace DTML.EduBot.Common
 {
     public class BotPersonality
     {
-        public const string BotName = "Professor Edword";
         private static int Index = 0;
+        public const string BotName = "Professor Edword";
+        public const string UserNameQuestion = "What is your name?";
         public const string BotResponseUnrecognizedIntent = "I'm still learning just as you are, I will think and get back to you";
         public const string BotResponseToGibberish = "Hmm, that doesn't sound right, can you please rephrase?";
         public const string BotResponseToUserName = "That's a nice name";
@@ -22,10 +24,9 @@ namespace DTML.EduBot.Common
                 "Good to see you my friend, \n How are you doing?"
             };
 
-         private readonly static IReadOnlyList<string> ChatContinuer = new List<string>
+         private readonly static IReadOnlyList<string> AcquaintanceQs = new List<string>
             {
-                "What is your name?",
-                "In which class are you studying?",
+                "What class are you studying in?",
                 "What is your favorite color?",
                 "What is your favorite food?", 
                 "What did you eat today?",
@@ -47,16 +48,16 @@ namespace DTML.EduBot.Common
             return (BotGreeting[RandIndex]);
         }
 
-        public static string GetChatContinuer()
+        public static string BuildAcquaintance()
         {
-            if (Index > ChatContinuer.Count - 1)
+            if (Index > AcquaintanceQs.Count - 1)
             {
                 Index = 0;
-                return "I do not know what to say";
+                return "You are an interesting person!" + Shared.ClientNewLine + "Do you have any questions for me?";
             }
             else
             {
-                return ChatContinuer[Index++];
+                return AcquaintanceQs[Index++];
             }
 
         }

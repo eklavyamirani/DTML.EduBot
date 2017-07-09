@@ -5,6 +5,7 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
 using DTML.EduBot.Common;
+using DTML.EduBot.Constants;
 
 namespace DTML.EduBot.Dialogs
 {
@@ -13,7 +14,7 @@ namespace DTML.EduBot.Dialogs
         [LuisIntent("IAm")]
         public async Task HandleIAmIntent(IDialogContext context, LuisResult result)
         {
-           await context.PostAsync(BotPersonality.GetRandomGenericResponse() + "<br/>" + BotPersonality.GetChatContinuer());
+           await context.PostAsync(BotPersonality.GetRandomGenericResponse());
         }
     }
 }

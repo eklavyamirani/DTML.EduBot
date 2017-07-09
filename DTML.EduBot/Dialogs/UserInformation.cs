@@ -8,6 +8,7 @@ using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
 using Microsoft.Bot.Connector;
 using DTML.EduBot.Common;
+using DTML.EduBot.Constants;
 
 namespace DTML.EduBot.Dialogs
 {
@@ -17,14 +18,15 @@ namespace DTML.EduBot.Dialogs
         public async Task HandleUserInformation(IDialogContext context, LuisResult result)
         {
             EntityRecommendation entity;
-            string BotResponse = BotPersonality.BotResponseToUserName;
-            if (result.TryFindEntity("name", out entity))
-            {
+            string BotResponse = BotPersonality.GetRandomGenericResponse() + Shared.ClientNewLine;
+            if (result.TryFindEntity(BotEntities.Name, out entity))
+                {
+
                 ChatContext.Username = entity.Entity;
-                BotResponse += " " + ChatContext.Username;
+                BotResponse = BotPersonality.BotResponseToUserName + " " + ChatContext.Username + "! " + Shared.ClientNewLine;
             }
 
-            BotResponse += "! <br/>" + BotPersonality.GetChatContinuer();
+            BotResponse += BotPersonality.BuildAcquaintance();
             await context.PostAsync(BotResponse);
         }
     }

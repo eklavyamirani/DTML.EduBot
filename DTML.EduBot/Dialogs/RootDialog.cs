@@ -8,13 +8,11 @@ using DTML.EduBot.Common;
 
 namespace DTML.EduBot.Dialogs
 {
-    
+    [LuisModel("", "")]
     [Serializable]
     public partial class RootDialog : LuisDialog<object>
     {
-
         [LuisIntent("")]
-        
         [LuisIntent("None")]
         public async Task HandleUnrecognizedIntent(IDialogContext context, LuisResult result)
         {
