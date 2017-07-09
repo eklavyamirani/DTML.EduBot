@@ -5,22 +5,12 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
 using DTML.EduBot.Constants;
+using DTML.EduBot.Common;
 
 namespace DTML.EduBot.Dialogs
 {
-    [LuisModel("31511772-4f1c-4590-87a8-0d6b8a7707a1", "a88bd2b022e34d5db56a73eb2bd33726")]
-    [Serializable]
-    public partial class WhatIsDialog : LuisDialog<object>
+    public partial class RootDialog : LuisDialog<object>
     {
-        private const string BotName = "Professor Edword";
-
-        [LuisIntent("None")]
-        [LuisIntent("")]
-        public async Task None(IDialogContext context, LuisResult result)
-        {
-            await context.PostAsync("Sorry, this is not something I know. Ask me something else !");
-        }
-
         [LuisIntent("Age")]
         public async Task HandleAgeIntent(IDialogContext context, LuisResult result)
         {
@@ -32,7 +22,7 @@ namespace DTML.EduBot.Dialogs
         {
             if (result.Entities.Any(e => e.Type == BotEntities.Name))
             {
-                await context.PostAsync($"My name is {BotName}");
+                await context.PostAsync($"My name is {BotPersonality.BotName}");
             }
             else
             if (result.Entities.Any(e => e.Type == BotEntities.Time))
@@ -53,7 +43,7 @@ namespace DTML.EduBot.Dialogs
             }
             else
             {
-                await context.PostAsync($"Sorry, I didn't understand that...");
+                await context.PostAsync(BotPersonality.GetRandomGenericResponse());
             }
         }
     }

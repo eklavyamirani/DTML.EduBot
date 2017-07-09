@@ -112,9 +112,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Common\BotPersonality.cs" />
+    <Compile Include="Common\ChatContext.cs" />
     <Compile Include="Constants\BotEntities.cs" />
+    <Compile Include="Constants\Shared.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Dialogs\GreetingDialog.cs" />
+    <Compile Include="Dialogs\IAmDialog.cs" />
+    <Compile Include="Dialogs\OpenEndedDialog.cs" />
+    <Compile Include="Dialogs\UserInformation.cs" />
+    <Compile Include="Dialogs\RootDialog.cs" />
     <Compile Include="Dialogs\WhatIsDialog.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
