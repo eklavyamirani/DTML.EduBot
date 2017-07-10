@@ -1,4 +1,4 @@
-﻿namespace DTML.EduBot.Services
+﻿namespace DTML.EduBot.Qna
 {
     public interface IQnaRequest
     {

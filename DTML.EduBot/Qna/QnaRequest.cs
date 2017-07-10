@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace DTML.EduBot.Services
+﻿namespace DTML.EduBot.Qna
 {
+    using System;
+
     [Serializable]
     public class QnaRequest : IQnaRequest
     {

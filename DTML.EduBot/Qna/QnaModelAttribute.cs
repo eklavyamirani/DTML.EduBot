@@ -1,11 +1,8 @@
-﻿using DTML.EduBot.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace DTML.EduBot.Services
+﻿namespace DTML.EduBot.Qna
 {
+    using System;
+    using DTML.EduBot.Extensions;
+
     [Serializable]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
     public class QnaModelAttribute : Attribute, IQnaModel

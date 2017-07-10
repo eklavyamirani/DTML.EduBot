@@ -124,19 +124,20 @@
     <Compile Include="Dialogs\UserInformation.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
     <Compile Include="Dialogs\WhatIsDialog.cs" />
+    <Compile Include="Extensions\Require.cs" />
     <Compile Include="Extensions\Set.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IQnaModel.cs" />
-    <Compile Include="Services\IQnaRequest.cs" />
-    <Compile Include="Services\IQnaResult.cs" />
-    <Compile Include="Services\QnaModelAttribute.cs" />
-    <Compile Include="Services\QnaRequest.cs" />
-    <Compile Include="Services\QnaResult.cs" />
-    <Compile Include="Services\QnaResultCollection.cs" />
-    <Compile Include="Services\QnaService.cs" />
+    <Compile Include="Qna\IQnaModel.cs" />
+    <Compile Include="Qna\IQnaRequest.cs" />
+    <Compile Include="Qna\IQnaResult.cs" />
+    <Compile Include="Qna\QnaModelAttribute.cs" />
+    <Compile Include="Qna\QnaRequest.cs" />
+    <Compile Include="Qna\QnaResult.cs" />
+    <Compile Include="Qna\QnaResultCollection.cs" />
+    <Compile Include="Qna\QnaService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

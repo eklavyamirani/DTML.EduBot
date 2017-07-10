@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using DTML.EduBot.Services;
+    using DTML.EduBot.Qna;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
 
