@@ -12,7 +12,7 @@ using DTML.EduBot.Constants;
 
 namespace DTML.EduBot.Dialogs
 {
-    public partial class RootDialog : LuisDialog<object>
+    public partial class RootDialog : QnaLuisDialog<object>
     {
         [LuisIntent("UserInformation")]
         public async Task HandleUserInformation(IDialogContext context, LuisResult result)

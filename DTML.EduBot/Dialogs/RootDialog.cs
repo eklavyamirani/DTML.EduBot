@@ -5,12 +5,14 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
 using DTML.EduBot.Common;
+using DTML.EduBot.Services;
 
 namespace DTML.EduBot.Dialogs
 {
     [LuisModel("", "")]
+    [QnaModel(hostUri: "", subscriptionKey: "", modelId: "")]
     [Serializable]
-    public partial class RootDialog : LuisDialog<object>
+    public partial class RootDialog : QnaLuisDialog<object>
     {
         [LuisIntent("")]
         [LuisIntent("None")]
