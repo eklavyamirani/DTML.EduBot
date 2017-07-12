@@ -9,7 +9,7 @@ using DTML.EduBot.Constants;
 
 namespace DTML.EduBot.Dialogs
 {
-    public partial class RootDialog : LuisDialog <Object>
+    public partial class RootDialog : QnaLuisDialog <Object>
     {
         [LuisIntent("IAm")]
         public async Task HandleIAmIntent(IDialogContext context, LuisResult result)
