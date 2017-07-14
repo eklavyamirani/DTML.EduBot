@@ -22,7 +22,15 @@ namespace DTML.EduBot
         /// </summary>
         private const string targetLang = "en";
 
-        private string translatorEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
+        /// <summary>
+        /// Endpoint for issuing token based on subscription key
+        /// </summary>
+        private string tokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
+
+        /// <summary>
+        /// Endpoint for translator API
+        /// </summary>
+        private string translatorEndpoint = "http://api.microsofttranslator.com/v2/Http.svc/Translate";
 
         /// <summary>
         /// POST: api/Messages
@@ -79,14 +87,12 @@ namespace DTML.EduBot
         /// </summary>
         /// <param name="key">OcpApimSubscriptionKey</param>
         /// <returns></returns>
-        static async Task<string> GetAuthenticationToken(string key)
+        private async Task<string> GetAuthenticationToken(string key)
         {
-            
-
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", key);
-                var response = await client.PostAsync(endpoint, null);
+                var response = await client.PostAsync(this.tokenEndpoint, null);
                 var token = await response.Content.ReadAsStringAsync();
                 return token;
             }
