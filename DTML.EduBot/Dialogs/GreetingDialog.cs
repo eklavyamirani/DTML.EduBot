@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
+using System.Net.Http;
+using System.Web;
+using DTML.EduBot.Helpers;
 
 namespace DTML.EduBot.Dialogs
 {
@@ -12,7 +15,9 @@ namespace DTML.EduBot.Dialogs
         [LuisIntent("Greeting")]
         public async Task Greeting(IDialogContext context, LuisResult result)
         {
-            await context.PostAsync("Hello, its nice to meet you!!");
+            string message = "Hello, its nice to meet you!";
+            string query = result.Query.ToString();
+            await DialogHelper.SendMessage(context, query, message);
         }
     }
 }
