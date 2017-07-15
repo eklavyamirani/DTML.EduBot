@@ -14,7 +14,7 @@ namespace DTML.EduBot.Dialogs
         [LuisIntent("IAm")]
         public async Task HandleIAmIntent(IDialogContext context, LuisResult result)
         {
-           await context.PostAsync(BotPersonality.GetRandomGenericResponse());
+            await ConvertAndPostResponse(context, BotPersonality.GetRandomGenericResponse());
         }
     }
 }

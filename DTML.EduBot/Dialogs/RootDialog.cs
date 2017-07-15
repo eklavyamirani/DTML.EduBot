@@ -19,13 +19,13 @@
         [LuisIntent("None")]
         public async Task HandleUnrecognizedIntent(IDialogContext context, LuisResult result)
         {
-            await context.PostAsync(BotPersonality.BotResponseUnrecognizedIntent);
+            await ConvertAndPostResponse(context, BotPersonality.BotResponseUnrecognizedIntent);
         }
 
        [LuisIntent("Gibberish")]
         public async Task HandleGibberish(IDialogContext context, LuisResult result)
         {
-            await context.PostAsync(BotPersonality.BotResponseToGibberish);
+            await ConvertAndPostResponse(context, BotPersonality.BotResponseToGibberish);
         }
 
        

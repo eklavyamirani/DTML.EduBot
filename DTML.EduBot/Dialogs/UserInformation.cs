@@ -27,7 +27,7 @@ namespace DTML.EduBot.Dialogs
             }
 
             BotResponse += BotPersonality.BuildAcquaintance();
-            await context.PostAsync(BotResponse);
+            await ConvertAndPostResponse(context, BotResponse);
         }
     }
 }

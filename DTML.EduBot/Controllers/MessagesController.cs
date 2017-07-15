@@ -6,32 +6,13 @@ using System.Web.Http;
 using System.Xml.Linq;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using DTML.EduBot.Common;
 
 namespace DTML.EduBot
 {
     [BotAuthentication]
     public class MessagesController : ApiController
     {
-        /// <summary>
-        /// Microsoft translator API key
-        /// </summary>
-        private string TranslatorApiKey = "60d3de534d1a42ab824521d18b98fe0a ";
-
-        /// <summary>
-        /// Language to which we want the input to be converted to
-        /// </summary>
-        private const string targetLang = "en";
-
-        /// <summary>
-        /// Endpoint for issuing token based on subscription key
-        /// </summary>
-        private string tokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
-
-        /// <summary>
-        /// Endpoint for translator API
-        /// </summary>
-        private string translatorEndpoint = "http://api.microsofttranslator.com/v2/Http.svc/Translate";
-
         /// <summary>
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
@@ -41,9 +22,9 @@ namespace DTML.EduBot
             if (activity.Type == ActivityTypes.Message)
             {
                 var userQuery = activity.Text;
-                var authenticationToken = await GetAuthenticationToken(TranslatorApiKey);
-                var translatedText = await TranslateText(userQuery, authenticationToken);
-                if (translatedText != null && authenticationToken != null)
+                await MessageTranslator.IdentifyLangAsync(userQuery);
+                var translatedText = await MessageTranslator.TranslateTextAsync(userQuery, "en");
+                if (translatedText != null)
                 {
                     activity.Text = translatedText;
                 }
@@ -57,46 +38,7 @@ namespace DTML.EduBot
             var response = Request.CreateResponse(HttpStatusCode.OK);
             return response;
         }
-
-        /// <summary>
-        /// Translate text to english and send forward
-        /// </summary>
-        /// <param name="inputText"></param>
-        /// <param name="accessToken">access token for translator API</param>
-        /// <returns></returns>
-        private async Task<string> TranslateText(string inputText, string accessToken)
-        {
-            string query = $"?text={System.Net.WebUtility.UrlEncode(inputText)}&to={targetLang}&contentType=text/plain";
-
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-                var response = await client.GetAsync(this.translatorEndpoint + query);
-                var result = await response.Content.ReadAsStringAsync();
-
-                if (!response.IsSuccessStatusCode)
-                    return null;
-
-                var translatedText = XElement.Parse(result).Value;
-                return translatedText;
-            }
-        }
-
-        /// <summary>
-        /// Get authentication token for translator API
-        /// </summary>
-        /// <param name="key">OcpApimSubscriptionKey</param>
-        /// <returns></returns>
-        private async Task<string> GetAuthenticationToken(string key)
-        {
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", key);
-                var response = await client.PostAsync(this.tokenEndpoint, null);
-                var token = await response.Content.ReadAsStringAsync();
-                return token;
-            }
-        }
+        
 
         private Activity HandleSystemMessage(Activity message)
         {

@@ -16,8 +16,7 @@ namespace DTML.EduBot.Dialogs
         [LuisIntent("OpenEndedQuestion")]
         public async Task HandleOpenEndedQuestion(IDialogContext context, LuisResult result)
         {
-            string botresponse = BotPersonality.GetRandomGenericResponse();
-            await context.PostAsync(botresponse);
+            await ConvertAndPostResponse(context, BotPersonality.GetRandomGenericResponse());
         }
     }
 }

@@ -7,6 +7,7 @@
     using DTML.EduBot.Qna;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
+    using EduBot.Common;
 
     [Serializable]
     public abstract class QnaLuisDialog<TResult> : LuisDialog<TResult>
@@ -57,7 +58,13 @@
 
         protected virtual async Task QnaHandler(IDialogContext context, IQnaResult result)
         {
-            await context.PostAsync(result.Answer);
+            await ConvertAndPostResponse(context, result.Answer);
+        }
+
+        protected static async Task ConvertAndPostResponse(IDialogContext context, string result)
+        {
+            string translatedText = await MessageTranslator.TranslateTextAsync(result);
+            await context.PostAsync(translatedText);
         }
     }
 }
