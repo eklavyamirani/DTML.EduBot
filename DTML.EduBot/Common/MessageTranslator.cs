@@ -14,7 +14,7 @@ namespace DTML.EduBot.Common
         /// <summary>
         /// Microsoft translator API key
         /// </summary>
-        private static string TranslatorApiKey = "60d3de534d1a42ab824521d18b98fe0a ";
+        private static string TranslatorApiKey = " ";
 
         /// <summary>
         /// Language to which we want the input to be converted to
