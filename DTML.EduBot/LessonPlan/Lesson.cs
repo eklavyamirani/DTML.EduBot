@@ -1,0 +1,18 @@
+﻿namespace DTML.EduBot.LessonPlan
+{
+    using System;
+    using System.Collections.Generic;
+
+    [Serializable]
+    public class Lesson
+    {
+        public string LessonName { get; set; }
+
+        private ICollection<Topic> topics = new List<Topic>();
+
+        public ICollection<Topic> Topics
+        {
+            get { return topics; }
+        }
+    }
+}
