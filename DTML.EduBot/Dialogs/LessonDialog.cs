@@ -80,7 +80,7 @@ namespace DTML.EduBot.Dialogs
             {
                 dynamic value = message.Value;
 
-                if (value.Lesson.ToString().Equals(lesson.Topics.ToArray()[currentTopic].TopicName))
+                if (value.Lesson.ToString().Equals(lesson.Topics.ToArray()[currentTopic].CorrectAnswer))
                 {
                     await context.PostAsync("You have the right answer! Moving on to the next question.");
                     currentTopic++;

@@ -167,6 +167,7 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="LessonPlan\lesson_plan.json" />
     <None Include="Properties\PublishProfiles\dtml-edubot-staging - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

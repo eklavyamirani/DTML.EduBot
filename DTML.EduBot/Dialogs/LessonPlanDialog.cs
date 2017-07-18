@@ -24,7 +24,7 @@ namespace DTML.EduBot.Dialogs
 
             ICollection<string> lessonsName = new List<string>();
 
-            foreach (Lesson lesson in LessonPlanModule.LessonPlan().Lessons)
+            foreach (Lesson lesson in LessonPlanModule.LessonPlan.Lessons)
             {
                 lessonsName.Add(lesson.LessonName);
             }
@@ -35,7 +35,7 @@ namespace DTML.EduBot.Dialogs
                 lessonsName,
                 "Hi " + friendlyUserName + ",\n Which lesson would you like to go?",
                 "I am sorry but I didn't understand that. I need you to select one of the options below",
-                attempts: LessonPlanModule.LessonPlan().Lessons.Count);
+                attempts: LessonPlanModule.LessonPlan.Lessons.Count);
         }
 
         private async Task AfterLessonSelected(IDialogContext context, IAwaitable<string> result)
@@ -44,7 +44,7 @@ namespace DTML.EduBot.Dialogs
             {
                 var selection = await result;
 
-                ICollection<Lesson> allLessons = LessonPlanModule.LessonPlan().Lessons;
+                ICollection<Lesson> allLessons = LessonPlanModule.LessonPlan.Lessons;
                 Lesson selectedLesson = allLessons.Where(lesson => selection.Equals(lesson.LessonName)).FirstOrDefault();
                 context.Call(new LessonDialog(selectedLesson), AfterLessonFinished);
             }
