@@ -64,6 +64,11 @@
         protected static async Task ConvertAndPostResponse(IDialogContext context, string result)
         {
             string translatedText = await MessageTranslator.TranslateTextAsync(result);
+            if (translatedText == null)
+            {
+                translatedText = $"Sorry I did not get that. Please repeat.";
+            }
+
             await context.PostAsync(translatedText);
         }
     }

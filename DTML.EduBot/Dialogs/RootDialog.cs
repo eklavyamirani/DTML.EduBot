@@ -8,7 +8,7 @@
     using DTML.EduBot.Common;
     using DTML.EduBot.Qna;
 
-    [LuisModel("","")]
+    [LuisModel("", "")]
     [QnaModel(hostUri: "", subscriptionKey: "", modelId: "")]
     [Serializable]
     public partial class RootDialog : QnaLuisDialog<object>

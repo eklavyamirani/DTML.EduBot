@@ -14,7 +14,7 @@ namespace DTML.EduBot.Common
         /// <summary>
         /// Microsoft translator API key
         /// </summary>
-        private static string TranslatorApiKey = " ";
+        private static string TranslatorApiKey = "";
 
         /// <summary>
         /// Language to which we want the input to be converted to
@@ -46,8 +46,13 @@ namespace DTML.EduBot.Common
                 if (!response.IsSuccessStatusCode)
                     return null;
 
-                var translatedText = XElement.Parse(result).Value;
-                return translatedText;
+                if (result != null)
+                {
+                    var translatedText = XElement.Parse(result).Value;
+                    return translatedText;
+                }
+
+                return null;
             }
         }
 
@@ -70,8 +75,15 @@ namespace DTML.EduBot.Common
                 if (!response.IsSuccessStatusCode)
                     return;
 
-                var translatedText = XElement.Parse(result).Value;
-                inputTextLang = translatedText;
+                if (result != null)
+                {
+                    var translatedText = XElement.Parse(result).Value;
+                    inputTextLang = translatedText;
+                }
+                else
+                {
+                    inputTextLang = "en";
+                }
             }
 
         }
