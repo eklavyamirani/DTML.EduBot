@@ -12,7 +12,7 @@
     public abstract class QnaLuisDialog<TResult> : LuisDialog<TResult>
     {
         protected readonly QnaService qnaService;
-        protected const int QNA_THRESHOLD = 0;
+        protected const int QNA_THRESHOLD = 80;
 
         public QnaLuisDialog()
         {
