@@ -1,9 +1,12 @@
 ﻿using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Xml.Linq;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using DTML.EduBot.Common;
 
 namespace DTML.EduBot
 {
@@ -18,6 +21,14 @@ namespace DTML.EduBot
         {
             if (activity.Type == ActivityTypes.Message)
             {
+                var userQuery = activity.Text;
+                await MessageTranslator.IdentifyLangAsync(userQuery);
+                var translatedText = await MessageTranslator.TranslateTextAsync(userQuery, "en");
+                if (translatedText != null)
+                {
+                    activity.Text = translatedText;
+                }
+                
                 await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
             }
             else
@@ -27,6 +38,7 @@ namespace DTML.EduBot
             var response = Request.CreateResponse(HttpStatusCode.OK);
             return response;
         }
+        
 
         private Activity HandleSystemMessage(Activity message)
         {

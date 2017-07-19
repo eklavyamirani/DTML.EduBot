@@ -14,37 +14,41 @@ namespace DTML.EduBot.Dialogs
         [LuisIntent("Age")]
         public async Task HandleAgeIntent(IDialogContext context, LuisResult result)
         {
-                await context.PostAsync($"I am quite young. Just couple month old. But I am already a Professor. How about that !");
+            string botresponse = $"I am quite young. Just couple month old. But I am already a Professor. How about that !";
+            await ConvertAndPostResponse(context, botresponse);
         }
 
         [LuisIntent("WhatIs")]
         public async Task HandleWhatIsIntent(IDialogContext context, LuisResult result)
         {
+            string botresponse;
             if (result.Entities.Any(e => e.Type == BotEntities.Name))
             {
-                await context.PostAsync($"My name is {BotPersonality.BotName}");
+                botresponse = $"My name is {BotPersonality.BotName}";
             }
             else
             if (result.Entities.Any(e => e.Type == BotEntities.Time))
             {
-                await context.PostAsync($"It's always morning in the Botland, so I never need to sleep");
+                botresponse=$"It's always morning in the Botland, so I never need to sleep";
             }
             else
             if (result.Entities.Any(e => e.Type == BotEntities.Date))
             {
                 var date = DateTime.Now.ToLongDateString();
-                await context.PostAsync($"Oh, that's easy... It is {date}");
+                botresponse = $"Oh, that's easy... It is {date}";
             }
             else
             if (result.Entities.Any(e => e.Type == BotEntities.encyclopediaOrganization))
             {
                 //TODO: Call Wikipedia API and provide answer
-                await context.PostAsync($"I think it is a name of some company...");
+                botresponse = $"I think it is a name of some company...";
             }
             else
             {
-                await context.PostAsync(BotPersonality.GetRandomGenericResponse());
+                botresponse = BotPersonality.GetRandomGenericResponse();
             }
+
+            await ConvertAndPostResponse(context, botresponse);
         }
     }
 }

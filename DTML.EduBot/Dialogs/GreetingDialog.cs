@@ -14,14 +14,13 @@ namespace DTML.EduBot.Dialogs
         [LuisIntent("Greeting")]
         public async Task Greeting(IDialogContext context, LuisResult result)
         {
-            string botresponse = BotPersonality.GetRandomGreeting(); 
-            await context.PostAsync(botresponse);
+            await ConvertAndPostResponse(context, BotPersonality.GetRandomGreeting());
         }
 
         [LuisIntent("Courtesy")]
         public async Task Courtesy(IDialogContext context, LuisResult result)
         {
-            await context.PostAsync(BotPersonality.GetRandomGenericResponse());
+            await ConvertAndPostResponse(context, BotPersonality.GetRandomGenericResponse());
         }
     }
 }
