@@ -17,7 +17,6 @@ namespace DTML.EduBot
             base.Load(builder);
             LessonPlan = LoadLessonPlan();
 
-            builder.RegisterInstance(new LessonPlanDialog()).AsSelf().SingleInstance();
         }
 
         private LessonPlan.LessonPlan LoadLessonPlan()

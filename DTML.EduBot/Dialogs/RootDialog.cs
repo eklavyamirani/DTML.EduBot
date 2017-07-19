@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using DTML.EduBot.Extensions;
 using Microsoft.Bot.Builder.Internals.Fibers;
 
 namespace DTML.EduBot.Dialogs
@@ -21,16 +22,6 @@ namespace DTML.EduBot.Dialogs
             (new List<String> {
                 ChatWithBot,
                 StartTheLessonPlan});
-
-        private readonly LessonPlanDialog lessonPlanDialog;
-
-        public RootDialog()
-        {
-            using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
-            {
-                lessonPlanDialog = WebApiApplication.FindContainer().Resolve<LessonPlanDialog>();
-            }
-        }
 
         public async Task StartAsync(IDialogContext context)
         {
@@ -56,17 +47,20 @@ namespace DTML.EduBot.Dialogs
             {
                 var selection = await result;
 
-                switch (selection)
+                using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
                 {
-                    case ChatWithBot:
-                        await context.PostAsync("Great! Say Hello, and see what will I respond!");
-                        context.Call(new RootQnaLuisDialog(), this.AfterLessonPlan);
-                        break;
+                    switch (selection)
+                    {
+                        case ChatWithBot:
+                            await context.PostAsync("Great! Say Hello, and see what will I respond!");
+                            context.Call(scope.Resolve<ChitChatDialog>(), this.AfterLessonPlan);
+                            break;
 
-                    case StartTheLessonPlan:
-                        await context.PostAsync("Great! let's get it started!");
-                        context.Call(this.lessonPlanDialog, this.AfterLessonPlan);
-                        break;
+                        case StartTheLessonPlan:
+                            await context.PostAsync("Great! let's get it started!");
+                            context.Call(scope.Resolve<LessonPlanDialog>(), this.AfterLessonPlan);
+                            break;
+                    }
                 }
             }
             catch (TooManyAttemptsException)
@@ -79,16 +73,16 @@ namespace DTML.EduBot.Dialogs
         {
             try
             {
-                var selection = (string) await result;
+                var selection = (bool) await result;
 
                 switch (selection)
                 {
-                    case "success":
+                    case true:
                         await context.PostAsync("Congratz! You made it! Type anything if you would like to try another question.");
                         await this.StartAsync(context);
                         break;
 
-                    case "failed":
+                    case false:
                         await context.PostAsync("It's ok, there is always next time :)");
                         await this.StartAsync(context);
                         break;

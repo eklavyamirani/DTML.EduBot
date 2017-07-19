@@ -8,8 +8,6 @@ namespace DTML.EduBot.LessonPlan
     [Serializable]
     public class Lesson
     {
-        public string LessonName { get; set; }
-
         private ICollection<Topic> topics = new List<Topic>();
 
         [JsonProperty("lesson_title", Required = Required.Always)]
@@ -20,5 +18,8 @@ namespace DTML.EduBot.LessonPlan
         {
             get { return topics; }
         }
+
+        [JsonIgnore]
+        public int currentTopic { get; set; }
     }
 }

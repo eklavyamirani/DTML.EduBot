@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using AdaptiveCards;
-using DTML.EduBot.LessonPlan;
-using Microsoft.Bot.Connector;
-
-namespace DTML.EduBot.Dialogs
+﻿namespace DTML.EduBot.Dialogs
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
+    using AdaptiveCards;
+    using DTML.EduBot.LessonPlan;
     using Microsoft.Bot.Builder.Dialogs;
+    using Microsoft.Bot.Connector;
 
     [Serializable]
     public class LessonDialog : IDialog<string>
     {
         private Lesson lesson;
-        private int currentTopic;
 
         public LessonDialog(Lesson lesson)
         {
             this.lesson = lesson;
-            this.currentTopic = 0;
         }
 
         public async Task StartAsync(IDialogContext context)
@@ -37,7 +34,7 @@ namespace DTML.EduBot.Dialogs
                 {
                     new TextBlock()
                     {
-                        Text = "This is ________"
+                        Text = lesson.Topics.ToArray()[lesson.currentTopic].Question
                     },
                     new Image()
                     {
@@ -80,10 +77,10 @@ namespace DTML.EduBot.Dialogs
             {
                 dynamic value = message.Value;
 
-                if (value.Lesson.ToString().Equals(lesson.Topics.ToArray()[currentTopic].CorrectAnswer))
+                if (value.Lesson.ToString().Equals(lesson.Topics.ToArray()[lesson.currentTopic].CorrectAnswer))
                 {
                     await context.PostAsync("You have the right answer! Moving on to the next question.");
-                    currentTopic++;
+                    lesson.currentTopic++;
                     await this.StartAsync(context);
                 }
                 else

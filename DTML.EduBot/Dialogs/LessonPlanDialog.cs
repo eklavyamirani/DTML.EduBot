@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DTML.EduBot.LessonPlan;
-using Microsoft.Bot.Builder.Internals.Fibers;
-
-namespace DTML.EduBot.Dialogs
+﻿namespace DTML.EduBot.Dialogs
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
+    using DTML.EduBot.LessonPlan;
 
     [Serializable]
     public class LessonPlanDialog : IDialog<string>
@@ -22,17 +20,17 @@ namespace DTML.EduBot.Dialogs
         {
             string friendlyUserName = context.Activity.From.Name;
 
-            ICollection<string> lessonsName = new List<string>();
+            ICollection<string> lessonTitle = new List<string>();
 
             foreach (Lesson lesson in LessonPlanModule.LessonPlan.Lessons)
             {
-                lessonsName.Add(lesson.LessonName);
+                lessonTitle.Add(lesson.LessonTitle);
             }
 
             PromptDialog.Choice(
                 context,
                 this.AfterLessonSelected,
-                lessonsName,
+                lessonTitle,
                 "Hi " + friendlyUserName + ",\n Which lesson would you like to go?",
                 "I am sorry but I didn't understand that. I need you to select one of the options below",
                 attempts: LessonPlanModule.LessonPlan.Lessons.Count);
@@ -45,7 +43,7 @@ namespace DTML.EduBot.Dialogs
                 var selection = await result;
 
                 ICollection<Lesson> allLessons = LessonPlanModule.LessonPlan.Lessons;
-                Lesson selectedLesson = allLessons.Where(lesson => selection.Equals(lesson.LessonName)).FirstOrDefault();
+                Lesson selectedLesson = allLessons.Where(lesson => selection.Equals(lesson.LessonTitle)).FirstOrDefault();
                 context.Call(new LessonDialog(selectedLesson), AfterLessonFinished);
             }
             catch (TooManyAttemptsException)

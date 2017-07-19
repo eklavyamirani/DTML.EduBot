@@ -134,6 +134,7 @@
     <Compile Include="Constants\BotEntities.cs" />
     <Compile Include="Constants\Shared.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Dialogs\BasicDialogModule.cs" />
     <Compile Include="Dialogs\GreetingDialog.cs" />
     <Compile Include="Dialogs\IAmDialog.cs" />
     <Compile Include="Dialogs\LessonDialog.cs" />
@@ -142,14 +143,14 @@
     <Compile Include="Dialogs\QnaLuisDialog.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
     <Compile Include="Dialogs\UserInformation.cs" />
-    <Compile Include="Dialogs\RootQnaLuisDialog.cs" />
+    <Compile Include="Dialogs\ChitChatDialog.cs" />
     <Compile Include="Dialogs\WhatIsDialog.cs" />
     <Compile Include="Extensions\Require.cs" />
     <Compile Include="Extensions\Set.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="LessonPlanModule.cs" />
+    <Compile Include="LessonPlan\LessonPlanModule.cs" />
     <Compile Include="LessonPlan\Lesson.cs" />
     <Compile Include="LessonPlan\LessonPlan.cs" />
     <Compile Include="LessonPlan\Topic.cs" />

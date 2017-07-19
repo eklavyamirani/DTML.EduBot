@@ -8,10 +8,10 @@
     using DTML.EduBot.Common;
     using DTML.EduBot.Qna;
 
-    [LuisModel("", "")]
-    [QnaModel(hostUri: "", subscriptionKey: "", modelId: "")]
+    [LuisModel("31511772-4f1c-4590-87a8-0d6b8a7707a1", "a88bd2b022e34d5db56a73eb2bd33726")]
+    [QnaModel(hostUri: "https://westus.api.cognitive.microsoft.com/qnamaker/v2.0/", subscriptionKey: "d24b3b5df8b541cabfab6d4b12646ca0", modelId: "34aeee3d-51f6-42d4-bcb3-b8e8c1c1b88e")]
     [Serializable]
-    public partial class RootQnaLuisDialog : QnaLuisDialog<object>
+    public partial class ChitChatDialog : QnaLuisDialog<object>
     {
         [LuisIntent("")]
         [LuisIntent("None")]

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Web;
-using System.Web.Http;
-using System.Web.Routing;
-using Autofac;
-using Autofac.Integration.WebApi;
-
-namespace DTML.EduBot
+﻿namespace DTML.EduBot
 {
+    using System.Reflection;
+    using System.Web.Http;
+    using Autofac;
+    using Autofac.Integration.WebApi;
+    using DTML.EduBot.Dialogs;
+
     public class WebApiApplication : System.Web.HttpApplication
     {
         public static ILifetimeScope FindContainer()
@@ -26,6 +22,7 @@ namespace DTML.EduBot
             var builder = new ContainerBuilder();
 
             builder.RegisterModule(new LessonPlanModule());
+            builder.RegisterModule(new BasicDialogModule());
 
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
