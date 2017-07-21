@@ -9,6 +9,7 @@
     using DTML.EduBot.LessonPlan;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
+    using Models;
 
     [Serializable]
     public class LessonDialog : IDialog<string>
@@ -113,27 +114,6 @@
                 await context.PostAsync("Please try again");
                 await this.StartAsync(context);
             }
-        }
-    }
-
-    class StudentResponse
-    {
-        public string Answer { get; set; }
-
-        public static StudentResponse FromDynamic(dynamic studentResponse)
-        {
-            if (studentResponse == null)
-            {
-                throw new ArgumentNullException(nameof(studentResponse));
-            }
-
-            var answer = studentResponse.Answer as string;
-            return new StudentResponse(answer);
-        }
-
-        public StudentResponse(string answer)
-        {
-            this.Answer = answer;
         }
     }
 }
