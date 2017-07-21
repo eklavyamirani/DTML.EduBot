@@ -1,15 +1,17 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
-using Autofac;
-using DTML.EduBot.Dialogs;
-using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Connector;
-
-namespace DTML.EduBot
+﻿namespace DTML.EduBot
 {
+    using System;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Autofac;
+    using DTML.EduBot.Common;
+    using DTML.EduBot.Dialogs;
+    using Microsoft.Bot.Builder.Dialogs;
+    using Microsoft.Bot.Connector;
+
     [BotAuthentication]
     public class MessagesController : ApiController
     {
@@ -46,10 +48,17 @@ namespace DTML.EduBot
                 // Handle conversation state changes, like members being added and removed
                 // Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
                 // Not available in all channels
-                using (ConnectorClient connector = new ConnectorClient(new Uri(message.ServiceUrl)))
+
+                // Ensure the auto messages don't fire in group conversations and only when bot gets added to the conversation.
+                var isGroupConversation = message.Conversation.IsGroup.HasValue && message.Conversation.IsGroup.Value;
+                if (!isGroupConversation && message.MembersAdded.Any(member => member.Name == message.Recipient.Name))
                 {
-                    Activity reply = message.CreateReply("Hello, this is your " + message.Recipient.Name + " !");
-                    await connector.Conversations.ReplyToActivityAsync(reply);
+                    using (ConnectorClient connector = new ConnectorClient(new Uri(message.ServiceUrl)))
+                    {
+                        // TODO: start the root activity here.
+                        Activity reply = message.CreateReply($"Hi I am {BotPersonality.BotName}.");
+                        await connector.Conversations.ReplyToActivityAsync(reply);
+                    }
                 }
             }
             else if (message.Type == ActivityTypes.ContactRelationUpdate)
