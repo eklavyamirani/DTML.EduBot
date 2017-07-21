@@ -22,19 +22,32 @@
 
         public async Task StartAsync(IDialogContext context)
         {
-            await PostAdaptiveCard(context);
+            var wasSuccess = await PostAdaptiveCard(context);
+            if (!wasSuccess)
+            {
+                context.Done(Constants.Shared.NoMoreLessonsMessage);
+                return;
+            }
+
             context.Wait(this.CheckAnswerAsync);
         }
 
-        private async Task PostAdaptiveCard(IDialogContext context)
+        private async Task<bool> PostAdaptiveCard(IDialogContext context)
         {
+            var nextTopic = lesson.Topics.ElementAtOrDefault(lesson.currentTopic);
+            if (nextTopic == null)
+            {
+                return false;
+            }
+
+            // TODO: Remove hard coded stuff.
             AdaptiveCard adaptiveCard = new AdaptiveCard()
             {
                 Body = new List<CardElement>()
                 {
                     new TextBlock()
                     {
-                        Text = lesson.Topics.ToArray()[lesson.currentTopic].Question
+                        Text = nextTopic.Question
                     },
                     new Image()
                     {
@@ -43,7 +56,7 @@
                     },
                     new TextInput()
                     {
-                        Id = "Lesson",
+                        Id = "Answer",
                         Style = TextInputStyle.Text
                     }
                 },
@@ -67,28 +80,60 @@
             reply.Attachments.Add(attachment);
 
             await context.PostAsync(reply, CancellationToken.None);
+            return true;
         }
 
         private async Task CheckAnswerAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
             var message = await result;
 
-            if (message.Value != null)
+            if (message.Value == null)
             {
-                dynamic value = message.Value;
-
-                if (value.Lesson.ToString().Equals(lesson.Topics.ToArray()[lesson.currentTopic].CorrectAnswer))
-                {
-                    await context.PostAsync("You have the right answer! Moving on to the next question.");
-                    lesson.currentTopic++;
-                    await this.StartAsync(context);
-                }
-                else
-                {
-                    await context.PostAsync("Please try again");
-                    await this.StartAsync(context);
-                }
+                return;
             }
+
+            // TODO: transform into strongly typed.
+            dynamic response = message.Value;
+            var topic = lesson.Topics.ElementAtOrDefault(lesson.currentTopic);
+            if (topic == null)
+            {
+                return;
+            }
+
+            StudentResponse studentResponse = StudentResponse.FromDynamic(response);
+
+            if (studentResponse.Answer.Equals(topic.CorrectAnswer, StringComparison.InvariantCultureIgnoreCase))
+            {
+                await context.PostAsync("You have the right answer! Moving on to the next question.");
+                lesson.currentTopic++;
+                await this.StartAsync(context);
+            }
+            else
+            {
+                await context.PostAsync("Please try again");
+                await this.StartAsync(context);
+            }
+        }
+    }
+
+    class StudentResponse
+    {
+        public string Answer { get; set; }
+
+        public static StudentResponse FromDynamic(dynamic studentResponse)
+        {
+            if (studentResponse == null)
+            {
+                throw new ArgumentNullException(nameof(studentResponse));
+            }
+
+            var answer = studentResponse.Answer as string;
+            return new StudentResponse(answer);
+        }
+
+        public StudentResponse(string answer)
+        {
+            this.Answer = answer;
         }
     }
 }

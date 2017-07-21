@@ -1,14 +1,11 @@
-﻿using Autofac;
-using DTML.EduBot.Extensions;
-using Microsoft.Bot.Builder.Internals.Fibers;
-
-namespace DTML.EduBot.Dialogs
+﻿namespace DTML.EduBot.Dialogs
 {
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading.Tasks;
+    using Autofac;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
 
@@ -23,12 +20,13 @@ namespace DTML.EduBot.Dialogs
                 ChatWithBot,
                 StartTheLessonPlan});
 
-        public async Task StartAsync(IDialogContext context)
+        public Task StartAsync(IDialogContext context)
         {
             context.Wait(this.MessageReceivedAsync);
+            return Task.CompletedTask;
         }
 
-        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
+        private Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
             string friendlyUserName = context.Activity.From.Name;
             
@@ -39,6 +37,8 @@ namespace DTML.EduBot.Dialogs
                 "Hello Dear " + friendlyUserName + ",\n What would you like to do.",
                 "I am sorry but I didn't understand that. I need you to select one of the options below",
                 attempts: Choices.Count());
+
+            return Task.CompletedTask;
         }
 
         private async Task AfterChoiceSelected(IDialogContext context, IAwaitable<string> result)
@@ -49,6 +49,7 @@ namespace DTML.EduBot.Dialogs
 
                 using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
                 {
+                    // TODO: enum.
                     switch (selection)
                     {
                         case ChatWithBot:
@@ -57,7 +58,6 @@ namespace DTML.EduBot.Dialogs
                             break;
 
                         case StartTheLessonPlan:
-                            await context.PostAsync("Great! let's get it started!");
                             context.Call(scope.Resolve<LessonPlanDialog>(), this.AfterLessonPlan);
                             break;
                     }
@@ -75,6 +75,7 @@ namespace DTML.EduBot.Dialogs
             {
                 var selection = (bool) await result;
 
+                // TODO: enum.
                 switch (selection)
                 {
                     case true:
