@@ -2,24 +2,58 @@
     "lessons":[  
         {  
           "lesson_title":"A few words every day",
-          "topics":[  
-              {  
-                "question":"Lets start off with 10 questions. Please identify the image below:",
-                "image_url":"https://images.contentful.com/6m9bd13t776q/6KmARX9mUwsuG4O8YsI8KY/4f68bd0d9d9d4d8a1ab5307f0fa59679/which-baby-names-stand-time-test-2160x1200.jpg",
+          "topics":[
+            {
+              "question": "Lets start off with 10 questions. Please identify the image below:",
+              "image_url": "https://images.contentful.com/6m9bd13t776q/6KmARX9mUwsuG4O8YsI8KY/4f68bd0d9d9d4d8a1ab5307f0fa59679/which-baby-names-stand-time-test-2160x1200.jpg",
+              "answer_options": [
+                "A baby",
+                "A robot",
+                "A computer"
+              ],
+              "correct_answer": "A baby",
+              "correct_answer_bot_response": "Correct! Now, can you type the word?",
+              "wrong_answer_bot_response": "Sorry, incorrect, try again",
+              "pronounciation_phrase": "Good work! Here is how you say it, Repeat after me.",
+              "wrap_up_phrases": [
+                "I got it",
+                "Say it again"
+              ]
+            },
+            {
+              "question": "Nice job! Try this one:",
+              "image_url": "https://static.pexels.com/photos/39803/pexels-photo-39803.jpeg",
+              "answer_options": [
+                "The TELEPHONE",
+                "The SKY",
+                "An APPLE"
+              ],
+              "correct_answer": "An APPLE",
+              "correct_answer_bot_response": "Good! Now, can you type the word?",
+              "wrong_answer_bot_response": "Oops, that's not right, try again",
+              "pronounciation_phrase": "Nice! Here is how you say it, Repeat after me.",
+              "wrap_up_phrases": [
+                "I got it",
+                "Say it again"
+              ]
+            },
+            {  
+                "question":"Good job! Lets keep going. Can you tell me what this is?",
+                "image_url":"http://www.naturalheightgrowth.com/wp-content/uploads/2016/06/milk-006.jpg",
                 "answer_options":[  
-                    "A baby",
-                    "A robot",
-                    "A computer"
+                    "A BOY",
+                    "S FISH",
+                    "THE MILK"
                 ],
-                "correct_answer":"A baby",
-                "correct_answer_bot_response":"Correct! Now, can you type the word?",
+                "correct_answer":"THE MILK",
+                "correct_answer_bot_response":"Wow good job! Type it in now",
                 "wrong_answer_bot_response":"Sorry, incorrect, try again",
-                "pronounciation_phrase":"Good work! Here is how you say it, Repeat after me.",
+                "pronounciation_phrase":"Good! Now repeat after me",
                 "wrap_up_phrases":[  
                     "I got it",
                     "Say it again"
                 ]
-              }
+             }
           ]
         }
     ]

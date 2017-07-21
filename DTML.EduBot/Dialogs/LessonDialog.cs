@@ -30,7 +30,7 @@
                 return;
             }
 
-            context.Wait(this.CheckAnswerAsync);
+            context.Wait(this.CheckAnswerOptionsAsync);
         }
 
         private async Task<bool> PostAdaptiveCard(IDialogContext context)
@@ -40,6 +40,8 @@
             {
                 return false;
             }
+
+            List<ActionBase> answerOptions = PopulateActionBasesFromAnswerOptions(nextTopic.AnswerOptions);
 
             // TODO: Remove hard coded stuff.
             AdaptiveCard adaptiveCard = new AdaptiveCard()
@@ -53,22 +55,10 @@
                     new Image()
                     {
                         Size = ImageSize.Large,
-                        Url  = "http://i1.wp.com/www.foodrepublic.com/wp-content/uploads/2012/03/roston_rotteneggs.jpg"
+                        Url  = nextTopic.ImageUrl
                     },
-                    new TextInput()
-                    {
-                        Id = "Answer",
-                        Style = TextInputStyle.Text
-                    }
                 },
-                Actions = new List<ActionBase>()
-                {
-                    new SubmitAction()
-                    {
-                        Title = "Submit Answer",
-                        DataJson = "{ \"Type\": \"Topic\"}"
-                    }
-                }
+                Actions = answerOptions
             };
 
             Attachment attachment = new Attachment()
@@ -84,36 +74,158 @@
             return true;
         }
 
-        private async Task CheckAnswerAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
+        private List<ActionBase> PopulateActionBasesFromAnswerOptions(ICollection<string> answerOptions)
         {
-            var message = await result;
+            List<ActionBase> actionBases = new List<ActionBase>();
 
-            if (message.Value == null)
+            foreach (string answer in answerOptions)
             {
-                return;
+                actionBases.Add(
+                    new SubmitAction()
+                    {
+                        Title = answer,
+                        DataJson = "{\"answer\": \"" + answer + "\"}"
+                    }
+                );
             }
 
-            // TODO: transform into strongly typed.
-            dynamic response = message.Value;
+            return actionBases;
+        }
+
+        private async Task CheckAnswerOptionsAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
+        {
+            dynamic response = ExtractMessageValue(result);
+            StudentResponse studentResponse = StudentResponse.FromDynamic(response);
+            
             var topic = lesson.Topics.ElementAtOrDefault(lesson.currentTopic);
             if (topic == null)
             {
                 return;
             }
 
-            StudentResponse studentResponse = StudentResponse.FromDynamic(response);
+            await CheckAnswerAsync(context, studentResponse, topic.CorrectAnswerBotResponse, this.CheckTypedAnswerAsync);
+        }
 
-            if (studentResponse.Answer.Equals(topic.CorrectAnswer, StringComparison.InvariantCultureIgnoreCase))
+        private async Task CheckTypedAnswerAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
+        {
+            var message = await result;
+            StudentResponse studentResponse = new StudentResponse(message.Text);
+
+            // TODO think about how to deal with the bot response right after typed answer
+            await CheckAnswerAsync(context, studentResponse, "Great, now type anything to continue", this.PronounceLearnedPhrase);
+        }
+
+        private async Task CheckAnswerAsync(IDialogContext context, StudentResponse studentResponse, string botResponse, ResumeAfter<IMessageActivity> resume)
+        {
+            // TODO: transform into strongly typed.
+            
+
+            var topic = lesson.Topics.ElementAtOrDefault(lesson.currentTopic);
+            if (topic == null)
             {
-                await context.PostAsync("You have the right answer! Moving on to the next question.");
-                lesson.currentTopic++;
-                await this.StartAsync(context);
+                return;
+            }
+
+            if (studentResponse.Answer != null && studentResponse.Answer.Equals(topic.CorrectAnswer, StringComparison.InvariantCultureIgnoreCase))
+            {
+                // TODO fix the bug of showing bot respones after typed solution
+                await context.PostAsync(botResponse);
+                context.Wait(resume);
             }
             else
             {
-                await context.PostAsync("Please try again");
+                await context.PostAsync(topic.WrongAnswerBotResponse);
                 await this.StartAsync(context);
             }
+        }
+
+        private async Task PronounceLearnedPhrase(IDialogContext context, IAwaitable<IMessageActivity> result)
+        {
+            var topic = lesson.Topics.ElementAtOrDefault(lesson.currentTopic);
+            if (topic == null)
+            {
+                return;
+            }
+
+            await this.PostAudioInstruction(context, topic);
+
+            await this.WrapUpCurrentTopic(context, topic);
+        }
+
+        private async Task PostAudioInstruction(IDialogContext context, Topic topic)
+        {
+            await context.PostAsync(topic.PronounciationPhrase);
+
+            // TODO: integrate with text to speech API 
+        }
+
+        private Task WrapUpCurrentTopic(IDialogContext context, Topic topic)
+        {
+            PromptDialog.Choice(
+                context,
+                this.AfterWrapUpCurrentTopic,
+                topic.WrapUpPhrases,
+                "This marks the end of current topic!",
+                "I am sorry but I didn't understand that. I need you to select one of the options below",
+                attempts: topic.WrapUpPhrases.Count());
+
+            return Task.CompletedTask;
+        }
+
+        private async Task AfterWrapUpCurrentTopic(IDialogContext context, IAwaitable<string> result)
+        {
+            var topic = lesson.Topics.ElementAtOrDefault(lesson.currentTopic);
+            if (topic == null)
+            {
+                return;
+            }
+
+            List<string> wrapUpPhrases = new List<string>(topic.WrapUpPhrases);
+
+            string nextTopicPhrase = wrapUpPhrases[0];
+            string stayOnCurrentTopicPhrase = wrapUpPhrases[1];
+
+            try
+            {
+                var selection = (string) await result;
+
+                // TODO: enum.
+                if (nextTopicPhrase.Equals(selection))
+                {
+                    if (lesson.currentTopic >= lesson.Topics.Count - 1)
+                        // reaching the end of the topic for current lesson
+                    {
+                        context.Done("This is the end of the current lesson. Thank you!");
+                    }
+                    else
+                    {
+                        lesson.currentTopic++;
+                        await this.StartAsync(context);
+                    }
+                }
+                else if (stayOnCurrentTopicPhrase.Equals(selection))
+                {
+                    await this.PronounceLearnedPhrase(context, null);
+                }
+            }
+            catch (TooManyAttemptsException)
+            {
+                await this.StartAsync(context);
+            }
+        }
+
+        private async Task<dynamic> ExtractMessageValue(IAwaitable<IMessageActivity> result)
+        {
+            var message = await result;
+
+            if (message.Value == null)
+            {
+                return null;
+            }
+
+            dynamic response = message.Value;
+
+            return response;
         }
     }
 }
