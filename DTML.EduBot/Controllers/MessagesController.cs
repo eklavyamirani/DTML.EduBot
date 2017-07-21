@@ -8,6 +8,7 @@ using DTML.EduBot.Dialogs;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using System.Linq;
+using DTML.EduBot.Common;
 
 namespace DTML.EduBot
 {
@@ -54,7 +55,8 @@ namespace DTML.EduBot
                 {
                     using (ConnectorClient connector = new ConnectorClient(new Uri(message.ServiceUrl)))
                     {
-                        Activity reply = message.CreateReply("Hello, this is your " + message.Recipient.Name + " !");
+                        // TODO: start the root activity here.
+                        Activity reply = message.CreateReply($"Hi I am {BotPersonality.BotName}.");
                         await connector.Conversations.ReplyToActivityAsync(reply);
                     }
                 }
