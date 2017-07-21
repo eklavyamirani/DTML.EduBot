@@ -1,7 +1,10 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Autofac;
+using DTML.EduBot.Dialogs;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 
@@ -18,17 +21,20 @@ namespace DTML.EduBot
         {
             if (activity.Type == ActivityTypes.Message)
             {
-                await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
+                using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
+                {
+                    await Conversation.SendAsync(activity, () => scope.Resolve<RootDialog>());
+                }
             }
             else
             {
-                HandleSystemMessage(activity);
+                await HandleSystemMessageAsync(activity);
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             return response;
         }
 
-        private Activity HandleSystemMessage(Activity message)
+        private async Task<Activity> HandleSystemMessageAsync(Activity message)
         {
             if (message.Type == ActivityTypes.DeleteUserData)
             {
@@ -40,6 +46,11 @@ namespace DTML.EduBot
                 // Handle conversation state changes, like members being added and removed
                 // Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
                 // Not available in all channels
+                using (ConnectorClient connector = new ConnectorClient(new Uri(message.ServiceUrl)))
+                {
+                    Activity reply = message.CreateReply("Hello, this is your " + message.Recipient.Name + " !");
+                    await connector.Conversations.ReplyToActivityAsync(reply);
+                }
             }
             else if (message.Type == ActivityTypes.ContactRelationUpdate)
             {
