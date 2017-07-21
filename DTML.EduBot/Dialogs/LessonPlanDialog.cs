@@ -11,12 +11,9 @@
     [Serializable]
     public class LessonPlanDialog : IDialog<string>
     {
-        public async Task StartAsync(IDialogContext context)
-        {
-            context.Wait(this.MessageReceivedAsync);
-        }
+        private const int maxRetries = 3;
 
-        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
+        public Task StartAsync(IDialogContext context)
         {
             string friendlyUserName = context.Activity.From.Name;
 
@@ -31,9 +28,11 @@
                 context,
                 this.AfterLessonSelected,
                 lessonTitle,
-                "Hi " + friendlyUserName + ",\n Which lesson would you like to go?",
+                $"{friendlyUserName} Which lesson would you like to start?",
                 "I am sorry but I didn't understand that. I need you to select one of the options below",
-                attempts: LessonPlanModule.LessonPlan.Lessons.Count);
+                attempts: maxRetries);
+
+            return Task.CompletedTask;
         }
 
         private async Task AfterLessonSelected(IDialogContext context, IAwaitable<string> result)
@@ -42,8 +41,13 @@
             {
                 var selection = await result;
 
-                ICollection<Lesson> allLessons = LessonPlanModule.LessonPlan.Lessons;
-                Lesson selectedLesson = allLessons.Where(lesson => selection.Equals(lesson.LessonTitle)).FirstOrDefault();
+                var selectedLesson = LessonPlanModule.LessonPlan.Lessons.FirstOrDefault(lesson => selection.Equals(lesson.LessonTitle));
+                if (selectedLesson == null)
+                {
+                    context.Fail(new InvalidOperationException("The selected lesson plan was null."));
+                    return;
+                }
+
                 context.Call(new LessonDialog(selectedLesson), AfterLessonFinished);
             }
             catch (TooManyAttemptsException)
@@ -54,7 +58,9 @@
 
         private async Task AfterLessonFinished(IDialogContext context, IAwaitable<string> result)
         {
-            
+            // The current lesson finished. Plug in Analytics.
+            var finalMessage = await result;
+            await context.PostAsync(finalMessage);
         }
     }
 }
