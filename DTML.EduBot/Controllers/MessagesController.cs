@@ -1,17 +1,17 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
-using Autofac;
-using DTML.EduBot.Dialogs;
-using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Connector;
-using System.Linq;
-using DTML.EduBot.Common;
-
-namespace DTML.EduBot
+﻿namespace DTML.EduBot
 {
+    using System;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Autofac;
+    using DTML.EduBot.Common;
+    using DTML.EduBot.Dialogs;
+    using Microsoft.Bot.Builder.Dialogs;
+    using Microsoft.Bot.Connector;
+
     [BotAuthentication]
     public class MessagesController : ApiController
     {
