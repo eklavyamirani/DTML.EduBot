@@ -7,11 +7,11 @@
     using Microsoft.Bot.Builder.Luis.Models;
     using DTML.EduBot.Common;
     using DTML.EduBot.Qna;
+    using Microsoft.Azure;
+    using Attributes;
 
-    [LuisModel("", "")]
-    [QnaModel(hostUri: "",
-        subscriptionKey: "",
-        modelId: "")]
+    [PreConfiguredLuisModel]
+    [PreConfiguredQnaModel]
     [Serializable]
     public partial class ChitChatDialog : QnaLuisDialog<object>
     {

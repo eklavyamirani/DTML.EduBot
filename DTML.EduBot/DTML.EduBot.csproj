@@ -130,6 +130,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Attributes\PreConfiguredLuisModelAttribute.cs" />
+    <Compile Include="Attributes\PreConfiguredQnaModelAttribute.cs" />
     <Compile Include="Common\BotPersonality.cs" />
     <Compile Include="Common\ChatContext.cs" />
     <Compile Include="Constants\BotEntities.cs" />
