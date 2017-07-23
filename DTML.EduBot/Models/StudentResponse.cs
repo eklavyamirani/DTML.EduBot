@@ -15,20 +15,10 @@ namespace DTML.EduBot.Models
             {
                 throw new ArgumentNullException(nameof(studentResponse));
             }
-
-<<<<<<< HEAD
+            
             string result = JsonConvert.SerializeObject(studentResponse.Result);
             StudentResponse answer = JsonConvert.DeserializeObject<StudentResponse>(result);
             return answer;
-=======
-            if (studentResponse.Answer == null)
-            {
-                studentResponse.Answer = string.Empty;
-            }
-
-            var answer = studentResponse.Answer.ToString();
-            return new StudentResponse(answer);
->>>>>>> 7941c63b0b4cc99b6b51a1510ab84dfbbf877389
         }
 
         public StudentResponse(string answer)

@@ -103,7 +103,16 @@
                 return;
             }
 
-            await CheckAnswerAsync(context, studentResponse, topic.CorrectAnswerBotResponse, this.CheckTypedAnswerAsync);
+            if (studentResponse.Answer != null && studentResponse.Answer.Equals(topic.CorrectAnswer, StringComparison.InvariantCultureIgnoreCase))
+            {
+                await context.PostAsync(topic.CorrectAnswerBotResponse);
+                context.Wait(this.CheckTypedAnswerAsync);
+            }
+            else
+            {
+                await context.PostAsync(topic.WrongAnswerBotResponse);
+                await this.StartAsync(context);
+            }
         }
 
         private async Task CheckTypedAnswerAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
@@ -111,13 +120,6 @@
             var message = await result;
             StudentResponse studentResponse = new StudentResponse(message.Text);
 
-            // TODO think about how to deal with the bot response right after typed answer
-            await CheckAnswerAsync(context, studentResponse, "Great, now type anything to continue", this.PronounceLearnedPhrase);
-        }
-
-        private async Task CheckAnswerAsync(IDialogContext context, StudentResponse studentResponse, string botResponse, ResumeAfter<IMessageActivity> resume)
-        {
-            // TODO: transform into strongly typed.
             var topic = lesson.Topics.ElementAtOrDefault(lesson.currentTopic);
             if (topic == null)
             {
@@ -126,9 +128,7 @@
 
             if (studentResponse.Answer != null && studentResponse.Answer.Equals(topic.CorrectAnswer, StringComparison.InvariantCultureIgnoreCase))
             {
-                // TODO fix the bug of showing bot respones after typed solution
-                await context.PostAsync(botResponse);
-                context.Wait(resume);
+                await this.PronounceLearnedPhrase(context, result);
             }
             else
             {
