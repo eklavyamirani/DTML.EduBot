@@ -103,6 +103,7 @@
                 return;
             }
 
+<<<<<<< HEAD
             await CheckAnswerAsync(context, studentResponse, topic.CorrectAnswerBotResponse, this.CheckTypedAnswerAsync);
         }
 
@@ -120,13 +121,22 @@
             // TODO: transform into strongly typed.
             
 
+=======
+            dynamic response = message.Value;
+>>>>>>> 7941c63b0b4cc99b6b51a1510ab84dfbbf877389
             var topic = lesson.Topics.ElementAtOrDefault(lesson.currentTopic);
             if (topic == null)
             {
                 return;
             }
 
+<<<<<<< HEAD
             if (studentResponse.Answer != null && studentResponse.Answer.Equals(topic.CorrectAnswer, StringComparison.InvariantCultureIgnoreCase))
+=======
+            StudentResponse studentResponse = StudentResponse.FromDynamic(response);
+            // TODO: check for typos in answer.
+            if (studentResponse.Answer.Equals(topic.CorrectAnswer, StringComparison.InvariantCultureIgnoreCase))
+>>>>>>> 7941c63b0b4cc99b6b51a1510ab84dfbbf877389
             {
                 // TODO fix the bug of showing bot respones after typed solution
                 await context.PostAsync(botResponse);
