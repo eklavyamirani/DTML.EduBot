@@ -61,12 +61,7 @@
             // The current lesson finished. Plug in Analytics.
             var finalMessage = await result;
             await context.PostAsync(finalMessage);
-<<<<<<< HEAD
-
-            await this.StartAsync(context);
-=======
             context.Done(string.Empty);
->>>>>>> 7941c63b0b4cc99b6b51a1510ab84dfbbf877389
         }
     }
 }
