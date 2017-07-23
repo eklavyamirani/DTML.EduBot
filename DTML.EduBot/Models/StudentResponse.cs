@@ -13,12 +13,7 @@
                 throw new ArgumentNullException(nameof(studentResponse));
             }
 
-            if (string.IsNullOrWhiteSpace(studentResponse.Answer))
-            {
-                studentResponse.Answer = string.Empty;
-            }
-
-            var answer = studentResponse.Answer.ToString();
+            var answer = studentResponse.Answer as string;
             return new StudentResponse(answer);
         }
 
