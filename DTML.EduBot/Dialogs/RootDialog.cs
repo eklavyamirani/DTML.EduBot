@@ -71,28 +71,8 @@
 
         private async Task AfterLessonPlan(IDialogContext context, IAwaitable<object> result)
         {
-            try
-            {
-                var selection = (bool) await result;
-
-                // TODO: enum.
-                switch (selection)
-                {
-                    case true:
-                        await context.PostAsync("Congratz! You made it! Type anything if you would like to try another question.");
-                        await this.StartAsync(context);
-                        break;
-
-                    case false:
-                        await context.PostAsync("It's ok, there is always next time :)");
-                        await this.StartAsync(context);
-                        break;
-                }
-            }
-            catch (TooManyAttemptsException)
-            {
-                await this.StartAsync(context);
-            }
+            // BUG: this actually waits for user to respond. Needs to be proactive.
+            await this.StartAsync(context);
         }
     }
 }

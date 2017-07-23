@@ -61,6 +61,7 @@
             // The current lesson finished. Plug in Analytics.
             var finalMessage = await result;
             await context.PostAsync(finalMessage);
+            context.Done(string.Empty);
         }
     }
 }
