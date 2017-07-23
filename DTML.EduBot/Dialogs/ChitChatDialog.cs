@@ -25,7 +25,7 @@
        [LuisIntent("Gibberish")]
         public async Task HandleGibberish(IDialogContext context, LuisResult result)
         {
-            await context.PostAsync(BotPersonality.BotResponseToGibberish);
+            await context.SayAsync(BotPersonality.BotResponseToGibberish, BotPersonality.BotResponseToGibberish);
         }
     }
 }
