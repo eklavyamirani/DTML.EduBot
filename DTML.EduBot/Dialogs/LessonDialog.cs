@@ -93,7 +93,6 @@
                 return;
             }
 
-            // TODO: transform into strongly typed.
             dynamic response = message.Value;
             var topic = lesson.Topics.ElementAtOrDefault(lesson.currentTopic);
             if (topic == null)
@@ -102,7 +101,7 @@
             }
 
             StudentResponse studentResponse = StudentResponse.FromDynamic(response);
-
+            // TODO: check for typos in answer.
             if (studentResponse.Answer.Equals(topic.CorrectAnswer, StringComparison.InvariantCultureIgnoreCase))
             {
                 await context.PostAsync("You have the right answer! Moving on to the next question.");
