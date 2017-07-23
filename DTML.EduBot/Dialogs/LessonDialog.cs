@@ -14,6 +14,7 @@
     [Serializable]
     public class LessonDialog : IDialog<string>
     {
+        private readonly int MAX_ATTEMPT = 2;
         private Lesson lesson;
 
         public LessonDialog(Lesson lesson)
@@ -43,7 +44,6 @@
 
             List<ActionBase> answerOptions = PopulateActionBasesFromAnswerOptions(nextTopic.AnswerOptions);
 
-            // TODO: Remove hard coded stuff.
             AdaptiveCard adaptiveCard = new AdaptiveCard()
             {
                 Body = new List<CardElement>()
@@ -159,13 +159,17 @@
 
         private Task WrapUpCurrentTopic(IDialogContext context, Topic topic)
         {
+            ICollection<string> wrapUpPhrases = new List<string>();
+            wrapUpPhrases.Add(topic.NextTopicPhrase);
+            wrapUpPhrases.Add(topic.StayOnCurrentTopicPhrase);
+
             PromptDialog.Choice(
                 context,
                 this.AfterWrapUpCurrentTopic,
-                topic.WrapUpPhrases,
+                wrapUpPhrases,
                 "This marks the end of current topic!",
                 "I am sorry but I didn't understand that. I need you to select one of the options below",
-                attempts: topic.WrapUpPhrases.Count());
+                attempts: MAX_ATTEMPT);
 
             return Task.CompletedTask;
         }
@@ -178,17 +182,11 @@
                 return;
             }
 
-            List<string> wrapUpPhrases = new List<string>(topic.WrapUpPhrases);
-
-            string nextTopicPhrase = wrapUpPhrases[0];
-            string stayOnCurrentTopicPhrase = wrapUpPhrases[1];
-
             try
             {
-                var selection = (string) await result;
-
-                // TODO: enum.
-                if (nextTopicPhrase.Equals(selection))
+                var selection = await result as string;
+                
+                if (topic.NextTopicPhrase.Equals(selection))
                 {
                     if (lesson.currentTopic >= lesson.Topics.Count - 1)
                         // reaching the end of the topic for current lesson
@@ -201,7 +199,7 @@
                         await this.StartAsync(context);
                     }
                 }
-                else if (stayOnCurrentTopicPhrase.Equals(selection))
+                else if (topic.StayOnCurrentTopicPhrase.Equals(selection))
                 {
                     await this.PronounceLearnedPhrase(context, null);
                 }

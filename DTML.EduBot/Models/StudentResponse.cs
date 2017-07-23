@@ -15,9 +15,20 @@ namespace DTML.EduBot.Models
             {
                 throw new ArgumentNullException(nameof(studentResponse));
             }
-            
-            string result = JsonConvert.SerializeObject(studentResponse.Result);
-            StudentResponse answer = JsonConvert.DeserializeObject<StudentResponse>(result);
+
+            StudentResponse answer;
+
+            try
+            {
+                string result = JsonConvert.SerializeObject(studentResponse.Result);
+                answer = JsonConvert.DeserializeObject<StudentResponse>(result);
+            }
+            catch (Exception)
+            {
+                // swallow exception in case of invalid Json, instead set default answer
+                answer = new StudentResponse(string.Empty);
+            }
+
             return answer;
         }
 

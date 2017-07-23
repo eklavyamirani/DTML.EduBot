@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using System.Web;
     using Newtonsoft.Json;
@@ -27,20 +28,24 @@
         [JsonProperty("correct_answer", Required = Required.Always)]
         public string CorrectAnswer { get; set; }
 
-        [JsonProperty("correct_answer_bot_response", Required = Required.Always)]
+        [DefaultValue("Correct! Now, can you type the word?")]
+        [JsonProperty("correct_answer_bot_response", DefaultValueHandling = DefaultValueHandling.Populate)]
         public string CorrectAnswerBotResponse { get; set; }
 
-        [JsonProperty("wrong_answer_bot_response", Required = Required.Always)]
+        [DefaultValue("Sorry, incorrect, try again")]
+        [JsonProperty("wrong_answer_bot_response", DefaultValueHandling = DefaultValueHandling.Populate)]
         public string WrongAnswerBotResponse { get; set; }
 
-        [JsonProperty("pronounciation_phrase", Required = Required.Always)]
+        [DefaultValue("Good work! Here is how you say it, Repeat after me.")]
+        [JsonProperty("pronounciation_phrase", DefaultValueHandling = DefaultValueHandling.Populate)]
         public string PronounciationPhrase { get; set; }
 
+        [DefaultValue("I got it")]
+        [JsonProperty("next_topic_phrase", DefaultValueHandling = DefaultValueHandling.Populate)]
+        public string NextTopicPhrase { get; set; }
 
-        [JsonProperty("wrap_up_phrases", Required = Required.Always)]
-        public ICollection<string> WrapUpPhrases
-        {
-            get { return this.wrapUpPhrases; }
-        }
+        [DefaultValue("Say it again")]
+        [JsonProperty("stay_on_current_topic_phrase", DefaultValueHandling = DefaultValueHandling.Populate)]
+        public string StayOnCurrentTopicPhrase { get; set; }
     }
 }
