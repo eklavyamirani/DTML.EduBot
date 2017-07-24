@@ -1,9 +1,12 @@
-﻿namespace DTML.EduBot.Models
+﻿using Newtonsoft.Json;
+
+namespace DTML.EduBot.Models
 {
     using System;
 
     public class StudentResponse
     {
+        [JsonProperty("answer", Required = Required.Always)]
         public string Answer { get; set; }
 
         public static StudentResponse FromDynamic(dynamic studentResponse)
@@ -13,13 +16,20 @@
                 throw new ArgumentNullException(nameof(studentResponse));
             }
 
-            if (studentResponse.Answer == null)
+            StudentResponse answer;
+
+            try
             {
-                studentResponse.Answer = string.Empty;
+                string result = JsonConvert.SerializeObject(studentResponse.Result);
+                answer = JsonConvert.DeserializeObject<StudentResponse>(result);
+            }
+            catch (Exception)
+            {
+                // swallow exception in case of invalid Json, instead set default answer
+                answer = new StudentResponse(string.Empty);
             }
 
-            var answer = studentResponse.Answer.ToString();
-            return new StudentResponse(answer);
+            return answer;
         }
 
         public StudentResponse(string answer)
