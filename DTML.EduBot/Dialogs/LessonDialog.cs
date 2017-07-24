@@ -154,7 +154,8 @@
         {
             await context.PostAsync(topic.PronounciationPhrase);
 
-            // TODO: integrate with text to speech API 
+            // client handling at: https://github.com/eklavyamirani/BotFramework-WebChat/commit/a0cc2cf87563414c558691583788bbd8e8c8f6a2
+            await context.SayAsync(topic.CorrectAnswer, topic.CorrectAnswer);
         }
 
         private Task WrapUpCurrentTopic(IDialogContext context, Topic topic)
