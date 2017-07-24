@@ -41,7 +41,7 @@
         {
             string inputTextLang = "en";
 
-            if (String.IsNullOrEmpty(inputText))
+            if (String.IsNullOrWhiteSpace(inputText))
             {
                 return inputTextLang;
             }
@@ -60,7 +60,7 @@
                 if (response.IsSuccessStatusCode && response.Content != null)
                 {
                     var result = await response.Content.ReadAsStringAsync();
-                    if (!String.IsNullOrEmpty(result))
+                    if (!String.IsNullOrWhiteSpace(result))
                     {
                         var translatedText = XElement.Parse(result).Value;
                         inputTextLang = translatedText;
@@ -78,7 +78,7 @@
         /// <returns>translated string</returns>
         public static async Task<string> TranslateTextAsync(string inputText, string inputLang = "en")
         {
-            if (String.IsNullOrEmpty(inputText))
+            if (String.IsNullOrWhiteSpace(inputText))
             {
                 return inputText;
             }
@@ -97,7 +97,7 @@
                 if (response.IsSuccessStatusCode && response.Content != null)
                 {
                     var result = await response.Content.ReadAsStringAsync();
-                    if (!String.IsNullOrEmpty(result))
+                    if (!String.IsNullOrWhiteSpace(result))
                     {
                         var translatedText = XElement.Parse(result).Value;
                         return translatedText;
