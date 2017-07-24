@@ -17,7 +17,7 @@
         /// </summary>
         /// <param name="key">OcpApimSubscriptionKey</param>
         /// <returns>token if the request is successful null otherwise</returns>
-        public static async Task<string> GetAuthenticationTokenAsync(string key)
+        private static async Task<string> GetAuthenticationTokenAsync(string key)
         {
             using (var client = new HttpClient())
             {
@@ -41,6 +41,11 @@
         {
             string inputTextLang = "en";
 
+            if (String.IsNullOrEmpty(inputText))
+            {
+                return inputTextLang;
+            }
+
             var accessToken = await MessageTranslator.GetAuthenticationTokenAsync(ConfigurationManager.AppSettings["TranslatorApiKey"]);
             if (accessToken == null)
             {
@@ -52,10 +57,10 @@
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 var response = await client.GetAsync(ConfigurationManager.AppSettings["detectLanguageEndpoint"] + query);
-                if (response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode && response.Content != null)
                 {
                     var result = await response.Content.ReadAsStringAsync();
-                    if (result != null)
+                    if (!String.IsNullOrEmpty(result))
                     {
                         var translatedText = XElement.Parse(result).Value;
                         inputTextLang = translatedText;
@@ -73,6 +78,11 @@
         /// <returns>translated string</returns>
         public static async Task<string> TranslateTextAsync(string inputText, string inputLang = "en")
         {
+            if (String.IsNullOrEmpty(inputText))
+            {
+                return inputText;
+            }
+
             var accessToken = await MessageTranslator.GetAuthenticationTokenAsync(ConfigurationManager.AppSettings["TranslatorApiKey"]);
             if(accessToken==null)
             {
@@ -84,10 +94,10 @@
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 var response = await client.GetAsync(System.Configuration.ConfigurationManager.AppSettings["translatorEndpoint"] + query);
-                if (response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode && response.Content != null)
                 {
                     var result = await response.Content.ReadAsStringAsync();
-                    if (result != null)
+                    if (!String.IsNullOrEmpty(result))
                     {
                         var translatedText = XElement.Parse(result).Value;
                         return translatedText;
