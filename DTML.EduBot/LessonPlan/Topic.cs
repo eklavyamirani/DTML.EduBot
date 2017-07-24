@@ -11,7 +11,6 @@
     public class Topic
     {
         private ICollection<string> answerOptions = new List<string>();
-        private ICollection<string> wrapUpPhrases = new List<string>();
 
         [JsonProperty("question", Required = Required.Always)]
         public string Question { get; set; }
