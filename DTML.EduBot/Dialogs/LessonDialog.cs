@@ -18,13 +18,10 @@
         private readonly int MAX_ATTEMPT = 2;
         private Lesson lesson;
 
-        private const string Yes = "Yes";
-        private const string No = "No";
-
         private static readonly IEnumerable<string> YesNoChoices = new ReadOnlyCollection<string>
             (new List<String> {
-                Yes,
-                No });
+                Constants.Shared.Yes,
+                Constants.Shared.No });
 
         public LessonDialog(Lesson lesson)
         {
@@ -230,7 +227,7 @@
         private async Task AfterWrapUpCurrentLesson(IDialogContext context, IAwaitable<string> result)
         {
             var selection = await result as string;
-            if (selection.Equals(Yes, StringComparison.InvariantCultureIgnoreCase))
+            if (selection.Equals(Constants.Shared.Yes, StringComparison.InvariantCultureIgnoreCase))
             {
                 context.Call(new QuizDialog(lesson.Quiz), this.AfterQuizFinished);
             }

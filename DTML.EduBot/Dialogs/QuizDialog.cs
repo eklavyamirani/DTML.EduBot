@@ -73,7 +73,16 @@
 
         private async Task CheckAnswerOptionsAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
-            var studentAnswer = (await result).Text;
+            var studentAnswer = "";
+            try
+            {
+                studentAnswer = (await result).Text;
+            }
+            catch (Exception)
+            {
+                // Swallow exception for the demo purpose
+                // TODO log the exception
+            }
 
             var question = quiz.Questions.ElementAtOrDefault(quiz.currentQuestion);
             if (question == null)
