@@ -16,6 +16,7 @@ namespace DTML.EduBot.Dialogs
         {
             string botresponse = BotPersonality.GetRandomGreeting(); 
             await context.PostAsync(botresponse);
+
         }
 
         [LuisIntent("Courtesy")]

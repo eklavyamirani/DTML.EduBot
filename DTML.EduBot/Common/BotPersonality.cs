@@ -21,7 +21,9 @@ namespace DTML.EduBot.Common
                 "Hello there my friend, \n How is your day so far?",
                 "Hi buddy, good to see you \n How are you doing today?",
                 "Long time, I missed you, \n How have you been?",
-                "Good to see you my friend, \n How are you doing?"
+                "Good to see you my friend, \n How are you doing?",
+                "Hi.",
+
             };
 
          private readonly static IReadOnlyList<string> AcquaintanceQs = new List<string>
@@ -37,7 +39,8 @@ namespace DTML.EduBot.Common
             {
                 "Great!", "Good!", "Awesome!!",
                 "Very good","Perfect!", "Interesting!",
-                "Amazing", "Excellent!", "Super"
+                "Amazing", "Excellent!", "Super", "Okay",
+                "cool", "nice", "Stupendous."
             };
 
 
