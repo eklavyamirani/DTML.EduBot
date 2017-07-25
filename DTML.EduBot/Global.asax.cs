@@ -1,4 +1,6 @@
-﻿namespace DTML.EduBot
+﻿using DTML.EduBot.UserData;
+
+namespace DTML.EduBot
 {
     using System.Reflection;
     using System.Web.Http;
@@ -23,6 +25,7 @@
 
             builder.RegisterModule(new LessonPlanModule());
             builder.RegisterModule(new BasicDialogModule());
+            builder.RegisterModule(new UserDataModule());
 
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
