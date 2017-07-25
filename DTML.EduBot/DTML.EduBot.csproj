@@ -141,14 +141,13 @@
     <Compile Include="Dialogs\BasicDialogModule.cs" />
     <Compile Include="Dialogs\GreetingDialog.cs" />
     <Compile Include="Dialogs\HelpDialog.cs" />
-    <Compile Include="Dialogs\IAmDialog.cs" />
     <Compile Include="Dialogs\LessonDialog.cs" />
     <Compile Include="Dialogs\LessonPlanDialog.cs" />
     <Compile Include="Dialogs\OpenEndedDialog.cs" />
     <Compile Include="Dialogs\QnaLuisDialog.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
     <Compile Include="Dialogs\UserInformation.cs" />
-    <Compile Include="Dialogs\ChitChatDialog.cs" />
+    <Compile Include="Dialogs\NoneDialog.cs" />
     <Compile Include="Dialogs\WhatIsDialog.cs" />
     <Compile Include="Extensions\Require.cs" />
     <Compile Include="Extensions\Set.cs" />

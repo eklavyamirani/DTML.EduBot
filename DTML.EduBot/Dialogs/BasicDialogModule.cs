@@ -10,7 +10,7 @@
 
             builder.RegisterType<RootDialog>();
             builder.RegisterType<LessonPlanDialog>();
-            builder.RegisterType<ChitChatDialog>();
+            builder.RegisterType<NoneDialog>();
 
         }
     }

@@ -11,7 +11,7 @@ using DTML.EduBot.Common;
 
 namespace DTML.EduBot.Dialogs
 {
-    public partial class ChitChatDialog : QnaLuisDialog<object>
+    public partial class NoneDialog : QnaLuisDialog<object>
     {
         [LuisIntent("OpenEndedQuestion")]
         public async Task HandleOpenEndedQuestion(IDialogContext context, LuisResult result)
