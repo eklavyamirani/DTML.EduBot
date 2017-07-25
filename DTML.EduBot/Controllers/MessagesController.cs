@@ -56,7 +56,7 @@
                     using (ConnectorClient connector = new ConnectorClient(new Uri(message.ServiceUrl)))
                     {
                         // TODO: start the root activity here.
-                        Activity reply = message.CreateReply($"Hi I am {BotPersonality.BotName}.");
+                        Activity reply = message.CreateReply(BotPersonality.BotSelfIntroduction);
                         await connector.Conversations.ReplyToActivityAsync(reply);
                     }
                 }
