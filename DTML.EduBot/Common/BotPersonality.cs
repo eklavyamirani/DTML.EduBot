@@ -9,6 +9,7 @@ namespace DTML.EduBot.Common
     public class BotPersonality
     {
         private static int Index = 0;
+        public const string BotSelfIntroduction = "Hi I am " + BotName + ".";
         public const string BotName = "Professor Edword";
         public const string UserNameQuestion = "What is your name?";
         public const string BotResponseUnrecognizedIntent = "I'm still learning just as you are, I will think and get back to you";

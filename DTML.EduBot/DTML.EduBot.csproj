@@ -169,6 +169,10 @@
     <Compile Include="Qna\QnaResult.cs" />
     <Compile Include="Qna\QnaResultCollection.cs" />
     <Compile Include="Qna\QnaService.cs" />
+    <Compile Include="UserData\IUserDataRepository.cs" />
+    <Compile Include="UserData\UserData.cs" />
+    <Compile Include="UserData\UserDataModule.cs" />
+    <Compile Include="UserData\UserDataRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
