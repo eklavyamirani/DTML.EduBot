@@ -36,6 +36,11 @@
                     await HandleSystemMessageAsync(activity);
                 }
                 var response = Request.CreateResponse(HttpStatusCode.OK);
+                //Log verbose information in App Insights
+                /*
+                ErrorHandling.EduBotAILogger aILogger = new ErrorHandling.EduBotAILogger();
+                aILogger.logVerboseTrace("Message Controller - HttpResponse", "Response", "No additional details");
+                */
                 return response;
             }
             catch (Exception ex)
