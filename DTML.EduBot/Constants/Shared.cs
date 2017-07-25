@@ -21,5 +21,11 @@ namespace DTML.EduBot.Constants
         public const string StartTheLessonPlan = "Start English Lesson Plan";
 
         public const string TooManyAttemptMessage = "Sorry, you have attempted too many times :(";
+
+        public const string LevelOne = "1";
+        public const string LevelTwo = "2";
+        public const string LevelThree = "3";
+        public const string LevelFour = "4";
+        public const string LevelFive = "5";
     }
 }
