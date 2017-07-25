@@ -169,7 +169,7 @@
             }
             catch (TooManyAttemptsException)
             {
-                await Conversation.SendAsync(context.MakeMessage(), () => this);
+                await this.StartAsync(context);
             }
         }
 
@@ -202,13 +202,14 @@
             }
             catch (TooManyAttemptsException)
             {
-                await Conversation.SendAsync(context.MakeMessage(), () => this);
+                await this.StartAsync(context);
             }
         }
 
         private async Task AfterDialogEnded(IDialogContext context, IAwaitable<object> result)
         {
-            await Conversation.SendAsync(context.MakeMessage(), () => this);
+            // BUG: this actually waits for user to respond. Needs to be proactive.		 +            try
+            await this.StartAsync(context);
         }
 
         private async Task AfterChoosingLanguageSwitch(IDialogContext context, IAwaitable<object> result)
@@ -257,7 +258,7 @@
 
                     await context.PostAsync($"{translatedTooManyAttemptMessage}");
                 }
-                await Conversation.SendAsync(context.MakeMessage(), () => this);
+                await this.StartAsync(context);
             }
         }
     }
