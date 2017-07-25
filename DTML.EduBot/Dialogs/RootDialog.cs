@@ -49,7 +49,7 @@
 
             using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
             {
-                UserData.UserData userData = new UserData.UserData();
+                UserData userData = new UserData();
                 userData.UserId = context.Activity.From.Id;
                 userData.NativeLanguageIsoCode = detectedLanguageIsoCode;
 
@@ -113,7 +113,7 @@
             string nativeLanguageIsoCode = MessageTranslator.DEFAULT_LANGUAGE;
             using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
             {
-                UserData.UserData userData = scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
+                UserData userData = scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
                 nativeLanguageIsoCode = userData.NativeLanguageIsoCode;
             }
 
@@ -171,7 +171,7 @@
 
                 using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
                 {
-                    UserData.UserData userData = scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
+                    UserData userData = scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
                     string nativeLanguageIsoCode = userData.NativeLanguageIsoCode;
 
                     string translatedChatWithBot = await MessageTranslator.TranslateTextAsync(ChatWithBot,
@@ -209,7 +209,7 @@
             {
                 using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
                 {
-                    UserData.UserData userData = scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
+                    UserData userData = scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
 
                     string translatedYes = await MessageTranslator.TranslateTextAsync(Yes, userData.NativeLanguageIsoCode);
                     string translatedNo = await MessageTranslator.TranslateTextAsync(No, userData.NativeLanguageIsoCode);
@@ -240,7 +240,7 @@
             {
                 using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
                 {
-                    UserData.UserData userData =
+                    UserData userData =
                         scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
                     
                     string translatedTooManyAttemptMessage = await MessageTranslator.TranslateTextAsync(TooManyAttemptMessage, userData.NativeLanguageIsoCode);
