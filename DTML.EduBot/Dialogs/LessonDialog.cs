@@ -155,7 +155,10 @@
             await context.PostAsync(topic.PronounciationPhrase);
 
             // client handling at: https://github.com/eklavyamirani/BotFramework-WebChat/commit/a0cc2cf87563414c558691583788bbd8e8c8f6a2
-            await context.SayAsync(topic.CorrectAnswer, topic.CorrectAnswer);
+            await context.SayAsync(topic.CorrectAnswer, topic.CorrectAnswer, new MessageOptions
+            {
+                InputHint = "expectingInput"
+            });
         }
 
         private Task WrapUpCurrentTopic(IDialogContext context, Topic topic)
