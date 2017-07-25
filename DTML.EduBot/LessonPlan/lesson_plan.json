@@ -2,7 +2,7 @@
     "lessons":[  
         {  
           "lesson_title":"A few words every day",
-          "topics":[
+          "topics": [
             {
               "question": "Lets start off with 10 questions. Please identify the image below:",
               "image_url": "https://images.contentful.com/6m9bd13t776q/6KmARX9mUwsuG4O8YsI8KY/4f68bd0d9d9d4d8a1ab5307f0fa59679/which-baby-names-stand-time-test-2160x1200.jpg",
@@ -26,23 +26,39 @@
               "wrong_answer_bot_response": "Oops, that's not right, try again",
               "pronounciation_phrase": "Nice! Here is how you say it, Repeat after me.",
               "next_topic_phrase": "I got it",
-              "stay_on_current_topic_phrase":  "Say it again"
+              "stay_on_current_topic_phrase": "Say it again"
             },
-            {  
-                "question":"Good job! Lets keep going. Can you tell me what this is?",
-                "image_url":"http://www.naturalheightgrowth.com/wp-content/uploads/2016/06/milk-006.jpg",
-                "answer_options":[  
-                    "A BOY",
-                    "A FISH",
-                    "THE MILK"
-                ],
-                "correct_answer":"THE MILK",
-                "correct_answer_bot_response":"Wow good job! Type it in now",
-                "wrong_answer_bot_response":"Sorry, incorrect, try again",
-                "pronounciation_phrase":"Good! Now repeat after me",
-                "next_topic_phrase": "I got it",
-                "stay_on_current_topic_phrase":  "Say it again"
-             }
+            {
+              "question": "Good job! Lets keep going. Can you tell me what this is?",
+              "image_url": "http://www.naturalheightgrowth.com/wp-content/uploads/2016/06/milk-006.jpg",
+              "answer_options": [
+                "A BOY",
+                "A FISH",
+                "THE MILK"
+              ],
+              "correct_answer": "THE MILK",
+              "correct_answer_bot_response": "Wow good job! Type it in now",
+              "wrong_answer_bot_response": "Sorry, incorrect, try again",
+              "pronounciation_phrase": "Good! Now repeat after me",
+              "next_topic_phrase": "I got it",
+              "stay_on_current_topic_phrase": "Say it again"
+            }
+          ],
+          "test": [
+            {
+              "question": "This is an:",
+              "image_url": "https://images.contentful.com/6m9bd13t776q/6KmARX9mUwsuG4O8YsI8KY/4f68bd0d9d9d4d8a1ab5307f0fa59679/which-baby-names-stand-time-test-2160x1200.jpg",
+              "correct_answer": "apple",
+              "correct_answer_bot_response": "Correct!",
+              "wrong_answer_bot_response": "Oops, that's not right, try again"
+            },
+            {
+              "question": "This is a:",
+              "image_url": "https://static.pexels.com/photos/39803/pexels-photo-39803.jpeg",
+              "correct_answer": "baby",
+              "correct_answer_bot_response": "Right!",
+              "wrong_answer_bot_response": "Oops, that's not right, try again"
+            }
           ]
         }
     ]

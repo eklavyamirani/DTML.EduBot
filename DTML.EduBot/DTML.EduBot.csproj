@@ -157,6 +157,7 @@
     <Compile Include="LessonPlan\LessonPlanModule.cs" />
     <Compile Include="LessonPlan\Lesson.cs" />
     <Compile Include="LessonPlan\LessonPlan.cs" />
+    <Compile Include="LessonPlan\TestQuestion.cs" />
     <Compile Include="LessonPlan\Topic.cs" />
     <Compile Include="Models\StudentResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
