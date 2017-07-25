@@ -139,6 +139,7 @@
     <Compile Include="Constants\Shared.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Dialogs\BasicDialogModule.cs" />
+    <Compile Include="Dialogs\QuizDialog.cs" />
     <Compile Include="Dialogs\GreetingDialog.cs" />
     <Compile Include="Dialogs\IAmDialog.cs" />
     <Compile Include="Dialogs\LessonDialog.cs" />
@@ -157,7 +158,8 @@
     <Compile Include="LessonPlan\LessonPlanModule.cs" />
     <Compile Include="LessonPlan\Lesson.cs" />
     <Compile Include="LessonPlan\LessonPlan.cs" />
-    <Compile Include="LessonPlan\TestQuestion.cs" />
+    <Compile Include="LessonPlan\Quiz.cs" />
+    <Compile Include="LessonPlan\QuizQuestion.cs" />
     <Compile Include="LessonPlan\Topic.cs" />
     <Compile Include="Models\StudentResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
