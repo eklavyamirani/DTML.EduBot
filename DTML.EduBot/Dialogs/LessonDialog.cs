@@ -185,66 +185,35 @@
             }
 
             await context.PostAsync(Constants.Shared.CorrectAnswerMessage);
-            await this.WrapUpCurrentTopic(context, topic);
+            await this.WrapUpCurrentTopic(context);
         }
 
-        private Task WrapUpCurrentTopic(IDialogContext context, Topic topic)
+        private async Task WrapUpCurrentTopic(IDialogContext context)
         {
-            ICollection<string> wrapUpPhrases = new List<string>();
-            wrapUpPhrases.Add(topic.NextTopicPhrase);
-            wrapUpPhrases.Add(topic.StayOnCurrentTopicPhrase);
+            string topicMessage = Constants.Shared.TopicCompleteMessage;
 
-            PromptDialog.Choice(
-                context,
-                this.AfterWrapUpCurrentTopic,
-                wrapUpPhrases,
-                "This marks the end of current topic!",
-                "I am sorry but I didn't understand that. I need you to select one of the options below",
-                attempts: MAX_ATTEMPT);
-
-            return Task.CompletedTask;
-        }
-
-        private async Task AfterWrapUpCurrentTopic(IDialogContext context, IAwaitable<string> result)
-        {
-            var topic = lesson.Topics.ElementAtOrDefault(lesson.currentTopic);
-            if (topic == null)
+            // display number of stars for number of topics done
+            for (int i = 0; i < lesson.currentTopic + 1; i++)
             {
-                return;
+                topicMessage += "\U00002B50";
             }
+            await context.PostAsync(topicMessage);
 
-            try
+            if (lesson.currentTopic >= lesson.Topics.Count - 1)
+            // after finish last topic, ask if they want to take lesson's quiz
             {
-                var selection = await result as string;
-                
-                if (topic.NextTopicPhrase.Equals(selection))
-                {
-                    if (lesson.currentTopic >= lesson.Topics.Count - 1)
-                        // after finish last topic, ask if they want to take lesson's quiz
-                    {
-                        await context.PostAsync("You completed all the topics. Congratulations!");
-                        PromptDialog.Choice(
-                            context,
-                            this.AfterWrapUpCurrentLesson,
-                            YesNoChoices,
-                            "Are you ready for the quiz?",
-                            "I am sorry but I didn't understand that. I need you to select one of the options below",
-                            attempts: MAX_ATTEMPT);
-                    }
-                    else
-                    {
-                        lesson.currentTopic++;
-                        await this.StartAsync(context);
-                    }
-                }
-                else if (topic.StayOnCurrentTopicPhrase.Equals(selection))
-                {
-                    // TODO: Why null?
-                    await this.PronounceLearnedPhrase(context, null);
-                }
+                await context.PostAsync("You completed all the topics. Congratulations!");
+                PromptDialog.Choice(
+                    context,
+                    this.AfterWrapUpCurrentLesson,
+                    YesNoChoices,
+                    "Are you ready for the quiz?",
+                    "I am sorry but I didn't understand that. I need you to select one of the options below",
+                    attempts: MAX_ATTEMPT);
             }
-            catch (TooManyAttemptsException)
+            else
             {
+                lesson.currentTopic++;
                 await this.StartAsync(context);
             }
         }

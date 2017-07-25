@@ -38,13 +38,5 @@
         [DefaultValue("Good work! Here is how you say it, Repeat after me.")]
         [JsonProperty("pronounciation_phrase", DefaultValueHandling = DefaultValueHandling.Populate)]
         public string PronounciationPhrase { get; set; }
-
-        [DefaultValue("I got it")]
-        [JsonProperty("next_topic_phrase", DefaultValueHandling = DefaultValueHandling.Populate)]
-        public string NextTopicPhrase { get; set; }
-
-        [DefaultValue("Say it again")]
-        [JsonProperty("stay_on_current_topic_phrase", DefaultValueHandling = DefaultValueHandling.Populate)]
-        public string StayOnCurrentTopicPhrase { get; set; }
     }
 }
