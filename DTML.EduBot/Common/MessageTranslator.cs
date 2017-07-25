@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Net.Http;
     using System.Net.Http.Headers;
@@ -108,5 +109,17 @@
             }
         }
 
+        public static async Task<ICollection<string>> TranslatedChoices(IEnumerable<string> choices, string languageToTranslate)
+        {
+            ICollection<string> translatedChoices = new Collection<string>();
+
+            foreach (string choice in choices)
+            {
+                string translatedChoice = await MessageTranslator.TranslateTextAsync(choice, languageToTranslate);
+                translatedChoices.Add(translatedChoice);
+            }
+
+            return translatedChoices;
+        }
     }
 }

@@ -10,30 +10,22 @@
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
     using DTML.EduBot.Common;
+    using DTML.EduBot.Constants;
     using DTML.EduBot.UserData;
 
     [Serializable]
     public class RootDialog : IDialog<string>
     {
-        private readonly int MAX_ATTEMPT = 2;
-
-        private const string Yes = "Yes";
-        private const string No = "No";
 
         private static readonly IEnumerable<string> YesNoChoices = new ReadOnlyCollection<string>
             (new List<String> {
-                Yes,
-                No});
-
-        private const string ChatWithBot = "Chat With Bot";
-        private const string StartTheLessonPlan = "Start English Lesson Plan";
-
+                Shared.Yes,
+                Shared.No});
+        
         private static readonly IEnumerable<string> DialogChoices = new ReadOnlyCollection<string>
             (new List<String> {
-                ChatWithBot,
-                StartTheLessonPlan});
-
-        private const string TooManyAttemptMessage = "Sorry, you have attempted too many times :(";
+                Shared.ChatWithBot,
+                Shared.StartTheLessonPlan});
 
         public Task StartAsync(IDialogContext context)
         {
@@ -43,7 +35,17 @@
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
-            var userText = (await result).Text;
+            var userText = context.Activity.From.Name;
+
+            try
+            {
+                userText = (await result).Text;
+            }
+            catch (Exception)
+            {
+                // Swallow exception for the demo purpose
+                // TODO log the exception
+            }
             
             string detectedLanguageIsoCode = await MessageTranslator.IdentifyLangAsync(userText);
 
@@ -86,26 +88,36 @@
                     PromptDialog.Choice(
                         context,
                         this.AfterChoosingLanguageSwitch,
-                        await this.TranslatedChoices(YesNoChoices, detectedLanguageIsoCode),
+                        await MessageTranslator.TranslatedChoices(YesNoChoices, detectedLanguageIsoCode),
                         translatedSwitchQuestion,
                         translatedDontUnderstand,
-                        attempts: MAX_ATTEMPT
+                        attempts: Shared.MaxAttempt
                     );
                 }
             }
         }
 
-        private Task UserNameReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
+        private async Task UserNameReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
+            var userText = context.Activity.From.Name;
+
+            try
+            {
+                userText = (await result).Text;
+            }
+            catch (Exception)
+            {
+                // Swallow exception for the demo purpose
+                // TODO log the exception
+            }
+
             PromptDialog.Choice(
                 context,
                 this.AfterDialogChoiceSelectedAsync,
                 DialogChoices,
-                $"Hello Dear {result.GetAwaiter().GetResult().Text},\n What would you like to do.",
+                $"Hello Dear {userText},\n What would you like to do.",
                 "I am sorry but I didn't understand that. I need you to select one of the options below",
-                attempts: MAX_ATTEMPT);
-
-            return Task.CompletedTask;
+                attempts: Shared.MaxAttempt);
         }
 
         private async Task UserNameReceivedInNativeLanguageAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
@@ -128,10 +140,10 @@
             PromptDialog.Choice(
                 context,
                 this.AfterDialogChoiceSelectedInNativeLanguageAsync,
-                await this.TranslatedChoices(DialogChoices, nativeLanguageIsoCode),
+                await MessageTranslator.TranslatedChoices(DialogChoices, nativeLanguageIsoCode),
                 translatedWhatToDo,
                 translatedNotUnderstandSelection,
-                attempts: MAX_ATTEMPT);
+                attempts: Shared.MaxAttempt);
         }
 
         private async Task AfterDialogChoiceSelectedAsync(IDialogContext context, IAwaitable<string> result)
@@ -140,18 +152,16 @@
             {
                 var selection = await result;
 
-                // TODO: enum.
                 using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
                 {
-                    // TODO: enum.
                     switch (selection)
                     {
-                        case ChatWithBot:
+                        case Shared.ChatWithBot:
                             await context.PostAsync("Great! Say Hello, and see what will I respond!");
                             context.Call(scope.Resolve<ChitChatDialog>(), this.AfterDialogEnded);
                             break;
 
-                        case StartTheLessonPlan:
+                        case Shared.StartTheLessonPlan:
                             context.Call(scope.Resolve<LessonPlanDialog>(), this.AfterDialogEnded);
                             break;
                     }
@@ -174,9 +184,9 @@
                     UserData userData = scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
                     string nativeLanguageIsoCode = userData.NativeLanguageIsoCode;
 
-                    string translatedChatWithBot = await MessageTranslator.TranslateTextAsync(ChatWithBot,
+                    string translatedChatWithBot = await MessageTranslator.TranslateTextAsync(Shared.ChatWithBot,
                         nativeLanguageIsoCode);
-                    string translatedStartTheLessonPlan = await MessageTranslator.TranslateTextAsync(StartTheLessonPlan,
+                    string translatedStartTheLessonPlan = await MessageTranslator.TranslateTextAsync(Shared.StartTheLessonPlan,
                         nativeLanguageIsoCode);
 
                     if (translatedChatWithBot.Equals(selection, StringComparison.OrdinalIgnoreCase))
@@ -211,8 +221,8 @@
                 {
                     UserData userData = scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
 
-                    string translatedYes = await MessageTranslator.TranslateTextAsync(Yes, userData.NativeLanguageIsoCode);
-                    string translatedNo = await MessageTranslator.TranslateTextAsync(No, userData.NativeLanguageIsoCode);
+                    string translatedYes = await MessageTranslator.TranslateTextAsync(Shared.Yes.ToString(), userData.NativeLanguageIsoCode);
+                    string translatedNo = await MessageTranslator.TranslateTextAsync(Shared.No, userData.NativeLanguageIsoCode);
 
                     if (translatedYes.Equals(response, StringComparison.OrdinalIgnoreCase))
                     {
@@ -243,25 +253,12 @@
                     UserData userData =
                         scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
                     
-                    string translatedTooManyAttemptMessage = await MessageTranslator.TranslateTextAsync(TooManyAttemptMessage, userData.NativeLanguageIsoCode);
+                    string translatedTooManyAttemptMessage = await MessageTranslator.TranslateTextAsync(Shared.TooManyAttemptMessage, userData.NativeLanguageIsoCode);
 
                     await context.PostAsync($"{translatedTooManyAttemptMessage}");
                 }
                 await Conversation.SendAsync(context.MakeMessage(), () => this);
             }
-        }
-
-        private async Task<ICollection<string>> TranslatedChoices(IEnumerable<string> choices, string languageToTranslate)
-        {
-            ICollection<string> translatedChoices = new Collection<string>();
-
-            foreach (string choice in choices)
-            {
-                string translatedChoice = await MessageTranslator.TranslateTextAsync(choice, languageToTranslate);
-                translatedChoices.Add(translatedChoice);
-            }
-
-            return translatedChoices;
         }
     }
 }
