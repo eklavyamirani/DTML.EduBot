@@ -145,20 +145,40 @@
                 return;
             }
 
+            await context.PostAsync(Constants.Shared.CorrectAnswerMessage);
             await this.PostAudioInstruction(context, topic);
-
-            await this.WrapUpCurrentTopic(context, topic);
+            context.Wait(CheckAudioExercise);
         }
 
         private async Task PostAudioInstruction(IDialogContext context, Topic topic)
         {
-            await context.PostAsync(topic.PronounciationPhrase);
+            await context.PostAsync(Constants.Shared.RepeatAfterMe);
 
             // client handling at: https://github.com/eklavyamirani/BotFramework-WebChat/commit/a0cc2cf87563414c558691583788bbd8e8c8f6a2
             await context.SayAsync(topic.CorrectAnswer, topic.CorrectAnswer, new MessageOptions
             {
                 InputHint = "expectingInput"
             });
+        }
+
+        private async Task CheckAudioExercise(IDialogContext context, IAwaitable<IMessageActivity> responseActivity)
+        {
+            var response = await responseActivity;
+            // TODO: property
+            var topic = lesson.Topics.ElementAtOrDefault(lesson.currentTopic);
+            if (topic == null)
+            {
+                return;
+            }
+
+            if (response == null || !topic.CorrectAnswer.Equals(response.Text, StringComparison.InvariantCultureIgnoreCase))
+            {
+                await this.PostAudioInstruction(context, topic);
+                return;
+            }
+
+            await context.PostAsync(Constants.Shared.CorrectAnswerMessage);
+            await this.WrapUpCurrentTopic(context, topic);
         }
 
         private Task WrapUpCurrentTopic(IDialogContext context, Topic topic)
@@ -205,6 +225,7 @@
                 }
                 else if (topic.StayOnCurrentTopicPhrase.Equals(selection))
                 {
+                    // TODO: Why null?
                     await this.PronounceLearnedPhrase(context, null);
                 }
             }
