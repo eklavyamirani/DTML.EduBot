@@ -162,7 +162,7 @@
                             break;
 
                         case Shared.StartTheLessonPlan:
-                            context.Call(scope.Resolve<LessonPlanDialog>(), this.AfterDialogEnded);
+                            context.Call(scope.Resolve<LevelDialog>(), this.AfterDialogEnded);
                             break;
                     }
                 }

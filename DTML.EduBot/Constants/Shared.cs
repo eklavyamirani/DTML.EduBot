@@ -23,5 +23,11 @@ namespace DTML.EduBot.Constants
         public const string TooManyAttemptMessage = "Sorry, you have attempted too many times :(";
         public const string RepeatAfterMe = "Hear and repeat the phrase below:";
         public const string CorrectAnswerMessage = "That is correct.!";
+
+        public const string LevelOne = "1";
+        public const string LevelTwo = "2";
+        public const string LevelThree = "3";
+        public const string LevelFour = "4";
+        public const string LevelFive = "5";
     }
 }
