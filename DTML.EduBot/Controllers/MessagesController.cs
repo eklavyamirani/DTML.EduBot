@@ -21,19 +21,27 @@
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
-            if (activity.Type == ActivityTypes.Message)
+            try
             {
-                using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
+                if (activity.Type == ActivityTypes.Message)
                 {
-                    await Conversation.SendAsync(activity, () => scope.Resolve<RootDialog>());
+                    using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
+                    {
+                        await Conversation.SendAsync(activity, () => scope.Resolve<RootDialog>());
+                    }
                 }
+                else
+                {
+                    await HandleSystemMessageAsync(activity);
+                }
+                var response = Request.CreateResponse(HttpStatusCode.OK);
+                return response;
             }
-            else
+            catch(Exception e)
             {
-                await HandleSystemMessageAsync(activity);
+                e.Data.Add("id", activity.From.Id);
+                throw e;
             }
-            var response = Request.CreateResponse(HttpStatusCode.OK);
-            return response;
         }
 
         private async Task<Activity> HandleSystemMessageAsync(Activity message)

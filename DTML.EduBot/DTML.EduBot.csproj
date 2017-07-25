@@ -135,6 +135,7 @@
     <Compile Include="Common\BotPersonality.cs" />
     <Compile Include="Common\ChatContext.cs" />
     <Compile Include="Common\MessageTranslator.cs" />
+    <Compile Include="Common\TraceSourceExceptionLogger.cs" />
     <Compile Include="Constants\BotEntities.cs" />
     <Compile Include="Constants\Shared.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
