@@ -10,12 +10,18 @@
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
     using Models;
+    using System.Collections.ObjectModel;
 
     [Serializable]
     public class LessonDialog : IDialog<string>
     {
         private readonly int MAX_ATTEMPT = 2;
         private Lesson lesson;
+
+        private static readonly IEnumerable<string> YesNoChoices = new ReadOnlyCollection<string>
+            (new List<String> {
+                Constants.Shared.Yes,
+                Constants.Shared.No });
 
         public LessonDialog(Lesson lesson)
         {
@@ -213,9 +219,16 @@
                 if (topic.NextTopicPhrase.Equals(selection))
                 {
                     if (lesson.currentTopic >= lesson.Topics.Count - 1)
-                        // reaching the end of the topic for current lesson
+                        // after finish last topic, ask if they want to take lesson's quiz
                     {
-                        context.Done("This is the end of the current lesson. Thank you!");
+                        await context.PostAsync("You completed all the topics. Congratulations!");
+                        PromptDialog.Choice(
+                            context,
+                            this.AfterWrapUpCurrentLesson,
+                            YesNoChoices,
+                            "Are you ready for the quiz?",
+                            "I am sorry but I didn't understand that. I need you to select one of the options below",
+                            attempts: MAX_ATTEMPT);
                     }
                     else
                     {
@@ -233,6 +246,27 @@
             {
                 await this.StartAsync(context);
             }
+        }
+
+        private async Task AfterWrapUpCurrentLesson(IDialogContext context, IAwaitable<string> result)
+        {
+            var selection = await result as string;
+            if (selection.Equals(Constants.Shared.Yes, StringComparison.InvariantCultureIgnoreCase))
+            {
+                context.Call(new QuizDialog(lesson.Quiz), this.AfterQuizFinished);
+            }
+            else
+            {
+                context.Done("This is the end of the current lesson. Thank you!");
+            }
+        }
+
+        private async Task AfterQuizFinished(IDialogContext context, IAwaitable<string> result)
+        {
+            // The current lesson finished. Plug in Analytics.
+            var finalMessage = await result;
+            await context.PostAsync(finalMessage);
+            context.Done("This is the end of the current lesson. Thank you!");
         }
 
         private async Task<dynamic> ExtractMessageValue(IAwaitable<IMessageActivity> result)

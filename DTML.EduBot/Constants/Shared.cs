@@ -12,6 +12,7 @@ namespace DTML.EduBot.Constants
 
         public const string ClientNewLine = "<br/>";
         public const string NoMoreLessonsMessage = "That's all the lessons for today. Have a nice rest of your day!";
+        public const string NoMoreQuizesMessage = "That's all the quiz questions for today.";
 
         public const string Yes = "Yes";
         public const string No = "No";

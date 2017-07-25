@@ -44,22 +44,24 @@
               "stay_on_current_topic_phrase": "Say it again"
             }
           ],
-          "test": [
-            {
-              "question": "This is an:",
-              "image_url": "https://images.contentful.com/6m9bd13t776q/6KmARX9mUwsuG4O8YsI8KY/4f68bd0d9d9d4d8a1ab5307f0fa59679/which-baby-names-stand-time-test-2160x1200.jpg",
-              "correct_answer": "apple",
-              "correct_answer_bot_response": "Correct!",
-              "wrong_answer_bot_response": "Oops, that's not right, try again"
-            },
-            {
-              "question": "This is a:",
-              "image_url": "https://static.pexels.com/photos/39803/pexels-photo-39803.jpeg",
-              "correct_answer": "baby",
-              "correct_answer_bot_response": "Right!",
-              "wrong_answer_bot_response": "Oops, that's not right, try again"
-            }
-          ]
+          "quiz": {
+            "questions": [
+              {
+                "question": "This is an:",
+                "image_url": "https://static.pexels.com/photos/39803/pexels-photo-39803.jpeg",
+                "correct_answer": "apple",
+                "correct_answer_bot_response": "Correct!",
+                "wrong_answer_bot_response": "Oops, that's not right, try again"
+              },
+              {
+                "question": "This is a:",
+                "image_url": "https://images.contentful.com/6m9bd13t776q/6KmARX9mUwsuG4O8YsI8KY/4f68bd0d9d9d4d8a1ab5307f0fa59679/which-baby-names-stand-time-test-2160x1200.jpg",
+                "correct_answer": "baby",
+                "correct_answer_bot_response": "Right!",
+                "wrong_answer_bot_response": "Oops, that's not right, try again"
+              }
+            ]
+          }
         }
     ]
 }
