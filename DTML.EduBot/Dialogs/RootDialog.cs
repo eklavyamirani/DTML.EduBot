@@ -115,7 +115,7 @@
                 context,
                 this.AfterDialogChoiceSelectedAsync,
                 DialogChoices,
-                $"Hello Dear {userText},\n What would you like to do.",
+                $"Hello There {userText},\n What would you like to do.",
                 "I am sorry but I didn't understand that. I need you to select one of the options below",
                 attempts: Shared.MaxAttempt);
         }
