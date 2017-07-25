@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 
 namespace DTML.EduBot.LessonPlan
 {
+    [Serializable]
     public class TestQuestion
     {
         [JsonProperty("question", Required = Required.Always)]
