@@ -20,5 +20,7 @@ namespace DTML.EduBot.Constants
         public const string StartTheLessonPlan = "Start English Lesson Plan";
 
         public const string TooManyAttemptMessage = "Sorry, you have attempted too many times :(";
+        public const string RepeatAfterMe = "Hear and repeat the phrase below:";
+        public const string CorrectAnswerMessage = "That is correct.!";
     }
 }
