@@ -12,6 +12,7 @@
 
     public class MessageTranslator
     {
+        public static readonly string DEFAULT_LANGUAGE = "en";
         /// <summary>
         /// Get authentication token for translator API
         /// </summary>
@@ -39,7 +40,7 @@
         /// <returns></returns>
         public static async Task<string> IdentifyLangAsync(string inputText)
         {
-            string inputTextLang = "en";
+            string inputTextLang = DEFAULT_LANGUAGE;
 
             if (String.IsNullOrWhiteSpace(inputText))
             {
