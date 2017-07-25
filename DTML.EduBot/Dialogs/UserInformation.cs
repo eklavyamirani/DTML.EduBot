@@ -12,15 +12,15 @@ using DTML.EduBot.Constants;
 
 namespace DTML.EduBot.Dialogs
 {
-    public partial class ChitChatDialog : QnaLuisDialog<object>
+    public partial class NoneDialog : QnaLuisDialog<object>
     {
-        [LuisIntent("UserInformation")]
+        [LuisIntent("UserInfo")]
         public async Task HandleUserInformation(IDialogContext context, LuisResult result)
         {
             EntityRecommendation entity;
             string BotResponse = BotPersonality.GetRandomGenericResponse() + Shared.ClientNewLine;
             if (result.TryFindEntity(BotEntities.Name, out entity))
-                {
+            {
 
                 ChatContext.Username = entity.Entity;
                 BotResponse = BotPersonality.BotResponseToUserName + " " + ChatContext.Username + "! " + Shared.ClientNewLine;
@@ -28,6 +28,12 @@ namespace DTML.EduBot.Dialogs
 
             BotResponse += BotPersonality.BuildAcquaintance();
             await context.PostAsync(BotResponse);
+        }
+
+        [LuisIntent("UserEmotion")]
+        public async Task HandleUserEmotion(IDialogContext context, LuisResult result)
+        {
+            await context.PostAsync("");
         }
     }
 }

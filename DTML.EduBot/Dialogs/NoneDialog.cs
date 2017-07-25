@@ -13,7 +13,7 @@
     [PreConfiguredLuisModel]
     [PreConfiguredQnaModel]
     [Serializable]
-    public partial class ChitChatDialog : QnaLuisDialog<object>
+    public partial class NoneDialog : QnaLuisDialog<object>
     {
         [LuisIntent("")]
         [LuisIntent("None")]
@@ -22,10 +22,10 @@
             await context.PostAsync(BotPersonality.BotResponseUnrecognizedIntent);
         }
 
-       [LuisIntent("Gibberish")]
-        public async Task HandleGibberish(IDialogContext context, LuisResult result)
-        {
-            await context.SayAsync(BotPersonality.BotResponseToGibberish, BotPersonality.BotResponseToGibberish);
-        }
+       //[LuisIntent("Gibberish")]
+       // public async Task HandleGibberish(IDialogContext context, LuisResult result)
+       // {
+       //     await context.SayAsync(BotPersonality.BotResponseToGibberish, BotPersonality.BotResponseToGibberish);
+       // }
     }
 }

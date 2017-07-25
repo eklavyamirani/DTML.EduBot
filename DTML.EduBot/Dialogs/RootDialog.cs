@@ -54,7 +54,7 @@
                     {
                         case ChatWithBot:
                             await context.PostAsync("Great! Say Hello, and see what will I respond!");
-                            context.Call(scope.Resolve<ChitChatDialog>(), this.AfterLessonPlan);
+                            context.Call(scope.Resolve<NoneDialog>(), this.AfterLessonPlan);
                             break;
 
                         case StartTheLessonPlan:
