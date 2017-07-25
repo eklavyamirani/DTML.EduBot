@@ -146,6 +146,7 @@
     <Compile Include="Dialogs\OpenEndedDialog.cs" />
     <Compile Include="Dialogs\QnaLuisDialog.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
+    <Compile Include="Dialogs\TranslateDialog.cs" />
     <Compile Include="Dialogs\UserInformation.cs" />
     <Compile Include="Dialogs\NoneDialog.cs" />
     <Compile Include="Dialogs\WhatIsDialog.cs" />
