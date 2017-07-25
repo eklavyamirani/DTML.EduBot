@@ -56,7 +56,8 @@
                 {
                     new TextBlock()
                     {
-                        Text = nextTopic.Question
+                        Text = nextTopic.Question,
+                        Wrap = true
                     },
                     new Image()
                     {
