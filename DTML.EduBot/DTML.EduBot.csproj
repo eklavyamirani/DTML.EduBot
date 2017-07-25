@@ -24,8 +24,8 @@
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
     <Use64BitIISExpress />
-    <ApplicationInsightsResourceId>/subscriptions/b1ddd95a-b697-47b1-96ee-c2a9b506b87f/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/DTML.EduBot</ApplicationInsightsResourceId>
-    <ApplicationInsightsAnnotationResourceId>/subscriptions/b1ddd95a-b697-47b1-96ee-c2a9b506b87f/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/DTML.EduBot</ApplicationInsightsAnnotationResourceId>
+    <ApplicationInsightsResourceId>/subscriptions/43e9d6aa-4a10-4702-a35d-863b8f983bc0/resourcegroups/eduBot/providers/microsoft.insights/components/eduBot</ApplicationInsightsResourceId>
+    <ApplicationInsightsAnnotationResourceId>/subscriptions/43e9d6aa-4a10-4702-a35d-863b8f983bc0/resourceGroups/eduBot/providers/microsoft.insights/components/eduBot</ApplicationInsightsAnnotationResourceId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -93,6 +93,7 @@
     <Reference Include="Microsoft.Bot.Connector, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>$(SolutionDir)\packages\Microsoft.Bot.Builder.3.8.0\lib\net46\Microsoft.Bot.Connector.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.IdentityModel.Protocol.Extensions, Version=1.0.40306.1554, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>$(SolutionDir)\packages\Microsoft.IdentityModel.Protocol.Extensions.1.0.4.403061554\lib\net45\Microsoft.IdentityModel.Protocol.Extensions.dll</HintPath>
@@ -174,6 +175,7 @@
     <Compile Include="Dialogs\UserInformation.cs" />
     <Compile Include="Dialogs\ChitChatDialog.cs" />
     <Compile Include="Dialogs\WhatIsDialog.cs" />
+    <Compile Include="ErrorHandling\AILogger.cs" />
     <Compile Include="Extensions\Require.cs" />
     <Compile Include="Extensions\Set.cs" />
     <Compile Include="Global.asax.cs">
@@ -215,6 +217,7 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
