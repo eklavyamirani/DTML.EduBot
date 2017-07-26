@@ -116,13 +116,6 @@
 
         private async Task UserNameReceivedInNativeLanguageAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
-            string nativeLanguageIsoCode = MessageTranslator.DEFAULT_LANGUAGE;
-            using(var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
-            {
-                UserData userData = scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
-                nativeLanguageIsoCode = userData.NativeLanguageIsoCode;
-            }
-
             IMessageActivity userText = await result;
             string userTextInEnglish = await MessageTranslator.TranslateTextAsync(userText.Text);
             userText.Text = userTextInEnglish;
