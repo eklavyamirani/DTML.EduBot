@@ -5,6 +5,7 @@
     using System.Collections.ObjectModel;
     using System.Globalization;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using Autofac;
     using Microsoft.Bot.Builder.Dialogs;
@@ -16,6 +17,7 @@
     [Serializable]
     public class RootDialog : IDialog<string>
     {
+        private readonly ChitChatDialog _chitChatDialog;
 
         private static readonly IEnumerable<string> YesNoChoices = new ReadOnlyCollection<string>
             (new List<String> {
@@ -26,6 +28,11 @@
             (new List<String> {
                 Shared.ChatWithBot,
                 Shared.StartTheLessonPlan});
+
+        public RootDialog(ChitChatDialog chitChatDialog)
+        {
+            _chitChatDialog = chitChatDialog;
+        }
 
         public Task StartAsync(IDialogContext context)
         {
@@ -68,7 +75,7 @@
                 {
                     // detected user language
 
-                    CultureInfo[] allCultures =CultureInfo.GetCultures(CultureTypes.AllCultures);
+                    CultureInfo[] allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
                     CultureInfo detectedCulture =
                        allCultures
                             .Where(cultureInfo => (detectedLanguageIsoCode.Contains(cultureInfo.TwoLetterISOLanguageName)))
@@ -99,111 +106,29 @@
 
         private async Task UserNameReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
-            var userText = context.Activity.From.Name;
-
-            try
-            {
-                userText = (await result).Text;
-            }
-            catch (Exception)
-            {
-                // Swallow exception for the demo purpose
-                // TODO log the exception
-            }
-
-            PromptDialog.Choice(
-                context,
-                this.AfterDialogChoiceSelectedAsync,
-                DialogChoices,
-                $"Hey there {userText},\n What would you like to do.",
-                Shared.DoNotUnderstand,
-                attempts: Shared.MaxAttempt);
+            var messageActivity = await result;
+            await context.Forward(_chitChatDialog, this.AfterChitChatComplete, messageActivity, CancellationToken.None);
         }
 
         private async Task UserNameReceivedInNativeLanguageAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
             string nativeLanguageIsoCode = MessageTranslator.DEFAULT_LANGUAGE;
-            using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
+            using(var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
             {
                 UserData userData = scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
                 nativeLanguageIsoCode = userData.NativeLanguageIsoCode;
             }
 
-            string translatedWhatToDo =
-                await MessageTranslator.TranslateTextAsync(
-                    $"Hello Dear {result.GetAwaiter().GetResult().Text},\n What would you like to do.", nativeLanguageIsoCode);
-
-            string translatedNotUnderstandSelection =
-                await MessageTranslator.TranslateTextAsync(
-                    Shared.DoNotUnderstand, nativeLanguageIsoCode);
-
-            PromptDialog.Choice(
-                context,
-                this.AfterDialogChoiceSelectedInNativeLanguageAsync,
-                await MessageTranslator.TranslatedChoices(DialogChoices, nativeLanguageIsoCode),
-                translatedWhatToDo,
-                translatedNotUnderstandSelection,
-                attempts: Shared.MaxAttempt);
+            IMessageActivity userText = await result;
+            string userTextInEnglish = await MessageTranslator.TranslateTextAsync(userText.Text);
+            await context.Forward(_chitChatDialog, this.AfterChitChatComplete, new Activity { Text = userTextInEnglish }, CancellationToken.None);
         }
 
-        private async Task AfterDialogChoiceSelectedAsync(IDialogContext context, IAwaitable<string> result)
+        private async Task AfterChitChatComplete(IDialogContext context, IAwaitable<object> result)
         {
-            try
-            {
-                var selection = await result;
-
-                using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
-                {
-                    switch (selection)
-                    {
-                        case Shared.ChatWithBot:
-                            await context.PostAsync("Great! Say Hello, and see what will I respond!");
-                            context.Call(scope.Resolve<ChitChatDialog>(), this.AfterDialogEnded);
-                            break;
-
-                        case Shared.StartTheLessonPlan:
-                            context.Call(scope.Resolve<LevelDialog>(), this.AfterDialogEnded);
-                            break;
-                    }
-                }
-            }
-            catch (TooManyAttemptsException)
-            {
-                await this.StartAsync(context);
-            }
-        }
-
-        private async Task AfterDialogChoiceSelectedInNativeLanguageAsync(IDialogContext context, IAwaitable<string> result)
-        {
-            try
-            {
-                var selection = await result;
-
-                using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
-                {
-                    UserData userData = scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
-                    string nativeLanguageIsoCode = userData.NativeLanguageIsoCode;
-
-                    string translatedChatWithBot = await MessageTranslator.TranslateTextAsync(Shared.ChatWithBot,
-                        nativeLanguageIsoCode);
-                    string translatedStartTheLessonPlan = await MessageTranslator.TranslateTextAsync(Shared.StartTheLessonPlan,
-                        nativeLanguageIsoCode);
-
-                    if (translatedChatWithBot.Equals(selection, StringComparison.OrdinalIgnoreCase))
-                    {
-                        await context.PostAsync("Great! We will now start conversation in English! Excited?");
-                        context.Call(scope.Resolve<ChitChatDialog>(), this.AfterDialogEnded);
-                    }
-                    else if (translatedStartTheLessonPlan.Equals(selection, StringComparison.OrdinalIgnoreCase))
-                    {
-                        context.Call(scope.Resolve<LessonPlanDialog>(), this.AfterDialogEnded);
-                    }
-                }
-            }
-            catch (TooManyAttemptsException)
-            {
-                await this.StartAsync(context);
-            }
+            // Chit chat should never end, error if we get here
+            await context.PostAsync("Sorry, I seem to be getting tired here, I'll take a power nap and get back to you!");
+            await this.StartAsync(context);
         }
 
         private async Task AfterDialogEnded(IDialogContext context, IAwaitable<object> result)
@@ -218,7 +143,7 @@
 
             try
             {
-                using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
+                using(var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
                 {
                     UserData userData = scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
 
@@ -249,15 +174,16 @@
             }
             catch (TooManyAttemptsException)
             {
-                using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
+                using(var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
                 {
                     UserData userData =
                         scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
-                    
+
                     string translatedTooManyAttemptMessage = await MessageTranslator.TranslateTextAsync(Shared.TooManyAttemptMessage, userData.NativeLanguageIsoCode);
 
                     await context.PostAsync($"{translatedTooManyAttemptMessage}");
                 }
+
                 await this.StartAsync(context);
             }
         }
