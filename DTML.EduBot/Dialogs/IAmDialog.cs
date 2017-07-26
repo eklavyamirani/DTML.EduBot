@@ -11,7 +11,7 @@ namespace DTML.EduBot.Dialogs
 {
     public partial class ChitChatDialog : QnaLuisDialog <Object>
     {
-        [LuisIntent("IAm")]
+        [LuisIntent("UserEmotion")]
         public async Task HandleIAmIntent(IDialogContext context, LuisResult result)
         {
            await context.PostAsync(BotPersonality.GetRandomGenericResponse());
