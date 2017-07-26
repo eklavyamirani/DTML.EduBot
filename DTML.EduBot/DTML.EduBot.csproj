@@ -135,6 +135,7 @@
     <Compile Include="Common\BotPersonality.cs" />
     <Compile Include="Common\ChatContext.cs" />
     <Compile Include="Common\MessageTranslator.cs" />
+    <Compile Include="Common\TraceSourceExceptionLogger.cs" />
     <Compile Include="Constants\BotEntities.cs" />
     <Compile Include="Constants\Shared.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Dialogs\OpenEndedDialog.cs" />
     <Compile Include="Dialogs\QnaLuisDialog.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
+    <Compile Include="Dialogs\StartLessonPlanDialog.cs" />
     <Compile Include="Dialogs\UserInformation.cs" />
     <Compile Include="Dialogs\ChitChatDialog.cs" />
     <Compile Include="Dialogs\WhatIsDialog.cs" />

@@ -56,7 +56,7 @@
                 this.AfterLessonSelected,
                 lessonTitle,
                 $"{friendlyUserName} Which lesson would you like to start?",
-                "I am sorry but I didn't understand that. I need you to select one of the options below",
+                Shared.DoNotUnderstand,
                 attempts: Shared.MaxAttempt);
 
             return Task.CompletedTask;
