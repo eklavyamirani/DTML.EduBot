@@ -146,7 +146,6 @@
     <Compile Include="Dialogs\IAmDialog.cs" />
     <Compile Include="Dialogs\LessonDialog.cs" />
     <Compile Include="Dialogs\LessonPlanDialog.cs" />
-    <Compile Include="Dialogs\OpenEndedDialog.cs" />
     <Compile Include="Dialogs\QnaLuisDialog.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
     <Compile Include="Dialogs\StartLessonPlanDialog.cs" />
