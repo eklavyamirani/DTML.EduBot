@@ -146,7 +146,6 @@
     <Compile Include="Dialogs\IAmDialog.cs" />
     <Compile Include="Dialogs\LessonDialog.cs" />
     <Compile Include="Dialogs\LessonPlanDialog.cs" />
-    <Compile Include="Dialogs\OpenEndedDialog.cs" />
     <Compile Include="Dialogs\QnaLuisDialog.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
     <Compile Include="Dialogs\StartLessonPlanDialog.cs" />
@@ -155,6 +154,7 @@
     <Compile Include="Dialogs\WhatIsDialog.cs" />
     <Compile Include="Extensions\Require.cs" />
     <Compile Include="Extensions\Set.cs" />
+    <Compile Include="Gamification\GamerProfile.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

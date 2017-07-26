@@ -14,16 +14,20 @@ namespace DTML.EduBot.Dialogs
 {
     public partial class ChitChatDialog : QnaLuisDialog<object>
     {
-        [LuisIntent("UserInformation")]
+        [LuisIntent("UserInfo")]
         public async Task HandleUserInformation(IDialogContext context, LuisResult result)
         {
             EntityRecommendation entity;
             string BotResponse = BotPersonality.GetRandomGenericResponse() + Shared.ClientNewLine;
             if (result.TryFindEntity(BotEntities.Name, out entity))
-                {
+            {
 
                 ChatContext.Username = entity.Entity;
                 BotResponse = BotPersonality.BotResponseToUserName + " " + ChatContext.Username + "! " + Shared.ClientNewLine;
+            }
+            else
+            {
+                BotResponse = BotPersonality.GetRandomGenericResponse();
             }
 
             BotResponse += BotPersonality.BuildAcquaintance();
