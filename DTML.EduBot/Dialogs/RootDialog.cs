@@ -51,9 +51,13 @@
 
             using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
             {
-                UserData userData = new UserData();
-                userData.UserId = context.Activity.From.Id;
-                userData.NativeLanguageIsoCode = detectedLanguageIsoCode;
+                var userData = scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
+                if (userData == null)
+                {
+                    userData = new UserData();
+                    userData.UserId = context.Activity.From.Id;
+                    userData.NativeLanguageIsoCode = detectedLanguageIsoCode;
+                }
 
                 scope.Resolve<IUserDataRepository>().UpdateUserData(userData);
 
