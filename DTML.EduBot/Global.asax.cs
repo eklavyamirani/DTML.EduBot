@@ -7,6 +7,7 @@ namespace DTML.EduBot
     using Autofac;
     using Autofac.Integration.WebApi;
     using DTML.EduBot.Dialogs;
+    using System;
 
     public class WebApiApplication : System.Web.HttpApplication
     {
@@ -33,6 +34,8 @@ namespace DTML.EduBot
 
             var container = builder.Build();
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", Server.MapPath("translation.json"));
         }
     }
 }
