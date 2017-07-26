@@ -9,12 +9,13 @@ namespace DTML.EduBot.Common
     public class BotPersonality
     {
         private static int Index = 0;
-        public const string BotSelfIntroduction = "Hi I am " + BotName + ".";
+        public const string BotSelfIntroduction = "Hi I am " + BotName;
         public const string BotName = "Professor Edword Jr.";
         public const string UserNameQuestion = "What is your name?";
         public const string BotResponseUnrecognizedIntent = "I'm still learning just as you are, I will think and get back to you";
         public const string BotResponseToGibberish = "Hmm, that doesn't sound right, can you please rephrase?";
         public const string BotResponseToUserName = "That's a nice name";
+        public const string BotResponseToDeclinedLessonPlan = "Aww!Okay let's keep chatting";
 
         private static readonly Random random = new Random();
 
@@ -29,7 +30,7 @@ namespace DTML.EduBot.Common
 
          private readonly static IReadOnlyList<string> AcquaintanceQs = new List<string>
             {
-                "What class are you studying in?",
+                "Which is your favourite animal?",
                 "What is your favorite color?",
                 "What is your favorite food?", 
                 "What did you eat today?",

@@ -21,14 +21,13 @@
             return Task.CompletedTask;
         }
 
-        private Task AskToStartLessonPlan(IDialogContext context)
+        private void AskToStartLessonPlan(IDialogContext context)
         {
             PromptDialog.Confirm(
                 context, 
                 TryStartLessonPlan, 
                 BotPersonality.GetStartLessonPlanQuestion(), 
                 BotPersonality.BotResponseToGibberish);
-            return Task.CompletedTask;
         }
 
         private async Task TryStartLessonPlan(IDialogContext context, IAwaitable<bool> result)
@@ -40,7 +39,8 @@
             }
             else
             {
-                // Ask some other follow up question here
+                await context.PostAsync(BotPersonality.BotResponseToDeclinedLessonPlan);
+                await context.PostAsync(BotPersonality.BuildAcquaintance());
             }
         }
 
