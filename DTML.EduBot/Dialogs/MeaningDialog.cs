@@ -9,6 +9,8 @@
     using DTML.EduBot.Qna;
     using Microsoft.Azure;
     using Attributes;
+    using System.Linq;
+    using DTML.EduBot.Constants;
 
     [PreConfiguredLuisModel]
     [PreConfiguredQnaModel]
@@ -18,7 +20,16 @@
         [LuisIntent("Meaning")]
         public async Task HandleMeaningIntent(IDialogContext context, LuisResult result)
         {
-            await context.PostAsync("");
+            if (result.Entities.Any(e => e.Type == BotEntities.TranslateText))
+            {
+                //TODO: implement dictionary api to get the definition, pronunciation, part of speech, synonnyms, antonyms, etc
+                await context.PostAsync("This is the definition of a word");
+            }
+            else
+            {
+                await context.PostAsync("What is the word you would like to define?");
+            }
+            
         }
     }
 }

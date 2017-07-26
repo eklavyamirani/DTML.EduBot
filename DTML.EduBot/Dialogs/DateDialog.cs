@@ -18,7 +18,8 @@
         [LuisIntent("Date")]
         public async Task HandleDateIntent(IDialogContext context, LuisResult result)
         {
-            await context.PostAsync("");
+            var date = DateTime.Now.ToLongDateString();
+            await context.PostAsync($"Oh yeah, let me check my digital calendar. Today is... {date}");
         }
 
     }

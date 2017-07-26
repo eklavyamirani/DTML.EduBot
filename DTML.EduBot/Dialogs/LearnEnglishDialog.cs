@@ -18,7 +18,8 @@
         [LuisIntent("LearnEnglish")]
         public async Task HandleLearnEnglishIntent(IDialogContext context, LuisResult result)
         {
-            await context.PostAsync("");
+            string botresponse = BotPersonality.GetRandomStartLesson();
+            await context.PostAsync(botresponse);
         }
     }
 }

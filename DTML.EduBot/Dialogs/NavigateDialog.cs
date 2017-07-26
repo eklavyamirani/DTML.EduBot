@@ -9,6 +9,8 @@
     using DTML.EduBot.Qna;
     using Microsoft.Azure;
     using Attributes;
+    using System.Linq;
+    using DTML.EduBot.Constants;
 
     [PreConfiguredLuisModel]
     [PreConfiguredQnaModel]
@@ -18,7 +20,25 @@
         [LuisIntent("Navigate")]
         public async Task HandleNavigateIntent(IDialogContext context, LuisResult result)
         {
-            await context.PostAsync("");
+            if (result.Entities.Any(e => e.Type == BotEntities.Next))
+            {
+                //TODO: move to next item
+                await context.PostAsync("We can move on if that's what you want");
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Previous))
+            {
+                //TODO: move to previous item
+                await context.PostAsync("We can go back if that's what you want");
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.StartOver))
+            {
+                //TODO: start over current item
+                await context.PostAsync("We can start over if that's what you want");
+            }
+            else
+            {
+                await context.PostAsync("Did you want to go somewhere?");
+            }
         }
 
     }
