@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using AdaptiveCards;
     using DTML.EduBot.LessonPlan;
+    using DTML.EduBot.Constants;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
     using Models;
@@ -20,8 +21,8 @@
 
         private static readonly IEnumerable<string> YesNoChoices = new ReadOnlyCollection<string>
             (new List<String> {
-                Constants.Shared.Yes,
-                Constants.Shared.No });
+                Shared.Yes,
+                Shared.No });
 
         public LessonDialog(Lesson lesson)
         {
@@ -33,7 +34,7 @@
             var wasSuccess = await PostAdaptiveCard(context);
             if (!wasSuccess)
             {
-                context.Done(Constants.Shared.NoMoreLessonsMessage);
+                context.Done(Shared.NoMoreLessonsMessage);
                 return;
             }
 
@@ -152,14 +153,14 @@
                 return;
             }
 
-            await context.PostAsync(Constants.Shared.CorrectAnswerMessage);
+            await context.PostAsync(Shared.CorrectAnswerMessage);
             await this.PostAudioInstruction(context, topic);
             context.Wait(CheckAudioExercise);
         }
 
         private async Task PostAudioInstruction(IDialogContext context, Topic topic)
         {
-            await context.PostAsync(Constants.Shared.RepeatAfterMe);
+            await context.PostAsync(Shared.RepeatAfterMe);
 
             // client handling at: https://github.com/eklavyamirani/BotFramework-WebChat/commit/a0cc2cf87563414c558691583788bbd8e8c8f6a2
             await context.SayAsync(topic.CorrectAnswer, topic.CorrectAnswer, new MessageOptions
@@ -184,13 +185,13 @@
                 return;
             }
 
-            await context.PostAsync(Constants.Shared.CorrectAnswerMessage);
+            await context.PostAsync(Shared.CorrectAnswerMessage);
             await this.WrapUpCurrentTopic(context);
         }
 
         private async Task WrapUpCurrentTopic(IDialogContext context)
         {
-            string topicMessage = Constants.Shared.TopicCompleteMessage;
+            string topicMessage = Shared.TopicCompleteMessage;
 
             // display number of stars for number of topics done
             for (int i = 0; i < lesson.currentTopic + 1; i++)
@@ -202,13 +203,13 @@
             if (lesson.currentTopic >= lesson.Topics.Count - 1)
             // after finish last topic, ask if they want to take lesson's quiz
             {
-                await context.PostAsync("You completed all the topics. Congratulations!");
+                await context.PostAsync(Shared.AllTopicsCompleteMessage);
                 PromptDialog.Choice(
                     context,
                     this.AfterWrapUpCurrentLesson,
                     YesNoChoices,
-                    "Are you ready for the quiz?",
-                    "I am sorry but I didn't understand that. I need you to select one of the options below",
+                    Shared.ReadyForQuiz,
+                    Shared.DoNotUnderstand,
                     attempts: MAX_ATTEMPT);
             }
             else
@@ -220,14 +221,22 @@
 
         private async Task AfterWrapUpCurrentLesson(IDialogContext context, IAwaitable<string> result)
         {
-            var selection = await result as string;
-            if (selection.Equals(Constants.Shared.Yes, StringComparison.InvariantCultureIgnoreCase))
+            try
             {
-                context.Call(new QuizDialog(lesson.Quiz), this.AfterQuizFinished);
+                var selection = await result as string;
+                if (selection.Equals(Shared.Yes, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    context.Call(new QuizDialog(lesson.Quiz), this.AfterQuizFinished);
+                }
+                else
+                {
+                    context.Done(Shared.LessonCompleteMessage);
+                }
             }
-            else
+            catch (TooManyAttemptsException)
             {
-                context.Done("This is the end of the current lesson. Thank you!");
+                await context.PostAsync("It looks like you are not ready.");
+                context.Done(Shared.LessonCompleteMessage);
             }
         }
 
@@ -236,7 +245,7 @@
             // The current lesson finished. Plug in Analytics.
             var finalMessage = await result;
             await context.PostAsync(finalMessage);
-            context.Done("This is the end of the current lesson. Thank you!");
+            context.Done(Shared.LessonCompleteMessage);
         }
 
         private async Task<dynamic> ExtractMessageValue(IAwaitable<IMessageActivity> result)

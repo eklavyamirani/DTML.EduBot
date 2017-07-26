@@ -24,8 +24,6 @@ namespace DTML.EduBot.Common
                 context.Request.RequestUri,
                 context.Exception,
                 context.Exception.Data["id"]);
-
-            Console.WriteLine(context.Exception.Data["id"]);
         }
     }
 }
