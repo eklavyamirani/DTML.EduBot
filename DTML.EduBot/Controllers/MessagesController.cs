@@ -15,6 +15,13 @@
     [BotAuthentication]
     public class MessagesController : ApiController
     {
+        private readonly RootDialog _rootDialog;
+
+        public MessagesController(RootDialog rootDialog)
+        {
+            _rootDialog = rootDialog;
+        }
+
         /// <summary>
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
@@ -27,7 +34,7 @@
                 {
                     using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
                     {
-                        await Conversation.SendAsync(activity, () => scope.Resolve<RootDialog>());
+                        await Conversation.SendAsync(activity, () => _rootDialog);
                     }
                 }
                 else
