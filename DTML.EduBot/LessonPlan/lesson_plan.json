@@ -24,9 +24,7 @@
               "correct_answer": "An APPLE",
               "correct_answer_bot_response": "Good! Now, can you type the word?",
               "wrong_answer_bot_response": "Oops, that's not right, try again",
-              "pronounciation_phrase": "Nice! Here is how you say it, Repeat after me.",
-              "next_topic_phrase": "I got it",
-              "stay_on_current_topic_phrase": "Say it again"
+              "pronounciation_phrase": "Nice! Here is how you say it, Repeat after me."
             },
             {
               "question": "Good job! Lets keep going. Can you tell me what this is?",
@@ -39,9 +37,7 @@
               "correct_answer": "THE MILK",
               "correct_answer_bot_response": "Wow good job! Type it in now",
               "wrong_answer_bot_response": "Sorry, incorrect, try again",
-              "pronounciation_phrase": "Good! Now repeat after me",
-              "next_topic_phrase": "I got it",
-              "stay_on_current_topic_phrase": "Say it again"
+              "pronounciation_phrase": "Good! Now repeat after me"
             }
           ],
           "quiz": {

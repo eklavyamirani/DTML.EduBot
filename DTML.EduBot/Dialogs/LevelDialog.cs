@@ -26,7 +26,7 @@
                 this.AfterLevelSelected,
                 LevelChoices,
                 "Which level are you?",
-                "I am sorry but I didn't understand that. I need you to select one of the options below",
+                Shared.DoNotUnderstand,
                 attempts: Shared.MaxAttempt);
 
             return Task.CompletedTask;

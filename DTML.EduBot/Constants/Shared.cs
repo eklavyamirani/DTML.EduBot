@@ -23,6 +23,11 @@ namespace DTML.EduBot.Constants
         public const string TooManyAttemptMessage = "Sorry, you have attempted too many times :(";
         public const string RepeatAfterMe = "Hear and repeat the phrase below:";
         public const string CorrectAnswerMessage = "That is correct.!";
+        public const string TopicCompleteMessage = "WOW! You finished the whole topic! ";
+        public const string LessonCompleteMessage = "This is the end of the current lesson. Thank you!";
+        public const string AllTopicsCompleteMessage = "You completed all the topics. Congratulations!";
+        public const string DoNotUnderstand = "I am sorry but I didn't understand that. I need you to select one of the options below";
+        public const string ReadyForQuiz = "Are you ready for the quiz?";
 
         public const string LevelOne = "1";
         public const string LevelTwo = "2";

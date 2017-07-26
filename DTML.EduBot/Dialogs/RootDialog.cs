@@ -83,7 +83,7 @@
 
                     string translatedSwitchQuestion = await MessageTranslator.TranslateTextAsync($"Do you want to switch to {detectedLanguageName}", detectedLanguageIsoCode);
 
-                    string translatedDontUnderstand = await MessageTranslator.TranslateTextAsync("I am sorry but I didn't understand that. I need you to select one of the options below", detectedLanguageIsoCode);
+                    string translatedDontUnderstand = await MessageTranslator.TranslateTextAsync(Shared.DoNotUnderstand, detectedLanguageIsoCode);
 
                     PromptDialog.Choice(
                         context,
@@ -116,7 +116,7 @@
                 this.AfterDialogChoiceSelectedAsync,
                 DialogChoices,
                 $"Hey there {userText},\n What would you like to do.",
-                "I am sorry but I didn't understand that. I need you to select one of the options below",
+                Shared.DoNotUnderstand,
                 attempts: Shared.MaxAttempt);
         }
 
@@ -135,7 +135,7 @@
 
             string translatedNotUnderstandSelection =
                 await MessageTranslator.TranslateTextAsync(
-                    "I am sorry but I didn't understand that. I need you to select one of the options below", nativeLanguageIsoCode);
+                    Shared.DoNotUnderstand, nativeLanguageIsoCode);
 
             PromptDialog.Choice(
                 context,
