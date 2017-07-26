@@ -11,6 +11,8 @@
     using System.Collections.ObjectModel;
     using UserData;
     using Autofac;
+    using AdaptiveCards;
+    using System.Threading;
 
     [Serializable]
     public class LessonPlanDialog : IDialog<string>
@@ -96,7 +98,38 @@
 
             if (newBadges != null && newBadges.Any())
             {
-                var tasks = newBadges.Select(badge => context.PostAsync($"You unlocked {badge}"));
+                var tasks = newBadges.Select(async badge =>
+                {
+                    AdaptiveCard adaptiveCard = new AdaptiveCard()
+                    {
+                        Body = new List<CardElement>()
+                        {
+                            new Image()
+                            {
+                                Size = ImageSize.Medium,
+                                Url  = "https://www.kastatic.org/images/badges/meteorite/thumbs-up-512x512.png"
+                            },
+                            new TextBlock()
+                            {
+                                Text = $"You unlocked {badge}",
+                                Size = TextSize.Large,
+                                Wrap = true
+                            }
+                        }
+                    };
+
+                    Attachment attachment = new Attachment()
+                    {
+                        ContentType = AdaptiveCard.ContentType,
+                        Content = adaptiveCard
+                    };
+
+                    var reply = context.MakeMessage();
+                    reply.Attachments.Add(attachment);
+
+                    await context.PostAsync(reply, CancellationToken.None);
+                });
+
                 await Task.WhenAll(tasks);
             }
 
