@@ -15,6 +15,10 @@ namespace DTML.EduBot.Models
             {
                 throw new ArgumentNullException(nameof(studentResponse));
             }
+            else if (studentResponse.Result is string)
+            {
+                return new StudentResponse(studentResponse.Result);
+            }
 
             StudentResponse answer;
 
