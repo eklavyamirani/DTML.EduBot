@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Builder.Luis.Models;
-
-namespace DTML.EduBot.Dialogs
+﻿namespace DTML.EduBot.Dialogs
 {
+    using System.Threading.Tasks;
+    using Microsoft.Bot.Builder.Dialogs;
+    using Microsoft.Bot.Builder.Luis.Models;
+
     public partial class ChitChatDialog : QnaLuisDialog<object>
     {
         private LessonPlanDialog _lessonPlanDialog;
@@ -13,7 +13,7 @@ namespace DTML.EduBot.Dialogs
             _lessonPlanDialog = lessonPlanDialog;
         }
 
-        [LuisIntent("LessonPlan")]
+        [LuisIntent("LearnEnglish")]
         public Task HandleLessonPlan(IDialogContext dialogContext, LuisResult luisResult)
         {
             dialogContext.Call(_lessonPlanDialog, AfterLessonPlan);

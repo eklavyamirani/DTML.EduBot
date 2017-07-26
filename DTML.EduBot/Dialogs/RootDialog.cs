@@ -121,7 +121,8 @@
 
             IMessageActivity userText = await result;
             string userTextInEnglish = await MessageTranslator.TranslateTextAsync(userText.Text);
-            await context.Forward(_chitChatDialog, this.AfterChitChatComplete, new Activity { Text = userTextInEnglish }, CancellationToken.None);
+            userText.Text = userTextInEnglish;
+            await context.Forward(_chitChatDialog, this.AfterChitChatComplete, userText, CancellationToken.None);
         }
 
         private async Task AfterChitChatComplete(IDialogContext context, IAwaitable<object> result)
