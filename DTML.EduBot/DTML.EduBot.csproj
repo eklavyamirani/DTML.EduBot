@@ -140,6 +140,11 @@
     <Compile Include="Constants\Shared.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Dialogs\BasicDialogModule.cs" />
+    <Compile Include="Dialogs\BotQuestionsDialog.cs" />
+    <Compile Include="Dialogs\LearnEnglishDialog.cs" />
+    <Compile Include="Dialogs\MeaningDialog.cs" />
+    <Compile Include="Dialogs\NavigateDialog.cs" />
+    <Compile Include="Dialogs\DateDialog.cs" />
     <Compile Include="Dialogs\LevelDialog.cs" />
     <Compile Include="Dialogs\QuizDialog.cs" />
     <Compile Include="Dialogs\GreetingDialog.cs" />

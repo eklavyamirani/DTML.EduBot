@@ -19,12 +19,50 @@ namespace DTML.EduBot.Dialogs
         {
             EntityRecommendation entity;
             string BotResponse = BotPersonality.GetRandomGenericResponse() + Shared.ClientNewLine;
+
             if (result.TryFindEntity(BotEntities.Name, out entity))
-                {
+            {
 
                 ChatContext.Username = entity.Entity;
                 BotResponse = BotPersonality.BotResponseToUserName + " " + ChatContext.Username + "! " + Shared.ClientNewLine;
             }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Hobby))
+            {
+
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Animal))
+            {
+
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Place))
+            {
+
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Language))
+            {
+
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Family))
+            {
+
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Color))
+            {
+
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Subject))
+            {
+
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Food))
+            {
+
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Drink))
+            {
+
+            }
+
 
             BotResponse += BotPersonality.BuildAcquaintance();
             await context.PostAsync(BotResponse);
