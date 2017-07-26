@@ -5,6 +5,7 @@ using Microsoft.Bot.Builder.Internals.Fibers;
 
 namespace DTML.EduBot.UserData
 {
+    [Serializable]
     public class UserDataRepository : IUserDataRepository
     {
         // TODO persist in database instead in memory
