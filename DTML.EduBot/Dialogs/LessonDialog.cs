@@ -254,6 +254,10 @@
 
             if (message.Value == null)
             {
+                if (message.Text != null)
+                {
+                    return message.Text;
+                }
                 return null;
             }
 
