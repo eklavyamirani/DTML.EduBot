@@ -16,16 +16,28 @@
     [Serializable]
     public class RootDialog : IDialog<string>
     {
-
         private static readonly IEnumerable<string> YesNoChoices = new ReadOnlyCollection<string>
             (new List<String> {
                 Shared.Yes,
                 Shared.No});
-        
+
         private static readonly IEnumerable<string> DialogChoices = new ReadOnlyCollection<string>
             (new List<String> {
                 Shared.ChatWithBot,
                 Shared.StartTheLessonPlan});
+
+        private readonly IUserDataRepository _userDataRepository;
+        private readonly ChitChatDialog _chitChatDialog;
+        private readonly LessonPlanDialog _lessonPlanDialog;
+        private readonly LevelDialog _levelDialog;
+
+        public RootDialog(IUserDataRepository userdataRepository, ChitChatDialog chitChatDialog, LessonPlanDialog lessonPlanDialog, LevelDialog levelDialog)
+        {
+            _userDataRepository = userdataRepository;
+            _chitChatDialog = chitChatDialog;
+            _lessonPlanDialog = lessonPlanDialog;
+            _levelDialog = levelDialog;
+        }
 
         public Task StartAsync(IDialogContext context)
         {
@@ -46,58 +58,55 @@
                 // Swallow exception for the demo purpose
                 // TODO log the exception
             }
-            
+
             string detectedLanguageIsoCode = await MessageTranslator.IdentifyLangAsync(userText);
 
-            using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
+            var userData = _userDataRepository.GetUserData(context.Activity.From.Id);
+            if (userData == null)
             {
-                var userData = scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
-                if (userData == null)
+                userData = new UserData();
+                userData.UserId = context.Activity.From.Id;
+                userData.NativeLanguageIsoCode = detectedLanguageIsoCode;
+            }
+
+            _userDataRepository.UpdateUserData(userData);
+
+            if (MessageTranslator.DEFAULT_LANGUAGE.Equals(detectedLanguageIsoCode))
+            {
+                await context.PostAsync(BotPersonality.UserNameQuestion);
+
+                // detected it's english language
+                context.Wait(this.UserNameReceivedAsync);
+            }
+            else
+            {
+                // detected user language
+
+                CultureInfo[] allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
+                CultureInfo detectedCulture =
+                   allCultures
+                        .Where(cultureInfo => (detectedLanguageIsoCode.Contains(cultureInfo.TwoLetterISOLanguageName)))
+                        .FirstOrDefault();
+
+                string detectedLanguageName = CultureInfo.GetCultureInfo(MessageTranslator.DEFAULT_LANGUAGE).DisplayName;
+
+                if (detectedCulture != null)
                 {
-                    userData = new UserData();
-                    userData.UserId = context.Activity.From.Id;
-                    userData.NativeLanguageIsoCode = detectedLanguageIsoCode;
+                    detectedLanguageName = detectedCulture.DisplayName;
                 }
 
-                scope.Resolve<IUserDataRepository>().UpdateUserData(userData);
+                string translatedSwitchQuestion = await MessageTranslator.TranslateTextAsync($"Do you want to switch to {detectedLanguageName}", detectedLanguageIsoCode);
 
-                if (MessageTranslator.DEFAULT_LANGUAGE.Equals(detectedLanguageIsoCode))
-                {
-                    await context.PostAsync(BotPersonality.UserNameQuestion);
+                string translatedDontUnderstand = await MessageTranslator.TranslateTextAsync("I am sorry but I didn't understand that. I need you to select one of the options below", detectedLanguageIsoCode);
 
-                    // detected it's english language
-                    context.Wait(this.UserNameReceivedAsync);
-                }
-                else
-                {
-                    // detected user language
-
-                    CultureInfo[] allCultures =CultureInfo.GetCultures(CultureTypes.AllCultures);
-                    CultureInfo detectedCulture =
-                       allCultures
-                            .Where(cultureInfo => (detectedLanguageIsoCode.Contains(cultureInfo.TwoLetterISOLanguageName)))
-                            .FirstOrDefault();
-
-                    string detectedLanguageName = CultureInfo.GetCultureInfo(MessageTranslator.DEFAULT_LANGUAGE).DisplayName;
-
-                    if (detectedCulture != null)
-                    {
-                        detectedLanguageName = detectedCulture.DisplayName;
-                    }
-
-                    string translatedSwitchQuestion = await MessageTranslator.TranslateTextAsync($"Do you want to switch to {detectedLanguageName}", detectedLanguageIsoCode);
-
-                    string translatedDontUnderstand = await MessageTranslator.TranslateTextAsync("I am sorry but I didn't understand that. I need you to select one of the options below", detectedLanguageIsoCode);
-
-                    PromptDialog.Choice(
-                        context,
-                        this.AfterChoosingLanguageSwitch,
-                        await MessageTranslator.TranslatedChoices(YesNoChoices, detectedLanguageIsoCode),
-                        translatedSwitchQuestion,
-                        translatedDontUnderstand,
-                        attempts: Shared.MaxAttempt
-                    );
-                }
+                PromptDialog.Choice(
+                    context,
+                    this.AfterChoosingLanguageSwitch,
+                    await MessageTranslator.TranslatedChoices(YesNoChoices, detectedLanguageIsoCode),
+                    translatedSwitchQuestion,
+                    translatedDontUnderstand,
+                    attempts: Shared.MaxAttempt
+                );
             }
         }
 
@@ -127,11 +136,8 @@
         private async Task UserNameReceivedInNativeLanguageAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
             string nativeLanguageIsoCode = MessageTranslator.DEFAULT_LANGUAGE;
-            using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
-            {
-                UserData userData = scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
-                nativeLanguageIsoCode = userData.NativeLanguageIsoCode;
-            }
+            UserData userData = _userDataRepository.GetUserData(context.Activity.From.Id);
+            nativeLanguageIsoCode = userData.NativeLanguageIsoCode;
 
             string translatedWhatToDo =
                 await MessageTranslator.TranslateTextAsync(
@@ -156,20 +162,17 @@
             {
                 var selection = await result;
 
-                using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
-                {
                     switch (selection)
                     {
                         case Shared.ChatWithBot:
                             await context.PostAsync("Great! Say Hello, and see what will I respond!");
-                            context.Call(scope.Resolve<ChitChatDialog>(), this.AfterDialogEnded);
+                            context.Call(_chitChatDialog, this.AfterDialogEnded);
                             break;
 
                         case Shared.StartTheLessonPlan:
-                            context.Call(scope.Resolve<LevelDialog>(), this.AfterDialogEnded);
+                            context.Call(_levelDialog, this.AfterDialogEnded);
                             break;
                     }
-                }
             }
             catch (TooManyAttemptsException)
             {
@@ -183,25 +186,22 @@
             {
                 var selection = await result;
 
-                using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
+                UserData userData = _userDataRepository.GetUserData(context.Activity.From.Id);
+                string nativeLanguageIsoCode = userData.NativeLanguageIsoCode;
+
+                string translatedChatWithBot = await MessageTranslator.TranslateTextAsync(Shared.ChatWithBot,
+                    nativeLanguageIsoCode);
+                string translatedStartTheLessonPlan = await MessageTranslator.TranslateTextAsync(Shared.StartTheLessonPlan,
+                    nativeLanguageIsoCode);
+
+                if (translatedChatWithBot.Equals(selection, StringComparison.OrdinalIgnoreCase))
                 {
-                    UserData userData = scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
-                    string nativeLanguageIsoCode = userData.NativeLanguageIsoCode;
-
-                    string translatedChatWithBot = await MessageTranslator.TranslateTextAsync(Shared.ChatWithBot,
-                        nativeLanguageIsoCode);
-                    string translatedStartTheLessonPlan = await MessageTranslator.TranslateTextAsync(Shared.StartTheLessonPlan,
-                        nativeLanguageIsoCode);
-
-                    if (translatedChatWithBot.Equals(selection, StringComparison.OrdinalIgnoreCase))
-                    {
-                        await context.PostAsync("Great! We will now start conversation in English! Excited?");
-                        context.Call(scope.Resolve<ChitChatDialog>(), this.AfterDialogEnded);
-                    }
-                    else if (translatedStartTheLessonPlan.Equals(selection, StringComparison.OrdinalIgnoreCase))
-                    {
-                        context.Call(scope.Resolve<LessonPlanDialog>(), this.AfterDialogEnded);
-                    }
+                    await context.PostAsync("Great! We will now start conversation in English! Excited?");
+                    context.Call(_chitChatDialog, this.AfterDialogEnded);
+                }
+                else if (translatedStartTheLessonPlan.Equals(selection, StringComparison.OrdinalIgnoreCase))
+                {
+                    context.Call(_chitChatDialog, this.AfterDialogEnded);
                 }
             }
             catch (TooManyAttemptsException)
@@ -212,7 +212,7 @@
 
         private async Task AfterDialogEnded(IDialogContext context, IAwaitable<object> result)
         {
-            // BUG: this actually waits for user to respond. Needs to be proactive.		 +            try
+            // BUG: this actually waits for user to respond. Needs to be proactive.
             await this.StartAsync(context);
         }
 
@@ -222,46 +222,40 @@
 
             try
             {
-                using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
+                UserData userData = _userDataRepository.GetUserData(context.Activity.From.Id);
+
+                string translatedYes = await MessageTranslator.TranslateTextAsync(Shared.Yes.ToString(), userData.NativeLanguageIsoCode);
+                string translatedNo = await MessageTranslator.TranslateTextAsync(Shared.No, userData.NativeLanguageIsoCode);
+
+                if (translatedYes.Equals(response, StringComparison.OrdinalIgnoreCase))
                 {
-                    UserData userData = scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
+                    string translatedSelfIntroduction =
+                        await MessageTranslator.TranslateTextAsync(BotPersonality.BotSelfIntroduction,
+                            userData.NativeLanguageIsoCode);
+                    await context.PostAsync($"{translatedSelfIntroduction}");
 
-                    string translatedYes = await MessageTranslator.TranslateTextAsync(Shared.Yes.ToString(), userData.NativeLanguageIsoCode);
-                    string translatedNo = await MessageTranslator.TranslateTextAsync(Shared.No, userData.NativeLanguageIsoCode);
+                    string translatedUserNameQuestion =
+                        await MessageTranslator.TranslateTextAsync(BotPersonality.UserNameQuestion,
+                            userData.NativeLanguageIsoCode);
+                    await context.PostAsync($"{translatedUserNameQuestion}");
 
-                    if (translatedYes.Equals(response, StringComparison.OrdinalIgnoreCase))
-                    {
-                        string translatedSelfIntroduction =
-                            await MessageTranslator.TranslateTextAsync(BotPersonality.BotSelfIntroduction,
-                                userData.NativeLanguageIsoCode);
-                        await context.PostAsync($"{translatedSelfIntroduction}");
+                    context.Wait(this.UserNameReceivedInNativeLanguageAsync);
+                }
+                else if (translatedNo.Equals(response, StringComparison.OrdinalIgnoreCase))
+                {
+                    await context.PostAsync($"{BotPersonality.UserNameQuestion}");
 
-                        string translatedUserNameQuestion =
-                            await MessageTranslator.TranslateTextAsync(BotPersonality.UserNameQuestion,
-                                userData.NativeLanguageIsoCode);
-                        await context.PostAsync($"{translatedUserNameQuestion}");
-
-                        context.Wait(this.UserNameReceivedInNativeLanguageAsync);
-                    }
-                    else if (translatedNo.Equals(response, StringComparison.OrdinalIgnoreCase))
-                    {
-                        await context.PostAsync($"{BotPersonality.UserNameQuestion}");
-
-                        context.Wait(this.UserNameReceivedAsync);
-                    }
+                    context.Wait(this.UserNameReceivedAsync);
                 }
             }
             catch (TooManyAttemptsException)
             {
-                using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
-                {
-                    UserData userData =
-                        scope.Resolve<IUserDataRepository>().GetUserData(context.Activity.From.Id);
-                    
-                    string translatedTooManyAttemptMessage = await MessageTranslator.TranslateTextAsync(Shared.TooManyAttemptMessage, userData.NativeLanguageIsoCode);
+                UserData userData =
+                    _userDataRepository.GetUserData(context.Activity.From.Id);
 
-                    await context.PostAsync($"{translatedTooManyAttemptMessage}");
-                }
+                string translatedTooManyAttemptMessage = await MessageTranslator.TranslateTextAsync(Shared.TooManyAttemptMessage, userData.NativeLanguageIsoCode);
+
+                await context.PostAsync($"{translatedTooManyAttemptMessage}");
                 await this.StartAsync(context);
             }
         }

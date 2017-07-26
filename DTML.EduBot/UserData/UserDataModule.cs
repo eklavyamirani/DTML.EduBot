@@ -8,7 +8,8 @@ namespace DTML.EduBot.UserData
         {
             base.Load(builder);
 
-            builder.RegisterType<UserDataRepository>().As<IUserDataRepository>().SingleInstance();
+            builder.RegisterType<UserDataRepository>()
+                .As<IUserDataRepository>().SingleInstance();
         }
     }
 }

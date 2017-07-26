@@ -19,6 +19,13 @@
                 Shared.LevelFour,
                 Shared.LevelFive});
 
+        private readonly LessonPlanDialog _lessonPlanDialog;
+
+        public LevelDialog(LessonPlanDialog lessonPlanDialog)
+        {
+            _lessonPlanDialog = lessonPlanDialog;
+        }
+
         public Task StartAsync(IDialogContext context)
         {
             PromptDialog.Choice(
@@ -40,10 +47,7 @@
 
                 // TODO: choose lesson plan based on level selection. currently just automatically navigating to
                 // the one lesson plan that we have
-                using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
-                {
-                    context.Call(scope.Resolve<LessonPlanDialog>(), this.AfterLevelFinished);
-                }
+                context.Call(_lessonPlanDialog, this.AfterLevelFinished);
             }
             catch (TooManyAttemptsException)
             {
