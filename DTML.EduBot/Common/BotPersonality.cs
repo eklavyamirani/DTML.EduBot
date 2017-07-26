@@ -10,11 +10,13 @@ namespace DTML.EduBot.Common
     {
         private static int Index = 0;
         public const string BotSelfIntroduction = "Hi I am " + BotName + ".";
-        public const string BotName = "Professor Edword";
+        public const string BotName = "Professor Edword Jr.";
         public const string UserNameQuestion = "What is your name?";
         public const string BotResponseUnrecognizedIntent = "I'm still learning just as you are, I will think and get back to you";
         public const string BotResponseToGibberish = "Hmm, that doesn't sound right, can you please rephrase?";
         public const string BotResponseToUserName = "That's a nice name";
+
+        private static readonly Random random = new Random();
 
         private readonly static IReadOnlyList<string> BotGreeting= new List<string>
             {
@@ -34,6 +36,14 @@ namespace DTML.EduBot.Common
                 "What did you study today?"
             };
 
+        private readonly static IReadOnlyList<string> StartLessonPlanQuestions = new List<string>
+            {
+                "How about an English lesson?",
+                "Shall we do an English exercise now?",
+                "Would you like to improve your English with a lesson?",
+                "Would you like to learn some English now?",
+            };
+
         private readonly static IReadOnlyList<string> GenericResponses = new List<string>
             {
                 "Great!", "Good!", "Awesome!!",
@@ -44,8 +54,7 @@ namespace DTML.EduBot.Common
 
         public static string GetRandomGreeting()
         {
-            Random RandomNum = new Random();
-            int RandIndex = RandomNum.Next(BotGreeting.Count);
+            int RandIndex = random.Next(BotGreeting.Count);
             return (BotGreeting[RandIndex]);
         }
 
@@ -65,9 +74,14 @@ namespace DTML.EduBot.Common
 
         public static string GetRandomGenericResponse()
         {
-            Random randomNum = new Random();
-            int randIndex = randomNum.Next(GenericResponses.Count);
+            int randIndex = random.Next(GenericResponses.Count);
             return (GenericResponses[randIndex]);
+        }
+
+        public static string GetStartLessonPlanQuestion()
+        {
+            int randIndex = random.Next(StartLessonPlanQuestions.Count);
+            return (StartLessonPlanQuestions[randIndex]);
         }
     }
 }

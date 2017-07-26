@@ -1,6 +1,7 @@
 ﻿namespace DTML.EduBot.Dialogs
 {
     using System.Threading.Tasks;
+    using DTML.EduBot.Common;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Builder.Luis.Models;
 
@@ -16,8 +17,36 @@
         [LuisIntent("LearnEnglish")]
         public Task HandleLessonPlan(IDialogContext dialogContext, LuisResult luisResult)
         {
-            dialogContext.Call(_levelDialog, AfterLessonPlan);
+            LaunchLessonPlan(dialogContext);
             return Task.CompletedTask;
+        }
+
+        private Task AskToStartLessonPlan(IDialogContext context)
+        {
+            PromptDialog.Confirm(
+                context, 
+                TryStartLessonPlan, 
+                BotPersonality.GetStartLessonPlanQuestion(), 
+                BotPersonality.BotResponseToGibberish);
+            return Task.CompletedTask;
+        }
+
+        private async Task TryStartLessonPlan(IDialogContext context, IAwaitable<bool> result)
+        {
+            var confirm = await result;
+            if (confirm)
+            {
+                LaunchLessonPlan(context);
+            }
+            else
+            {
+                // Ask some other follow up question here
+            }
+        }
+
+        private void LaunchLessonPlan(IDialogContext context)
+        {
+            context.Call(_levelDialog, AfterLessonPlan);
         }
 
         private Task AfterLessonPlan(IDialogContext context, IAwaitable<object> result)
