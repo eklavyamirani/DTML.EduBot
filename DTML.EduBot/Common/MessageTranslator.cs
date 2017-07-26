@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Net.Http;
     using System.Net.Http.Headers;
@@ -12,6 +13,7 @@
 
     public class MessageTranslator
     {
+        public static readonly string DEFAULT_LANGUAGE = "en";
         /// <summary>
         /// Get authentication token for translator API
         /// </summary>
@@ -39,7 +41,7 @@
         /// <returns></returns>
         public static async Task<string> IdentifyLangAsync(string inputText)
         {
-            string inputTextLang = "en";
+            string inputTextLang = DEFAULT_LANGUAGE;
 
             if (String.IsNullOrWhiteSpace(inputText))
             {
@@ -107,5 +109,17 @@
             }
         }
 
+        public static async Task<ICollection<string>> TranslatedChoices(IEnumerable<string> choices, string languageToTranslate)
+        {
+            ICollection<string> translatedChoices = new Collection<string>();
+
+            foreach (string choice in choices)
+            {
+                string translatedChoice = await MessageTranslator.TranslateTextAsync(choice, languageToTranslate);
+                translatedChoices.Add(translatedChoice);
+            }
+
+            return translatedChoices;
+        }
     }
 }

@@ -135,6 +135,7 @@
     <Compile Include="Common\BotPersonality.cs" />
     <Compile Include="Common\ChatContext.cs" />
     <Compile Include="Common\MessageTranslator.cs" />
+    <Compile Include="Common\TraceSourceExceptionLogger.cs" />
     <Compile Include="Constants\BotEntities.cs" />
     <Compile Include="Constants\Shared.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
@@ -144,6 +145,8 @@
     <Compile Include="Dialogs\MeaningDialog.cs" />
     <Compile Include="Dialogs\NavigateDialog.cs" />
     <Compile Include="Dialogs\DateDialog.cs" />
+    <Compile Include="Dialogs\LevelDialog.cs" />
+    <Compile Include="Dialogs\QuizDialog.cs" />
     <Compile Include="Dialogs\GreetingDialog.cs" />
     <Compile Include="Dialogs\IAmDialog.cs" />
     <Compile Include="Dialogs\LessonDialog.cs" />
@@ -151,6 +154,7 @@
     <Compile Include="Dialogs\OpenEndedDialog.cs" />
     <Compile Include="Dialogs\QnaLuisDialog.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
+    <Compile Include="Dialogs\StartLessonPlanDialog.cs" />
     <Compile Include="Dialogs\UserInformation.cs" />
     <Compile Include="Dialogs\ChitChatDialog.cs" />
     <Compile Include="Dialogs\WhatIsDialog.cs" />
@@ -162,7 +166,8 @@
     <Compile Include="LessonPlan\LessonPlanModule.cs" />
     <Compile Include="LessonPlan\Lesson.cs" />
     <Compile Include="LessonPlan\LessonPlan.cs" />
-    <Compile Include="LessonPlan\TestQuestion.cs" />
+    <Compile Include="LessonPlan\Quiz.cs" />
+    <Compile Include="LessonPlan\QuizQuestion.cs" />
     <Compile Include="LessonPlan\Topic.cs" />
     <Compile Include="Models\StudentResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -174,6 +179,10 @@
     <Compile Include="Qna\QnaResult.cs" />
     <Compile Include="Qna\QnaResultCollection.cs" />
     <Compile Include="Qna\QnaService.cs" />
+    <Compile Include="UserData\IUserDataRepository.cs" />
+    <Compile Include="UserData\UserData.cs" />
+    <Compile Include="UserData\UserDataModule.cs" />
+    <Compile Include="UserData\UserDataRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

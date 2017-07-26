@@ -7,11 +7,19 @@
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
     using DTML.EduBot.LessonPlan;
+    using DTML.EduBot.Constants;
+    using System.Collections.ObjectModel;
 
     [Serializable]
     public class LessonPlanDialog : IDialog<string>
     {
-        private const int maxRetries = 3;
+        private static readonly IEnumerable<string> LevelChoices = new ReadOnlyCollection<string>
+            (new List<String> {
+                Shared.LevelOne,
+                Shared.LevelTwo,
+                Shared.LevelThree,
+                Shared.LevelFour,
+                Shared.LevelFive});
 
         public Task StartAsync(IDialogContext context)
         {
@@ -19,9 +27,14 @@
 
             ICollection<string> lessonTitle = new List<string>();
 
+            // get up to 5 lessons
+            int i = 0;
             foreach (Lesson lesson in LessonPlanModule.LessonPlan.Lessons)
             {
+                if (i >= 5) break;
+
                 lessonTitle.Add(lesson.LessonTitle);
+                i++;
             }
 
             PromptDialog.Choice(
@@ -29,8 +42,8 @@
                 this.AfterLessonSelected,
                 lessonTitle,
                 $"{friendlyUserName} Which lesson would you like to start?",
-                "I am sorry but I didn't understand that. I need you to select one of the options below",
-                attempts: maxRetries);
+                Shared.DoNotUnderstand,
+                attempts: Shared.MaxAttempt);
 
             return Task.CompletedTask;
         }

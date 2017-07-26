@@ -9,7 +9,6 @@ namespace DTML.EduBot.LessonPlan
     public class Lesson
     {
         private ICollection<Topic> topics = new List<Topic>();
-        private ICollection<TestQuestion> test = new List<TestQuestion>();
 
         [JsonProperty("lesson_title", Required = Required.Always)]
         public string LessonTitle { get; set; }
@@ -20,11 +19,8 @@ namespace DTML.EduBot.LessonPlan
             get { return topics; }
         }
 
-        [JsonProperty("test", Required = Required.Always)]
-        public ICollection<TestQuestion> Test
-        {
-            get { return test; }
-        }
+        [JsonProperty("quiz", Required = Required.Always)]
+        public Quiz Quiz { get; set; }
 
         [JsonIgnore]
         public int currentTopic { get; set; }

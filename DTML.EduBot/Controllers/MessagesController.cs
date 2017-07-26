@@ -15,25 +15,40 @@
     [BotAuthentication]
     public class MessagesController : ApiController
     {
+        private readonly RootDialog _rootDialog;
+
+        public MessagesController(RootDialog rootDialog)
+        {
+            _rootDialog = rootDialog;
+        }
+
         /// <summary>
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
-            if (activity.Type == ActivityTypes.Message)
+            try
             {
-                using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
+                if (activity.Type == ActivityTypes.Message)
                 {
-                    await Conversation.SendAsync(activity, () => scope.Resolve<RootDialog>());
+                    using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
+                    {
+                        await Conversation.SendAsync(activity, () => _rootDialog);
+                    }
                 }
+                else
+                {
+                    await HandleSystemMessageAsync(activity);
+                }
+                var response = Request.CreateResponse(HttpStatusCode.OK);
+                return response;
             }
-            else
+            catch(Exception e)
             {
-                await HandleSystemMessageAsync(activity);
+                e.Data.Add("id", activity.From.Id);
+                throw e;
             }
-            var response = Request.CreateResponse(HttpStatusCode.OK);
-            return response;
         }
 
         private async Task<Activity> HandleSystemMessageAsync(Activity message)
@@ -56,7 +71,7 @@
                     using (ConnectorClient connector = new ConnectorClient(new Uri(message.ServiceUrl)))
                     {
                         // TODO: start the root activity here.
-                        Activity reply = message.CreateReply($"Hi I am {BotPersonality.BotName}.");
+                        Activity reply = message.CreateReply(BotPersonality.BotSelfIntroduction);
                         await connector.Conversations.ReplyToActivityAsync(reply);
                     }
                 }
