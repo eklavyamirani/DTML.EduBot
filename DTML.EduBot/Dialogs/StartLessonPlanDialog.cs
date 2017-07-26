@@ -6,17 +6,17 @@
 
     public partial class ChitChatDialog : QnaLuisDialog<object>
     {
-        private LessonPlanDialog _lessonPlanDialog;
+        private LevelDialog _levelDialog;
 
-        public ChitChatDialog(LessonPlanDialog lessonPlanDialog)
+        public ChitChatDialog(LevelDialog levelDialog)
         {
-            _lessonPlanDialog = lessonPlanDialog;
+            _levelDialog = levelDialog;
         }
 
         [LuisIntent("LearnEnglish")]
         public Task HandleLessonPlan(IDialogContext dialogContext, LuisResult luisResult)
         {
-            dialogContext.Call(_lessonPlanDialog, AfterLessonPlan);
+            dialogContext.Call(_levelDialog, AfterLessonPlan);
             return Task.CompletedTask;
         }
 
