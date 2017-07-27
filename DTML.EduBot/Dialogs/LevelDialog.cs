@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.Bot.Builder.Dialogs;
+    using DTML.EduBot.Common;
     using DTML.EduBot.Constants;
     using System.Collections.ObjectModel;
     using Autofac;
@@ -19,17 +20,17 @@
                 Shared.LevelFour,
                 Shared.LevelFive});
 
-        public Task StartAsync(IDialogContext context)
+        public async Task StartAsync(IDialogContext context)
         {
+            await context.PostAsync(BotPersonality.BotEnteringEnglish);
+
             PromptDialog.Choice(
                 context,
                 this.AfterLevelSelected,
                 LevelChoices,
-                "Which level are you?",
+                BotPersonality.BotAskingLevel,
                 Shared.DoNotUnderstand,
                 attempts: Shared.MaxAttempt);
-
-            return Task.CompletedTask;
         }
 
         private async Task AfterLevelSelected(IDialogContext context, IAwaitable<string> result)

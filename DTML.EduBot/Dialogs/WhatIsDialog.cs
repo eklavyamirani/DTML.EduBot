@@ -17,11 +17,15 @@ namespace DTML.EduBot.Dialogs
         {
             if (result.Entities.Any(e => e.Type == BotEntities.Name))
             {
-                await context.PostAsync($"My name is {BotPersonality.BotName}");
+                string translatedBotResponse = await this.TranslateBotResponseAsync(context, $"My name is {BotPersonality.BotName}");
+
+                await context.PostAsync(translatedBotResponse);
             }
             else
             {
-                await context.PostAsync(BotPersonality.GetRandomGenericResponse());
+                string translatedBotResponse = await this.TranslateBotResponseAsync(context, BotPersonality.GetRandomGenericResponse());
+
+                await context.PostAsync(translatedBotResponse);
             }
         }
     }

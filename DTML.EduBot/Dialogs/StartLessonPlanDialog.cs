@@ -7,13 +7,6 @@
 
     public partial class ChitChatDialog : QnaLuisDialog<object>
     {
-        private LevelDialog _levelDialog;
-
-        public ChitChatDialog(LevelDialog levelDialog)
-        {
-            _levelDialog = levelDialog;
-        }
-
         [LuisIntent("LearnEnglish")]
         public Task HandleLessonPlan(IDialogContext dialogContext, LuisResult luisResult)
         {
@@ -21,12 +14,14 @@
             return Task.CompletedTask;
         }
 
-        private void AskToStartLessonPlan(IDialogContext context)
+        private async Task AskToStartLessonPlan(IDialogContext context)
         {
+            string translatedBotResponse = await this.TranslateBotResponseAsync(context, BotPersonality.GetStartLessonPlanQuestion());
+
             PromptDialog.Confirm(
                 context, 
-                TryStartLessonPlan, 
-                BotPersonality.GetStartLessonPlanQuestion(), 
+                TryStartLessonPlan,
+                translatedBotResponse,
                 BotPersonality.BotResponseToGibberish);
         }
 
@@ -39,8 +34,11 @@
             }
             else
             {
-                await context.PostAsync(BotPersonality.BotResponseToDeclinedLessonPlan);
-                await context.PostAsync(BotPersonality.BuildAcquaintance());
+                string translatedDeclineBotResponse = await this.TranslateBotResponseAsync(context, BotPersonality.BotResponseToDeclinedLessonPlan);
+                await context.PostAsync(translatedDeclineBotResponse);
+
+                string translatedAcquaitanceBotResponse = await this.TranslateBotResponseAsync(context, BotPersonality.BuildAcquaintance());
+                await context.PostAsync(translatedAcquaitanceBotResponse);
             }
         }
 
@@ -53,7 +51,6 @@
         {
             context.Wait(this.MessageReceived);
             return Task.CompletedTask;
-
         }
     }
 }
