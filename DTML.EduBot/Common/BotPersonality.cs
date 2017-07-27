@@ -15,9 +15,7 @@ namespace DTML.EduBot.Common
         public const string BotResponseUnrecognizedIntent = "I'm still learning just as you are, I will think and get back to you";
         public const string BotResponseToGibberish = "Hmm, that doesn't sound right, can you please rephrase?";
         public const string BotResponseToUserName = "That's a nice name";
-        public const string BotResponseToDeclinedLessonPlan = "Aww!Okay let's keep chatting";
-
-        private static readonly Random random = new Random();
+        public const string BotResponseToDeclinedLessonPlan = "Aww! Okay let's keep chatting";
 
         private readonly static IReadOnlyList<string> BotGreeting= new List<string>
             {
@@ -55,7 +53,7 @@ namespace DTML.EduBot.Common
 
         public static string GetRandomGreeting()
         {
-            int RandIndex = random.Next(BotGreeting.Count);
+            int RandIndex = (int) (DateTime.UtcNow.Ticks % BotGreeting.Count);
             return (BotGreeting[RandIndex]);
         }
 
@@ -75,13 +73,13 @@ namespace DTML.EduBot.Common
 
         public static string GetRandomGenericResponse()
         {
-            int randIndex = random.Next(GenericResponses.Count);
+            int randIndex = (int)(DateTime.UtcNow.Ticks % GenericResponses.Count);
             return (GenericResponses[randIndex]);
         }
 
         public static string GetStartLessonPlanQuestion()
         {
-            int randIndex = random.Next(StartLessonPlanQuestions.Count);
+            int randIndex = (int)(DateTime.UtcNow.Ticks % StartLessonPlanQuestions.Count);
             return (StartLessonPlanQuestions[randIndex]);
         }
     }
