@@ -25,15 +25,20 @@
         /// <returns></returns>
         public static async Task<string> IdentifyLangAsync(string inputText)
         {
-            string inputTextLang = DEFAULT_LANGUAGE;
-
-            if (String.IsNullOrWhiteSpace(inputText))
+            try
             {
-                return inputTextLang;
-            }
+                if (String.IsNullOrWhiteSpace(inputText))
+                {
+                    return DEFAULT_LANGUAGE;
+                }
 
-            var response = await client.DetectLanguageAsync(inputText);
-            return response.Language;
+                var response = await client.DetectLanguageAsync(inputText);
+                return response.Language;
+            }
+            catch
+            {
+                return DEFAULT_LANGUAGE;
+            }
         }
 
         /// <summary>
@@ -49,8 +54,15 @@
                 return inputText;
             }
 
-            var message = await client.TranslateTextAsync(inputText, inputLang);
-            return message.TranslatedText;
+            try
+            {
+                var message = await client.TranslateTextAsync(inputText, inputLang);
+                return message.TranslatedText;
+            }
+            catch
+            {
+                return inputText;
+            }
         }
 
         public static async Task<ICollection<string>> TranslatedChoices(IEnumerable<string> choices, string languageToTranslate)
