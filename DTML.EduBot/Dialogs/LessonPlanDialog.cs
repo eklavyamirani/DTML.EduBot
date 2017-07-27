@@ -85,10 +85,6 @@
 
         private async Task AfterLessonFinished(IDialogContext context, IAwaitable<string> result)
         {
-            // The current lesson finished. Plug in Analytics.
-            var finalMessage = await result;
-            await context.PostAsync(finalMessage);
-
             // TODO: inject dependency
             var badgeRepository = new Gamification.BadgeRepository();
             var updatedProfile = GetUserGamerProfile(context.Activity.From.Id);
@@ -132,6 +128,10 @@
 
                 await Task.WhenAll(tasks);
             }
+
+            // The current lesson finished. Plug in Analytics.
+            var finalMessage = await result;
+            await context.PostAsync(finalMessage);
 
             // Refactor
             var updatedUserData = _userDataRepository.GetUserData(context.Activity.From.Id);

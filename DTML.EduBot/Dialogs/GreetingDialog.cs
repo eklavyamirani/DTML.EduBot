@@ -22,6 +22,7 @@ namespace DTML.EduBot.Dialogs
         public async Task Courtesy(IDialogContext context, LuisResult result)
         {
             await context.PostAsync(BotPersonality.GetRandomGenericResponse());
+            await EngageWithUser(context);
         }
     }
 }

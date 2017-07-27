@@ -14,6 +14,9 @@ namespace DTML.EduBot.Dialogs
 {
     public partial class ChitChatDialog : QnaLuisDialog<object>
     {
+        private const int InitiateLessonPlan = 0;
+        private readonly Random random = new Random();
+
         [LuisIntent("UserInfo")]
         public async Task HandleUserInformation(IDialogContext context, LuisResult result)
         {
@@ -30,8 +33,20 @@ namespace DTML.EduBot.Dialogs
                 BotResponse = BotPersonality.GetRandomGenericResponse();
             }
 
-            BotResponse += BotPersonality.BuildAcquaintance();
             await context.PostAsync(BotResponse);
+            await EngageWithUser(context);
+        }
+
+        private async Task EngageWithUser(IDialogContext context)
+        {
+            if (random.Next(2) == InitiateLessonPlan)
+            {
+                AskToStartLessonPlan(context);
+            }
+            else
+            {
+                await context.PostAsync(BotPersonality.BuildAcquaintance());
+            }
         }
     }
 }
