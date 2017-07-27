@@ -51,7 +51,7 @@
               },
               {
                 "question": "This is a:",
-                "image_url": "https://images.contentful.com/6m9bd13t776q/6KmARX9mUwsuG4O8YsI8KY/4f68bd0d9d9d4d8a1ab5307f0fa59679/which-baby-names-stand-time-test-2160x1200.jpg",
+                "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/paternity-633453_640.jpg",
                 "correct_answer": "baby",
                 "correct_answer_bot_response": "Right!",
                 "wrong_answer_bot_response": "Oops, that's not right, try again"
