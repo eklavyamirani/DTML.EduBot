@@ -129,6 +129,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\GlobalMessageHandlersModule.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Attributes\PreConfiguredLuisModelAttribute.cs" />
     <Compile Include="Attributes\PreConfiguredQnaModelAttribute.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Constants\Shared.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Dialogs\BasicDialogModule.cs" />
+    <Compile Include="Dialogs\HelpDialog.cs" />
     <Compile Include="Dialogs\LevelDialog.cs" />
     <Compile Include="Dialogs\QuizDialog.cs" />
     <Compile Include="Dialogs\GreetingDialog.cs" />
@@ -175,6 +177,7 @@
     <Compile Include="Qna\QnaResult.cs" />
     <Compile Include="Qna\QnaResultCollection.cs" />
     <Compile Include="Qna\QnaService.cs" />
+    <Compile Include="Scorables\HelpScorables.cs" />
     <Compile Include="UserData\IUserDataRepository.cs" />
     <Compile Include="UserData\UserData.cs" />
     <Compile Include="UserData\UserDataModule.cs" />

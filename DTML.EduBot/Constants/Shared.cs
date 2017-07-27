@@ -34,5 +34,7 @@ namespace DTML.EduBot.Constants
         public const string LevelThree = "3";
         public const string LevelFour = "4";
         public const string LevelFive = "5";
+        public const string HelpCommand = "Help";
+        public const string CannotHelpMessage = "I cannot help you with that. Sorry. If you need help, type help again.";
     }
 }

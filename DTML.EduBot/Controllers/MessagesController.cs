@@ -32,10 +32,7 @@
             {
                 if (activity.Type == ActivityTypes.Message)
                 {
-                    using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
-                    {
-                        await Conversation.SendAsync(activity, () => _rootDialog);
-                    }
+                    await Conversation.SendAsync(activity, () => _rootDialog);
                 }
                 else
                 {
@@ -44,7 +41,7 @@
                 var response = Request.CreateResponse(HttpStatusCode.OK);
                 return response;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 e.Data.Add("id", activity.From.Id);
                 throw e;
