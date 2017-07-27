@@ -33,11 +33,13 @@
        
         protected override async Task MessageReceived(IDialogContext context, IAwaitable<IMessageActivity> item)
         {
-            if ((await item) != null && (await item).Text != null)
-            {
-                string userInputText = (await item).Text;
+            var activity = await item;
 
-                (await item).Text = await MessageTranslator.TranslateTextAsync(userInputText);
+            if (activity != null && activity.Text != null)
+            {
+                string userInputText = activity.Text;
+
+                activity.Text = await MessageTranslator.TranslateTextAsync(userInputText);
             }
 
             await base.MessageReceived(context, item);
