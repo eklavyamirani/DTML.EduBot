@@ -33,21 +33,14 @@
        
         protected override async Task MessageReceived(IDialogContext context, IAwaitable<IMessageActivity> item)
         {
-            try
+            if ((await item) != null && (await item).Text != null)
             {
                 string userInputText = (await item).Text;
 
-                if (context.Activity != null && context.Activity.AsMessageActivity() != null)
-                {
-                    context.Activity.AsMessageActivity().Text = await MessageTranslator.TranslateTextAsync(userInputText);
-                }
+                (await item).Text = await MessageTranslator.TranslateTextAsync(userInputText);
+            }
 
-                await base.MessageReceived(context, item);
-            }
-            catch (Exception)
-            {
-                // Suppress potential exception from await for demo purpose
-            }
+            await base.MessageReceived(context, item);
         }
 
         protected virtual async Task<string> TranslateBotResponseAsync(IDialogContext context, string rawResponse)
