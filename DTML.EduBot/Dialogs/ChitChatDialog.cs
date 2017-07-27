@@ -36,7 +36,12 @@
             try
             {
                 string userInputText = (await item).Text;
-                context.Activity.AsMessageActivity().Text = await MessageTranslator.TranslateTextAsync(userInputText);
+
+                if (context.Activity != null && context.Activity.AsMessageActivity() != null)
+                {
+                    context.Activity.AsMessageActivity().Text = await MessageTranslator.TranslateTextAsync(userInputText);
+                }
+
                 await base.MessageReceived(context, item);
             }
             catch (Exception)
@@ -54,6 +59,10 @@
             {
                 translatedBotResponse = await MessageTranslator.TranslateTextAsync(rawResponse,
                     userData.NativeLanguageIsoCode);
+            }
+            else
+            {
+                return rawResponse;
             }
 
             return translatedBotResponse;
