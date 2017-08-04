@@ -33,7 +33,9 @@ namespace DTML.EduBot.Dialogs
                 BotResponse = BotPersonality.GetRandomGenericResponse();
             }
 
-            await context.PostAsync(BotResponse);
+            string translatedBotResponse = await this.TranslateBotResponseAsync(context, BotResponse);
+            
+            await context.PostAsync(translatedBotResponse);
             await EngageWithUser(context);
         }
 
@@ -41,11 +43,13 @@ namespace DTML.EduBot.Dialogs
         {
             if (random.Next(2) == InitiateLessonPlan)
             {
-                AskToStartLessonPlan(context);
+                await AskToStartLessonPlan(context);
             }
             else
             {
-                await context.PostAsync(BotPersonality.BuildAcquaintance());
+                string translatedBotResponse = await this.TranslateBotResponseAsync(context, BotPersonality.BuildAcquaintance());
+
+                await context.PostAsync(translatedBotResponse);
             }
         }
     }

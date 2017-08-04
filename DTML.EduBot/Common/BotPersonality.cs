@@ -16,6 +16,8 @@ namespace DTML.EduBot.Common
         public const string BotResponseToGibberish = "Hmm, that doesn't sound right, can you please rephrase?";
         public const string BotResponseToUserName = "That's a nice name";
         public const string BotResponseToDeclinedLessonPlan = "Aww! Okay let's keep chatting";
+        public const string BotEnteringEnglish = "We are now entering English mode!";
+        public const string BotAskingLevel = "Which level are you?";
 
         private readonly static IReadOnlyList<string> BotGreeting= new List<string>
             {

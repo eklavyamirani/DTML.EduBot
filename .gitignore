@@ -294,3 +294,4 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 /DTML.EduBot/Web.Secrets.Config
+DTML.EduBot/translation.json
