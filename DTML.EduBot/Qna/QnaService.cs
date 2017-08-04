@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
     using DTML.EduBot.Extensions;
     using Newtonsoft.Json;
+    using System.Collections.Generic;
 
     [Serializable]
     public class QnaService
@@ -47,9 +48,18 @@
                 var topScore = results.Max(result => result.Score);
                 return results.FirstOrDefault(result => result.Score == topScore);
             }
-            catch (JsonException exception)
+            catch (Exception)
             {
-                throw new InvalidOperationException("Bad json response", exception);
+                // TODO: log exception
+                return new QnaResult
+                {
+                    Answer = string.Empty,
+                    Score = -1,
+                    Questions = new List<string>
+                    {
+                        question
+                    }
+                };
             }
         }
     }
