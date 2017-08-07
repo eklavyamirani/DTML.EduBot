@@ -90,17 +90,21 @@
                     detectedLanguageName = detectedCulture.DisplayName;
                 }
 
-                var translatedSwitchQuestionTask = MessageTranslator.TranslateTextAsync($"Do you want to switch to {detectedLanguageName}", detectedLanguageIsoCode);
-                var translatedDontUnderstandTask = MessageTranslator.TranslateTextAsync(Shared.DoNotUnderstand, detectedLanguageIsoCode);
-                var translatedChoicesTask = MessageTranslator.TranslateTextAsync(YesNoChoices, detectedLanguageIsoCode);
-                await Task.WhenAll(translatedSwitchQuestionTask, translatedDontUnderstandTask, translatedChoicesTask);
+                var translationInputTextlist = new List<string>(capacity: 4);
+                translationInputTextlist.AddRange(YesNoChoices);
+                translationInputTextlist.AddRange(new string[] { $"Do you want to switch to {detectedLanguageName}", Shared.DoNotUnderstand });
+
+                var translatedList = await MessageTranslator.TranslateTextAsync(translationInputTextlist, detectedLanguageIsoCode);
+                var translatedSwitchQuestion = translatedList.ElementAt(2);
+                var translatedDontUnderstand = translatedList.ElementAt(3);
+                var translatedChoices = translatedList.Take(2);
 
                 PromptDialog.Choice(
                     context,
                     this.AfterChoosingLanguageSwitch,
-                    translatedChoicesTask.Result,
-                    translatedSwitchQuestionTask.Result,
-                    translatedDontUnderstandTask.Result,
+                    translatedChoices,
+                    translatedSwitchQuestion,
+                    translatedDontUnderstand,
                     attempts: Shared.MaxPromptAttempts
                 );
             }
