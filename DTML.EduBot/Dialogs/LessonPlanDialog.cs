@@ -20,13 +20,12 @@
         private const ulong _pointsPerLesson = 10;
         private ulong _userPointsBeforeLessonPlan;
         private IUserDataRepository _userDataRepository;
-        private static readonly IEnumerable<string> LevelChoices = new ReadOnlyCollection<string>
-            (new List<String> {
+        private static readonly IReadOnlyCollection<string> LevelChoices = new List<string> {
                 Shared.LevelOne,
                 Shared.LevelTwo,
                 Shared.LevelThree,
                 Shared.LevelFour,
-                Shared.LevelFive});
+                Shared.LevelFive};
 
         public LessonPlanDialog(IUserDataRepository userDataRepository)
         {
