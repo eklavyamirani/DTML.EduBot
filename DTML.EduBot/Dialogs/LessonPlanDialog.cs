@@ -3,16 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
+    using AdaptiveCards;
+    using DTML.EduBot.Constants;
+    using DTML.EduBot.LessonPlan;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
-    using DTML.EduBot.LessonPlan;
-    using DTML.EduBot.Constants;
-    using System.Collections.ObjectModel;
     using UserData;
-    using Autofac;
-    using AdaptiveCards;
-    using System.Threading;
 
     [Serializable]
     public class LessonPlanDialog : IDialog<string>
@@ -20,13 +18,12 @@
         private const ulong _pointsPerLesson = 10;
         private ulong _userPointsBeforeLessonPlan;
         private IUserDataRepository _userDataRepository;
-        private static readonly IEnumerable<string> LevelChoices = new ReadOnlyCollection<string>
-            (new List<String> {
+        private static readonly IReadOnlyCollection<string> LevelChoices = new List<string> {
                 Shared.LevelOne,
                 Shared.LevelTwo,
                 Shared.LevelThree,
                 Shared.LevelFour,
-                Shared.LevelFive});
+                Shared.LevelFive};
 
         public LessonPlanDialog(IUserDataRepository userDataRepository)
         {
@@ -57,7 +54,7 @@
                 lessonTitle,
                 $"{friendlyUserName} Which lesson would you like to start?",
                 Shared.DoNotUnderstand,
-                attempts: Shared.MaxAttempt);
+                attempts: Shared.MaxPromptAttempts);
 
             return Task.CompletedTask;
         }

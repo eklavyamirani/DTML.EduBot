@@ -11,13 +11,19 @@
     [Serializable]
     public class LevelDialog : IDialog<string>
     {
-        private static readonly IEnumerable<string> LevelChoices = new ReadOnlyCollection<string>
-            (new List<String> {
+        private static readonly IReadOnlyCollection<string> LevelChoices = new List<String> {
                 Shared.LevelOne,
                 Shared.LevelTwo,
                 Shared.LevelThree,
                 Shared.LevelFour,
-                Shared.LevelFive});
+                Shared.LevelFive};
+
+        private readonly LessonPlanDialog _lessonPlanDialog;
+
+        public LevelDialog(LessonPlanDialog lessonPlanDialog)
+        {
+            _lessonPlanDialog = lessonPlanDialog;
+        }
 
         public Task StartAsync(IDialogContext context)
         {
@@ -27,7 +33,7 @@
                 LevelChoices,
                 "Which level are you?",
                 Shared.DoNotUnderstand,
-                attempts: Shared.MaxAttempt);
+                attempts: Shared.MaxPromptAttempts);
 
             return Task.CompletedTask;
         }
@@ -37,13 +43,7 @@
             try
             {
                 var selection = await result;
-
-                // TODO: choose lesson plan based on level selection. currently just automatically navigating to
-                // the one lesson plan that we have
-                using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
-                {
-                    context.Call(scope.Resolve<LessonPlanDialog>(), this.AfterLevelFinished);
-                }
+                context.Call(_lessonPlanDialog, this.AfterLevelFinished);
             }
             catch (TooManyAttemptsException)
             {
