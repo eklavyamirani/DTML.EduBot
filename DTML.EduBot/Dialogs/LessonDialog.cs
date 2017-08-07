@@ -118,8 +118,8 @@
             }
             else
             {
-                await context.PostAsync(topic.WrongAnswerBotResponse);
-                await this.StartAsync(context);
+                await Task.WhenAll(context.PostAsync(topic.WrongAnswerBotResponse),
+                    this.StartAsync(context));
             }
         }
 
@@ -140,8 +140,8 @@
             }
             else
             {
-                await context.PostAsync(topic.WrongAnswerBotResponse);
-                await this.StartAsync(context);
+                await Task.WhenAll(context.PostAsync(topic.WrongAnswerBotResponse),
+                    this.StartAsync(context));
             }
         }
 
@@ -185,8 +185,8 @@
                 return;
             }
 
-            await context.PostAsync(Shared.CorrectAnswerMessage);
-            await this.WrapUpCurrentTopic(context);
+            await Task.WhenAll(context.PostAsync(Shared.CorrectAnswerMessage),
+                               this.WrapUpCurrentTopic(context));
         }
 
         private async Task WrapUpCurrentTopic(IDialogContext context)

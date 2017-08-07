@@ -6,7 +6,6 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Autofac;
     using DTML.EduBot.Common;
     using DTML.EduBot.Dialogs;
     using Microsoft.Bot.Builder.Dialogs;
@@ -32,19 +31,17 @@
             {
                 if (activity.Type == ActivityTypes.Message)
                 {
-                    using (var scope = WebApiApplication.FindContainer().BeginLifetimeScope())
-                    {
-                        await Conversation.SendAsync(activity, () => _rootDialog);
-                    }
+                    await Conversation.SendAsync(activity, () => _rootDialog);
                 }
                 else
                 {
                     await HandleSystemMessageAsync(activity);
                 }
+
                 var response = Request.CreateResponse(HttpStatusCode.OK);
                 return response;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 e.Data.Add("id", activity.From.Id);
                 throw e;
