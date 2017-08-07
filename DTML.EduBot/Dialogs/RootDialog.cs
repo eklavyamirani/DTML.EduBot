@@ -20,12 +20,12 @@
         private readonly ChitChatDialog _chitChatDialog;
         private readonly IUserDataRepository _userDataRepository;
 
-        private static readonly IEnumerable<string> YesNoChoices = new ReadOnlyCollection<string>
+        private static readonly IReadOnlyCollection<string> YesNoChoices = new ReadOnlyCollection<string>
             (new List<String> {
                 Shared.Yes,
                 Shared.No});
 
-        private static readonly IEnumerable<string> DialogChoices = new ReadOnlyCollection<string>
+        private static readonly IReadOnlyCollection<string> DialogChoices = new ReadOnlyCollection<string>
             (new List<String> {
                 Shared.ChatWithBot,
                 Shared.StartTheLessonPlan});
@@ -82,8 +82,7 @@
                 CultureInfo[] allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
                 CultureInfo detectedCulture =
                    allCultures
-                        .Where(cultureInfo => (detectedLanguageIsoCode.Contains(cultureInfo.TwoLetterISOLanguageName)))
-                        .FirstOrDefault();
+                        .FirstOrDefault(cultureInfo => (detectedLanguageIsoCode.Contains(cultureInfo.TwoLetterISOLanguageName)));
 
                 string detectedLanguageName = CultureInfo.GetCultureInfo(MessageTranslator.DEFAULT_LANGUAGE).DisplayName;
 
@@ -92,17 +91,18 @@
                     detectedLanguageName = detectedCulture.DisplayName;
                 }
 
-                string translatedSwitchQuestion = await MessageTranslator.TranslateTextAsync($"Do you want to switch to {detectedLanguageName}", detectedLanguageIsoCode);
-
-                string translatedDontUnderstand = await MessageTranslator.TranslateTextAsync(Shared.DoNotUnderstand, detectedLanguageIsoCode);
+                var translatedSwitchQuestionTask = MessageTranslator.TranslateTextAsync($"Do you want to switch to {detectedLanguageName}", detectedLanguageIsoCode);
+                var translatedDontUnderstandTask = MessageTranslator.TranslateTextAsync(Shared.DoNotUnderstand, detectedLanguageIsoCode);
+                var translatedChoicesTask = MessageTranslator.TranslateTextAsync(YesNoChoices, detectedLanguageIsoCode);
+                await Task.WhenAll(translatedSwitchQuestionTask, translatedDontUnderstandTask, translatedChoicesTask);
 
                 PromptDialog.Choice(
                     context,
                     this.AfterChoosingLanguageSwitch,
-                    await MessageTranslator.TranslatedChoices(YesNoChoices, detectedLanguageIsoCode),
-                    translatedSwitchQuestion,
-                    translatedDontUnderstand,
-                    attempts: Shared.MaxAttempt
+                    translatedChoicesTask.Result,
+                    translatedSwitchQuestionTask.Result,
+                    translatedDontUnderstandTask.Result,
+                    attempts: Shared.MaxPromptAttempts
                 );
             }
         }
@@ -124,45 +124,49 @@
         private async Task AfterChitChatComplete(IDialogContext context, IAwaitable<object> result)
         {
             // Chit chat should never end, error if we get here
-            await context.PostAsync("Sorry, I seem to be getting tired here, I'll take a power nap and get back to you!");
-            await this.StartAsync(context);
+            await Task.WhenAll(context.PostAsync("Sorry, I seem to be getting tired here, I'll take a power nap and get back to you!"),
+                        this.StartAsync(context));
         }
 
         private async Task AfterDialogEnded(IDialogContext context, IAwaitable<object> result)
         {
-            // BUG: this actually waits for user to respond. Needs to be proactive.		 +            try
+            // BUG: this actually waits for user to respond. Needs to be proactive.
             await this.StartAsync(context);
         }
 
         private async Task AfterChoosingLanguageSwitch(IDialogContext context, IAwaitable<object> result)
         {
             var response = await result as string;
+            if (response == null)
+            {
+                await this.StartAsync(context);
+                return;
+            }
 
             try
             {
                 UserData userData = _userDataRepository.GetUserData(context.Activity.From.Id);
+                var translatedResponse = await MessageTranslator.TranslateTextAsync(response);
 
-                string translatedYes = await MessageTranslator.TranslateTextAsync(Shared.Yes.ToString(), userData.NativeLanguageIsoCode);
-                string translatedNo = await MessageTranslator.TranslateTextAsync(Shared.No, userData.NativeLanguageIsoCode);
-
-                if (translatedYes.Equals(response, StringComparison.OrdinalIgnoreCase))
+                if (translatedResponse.Equals(Shared.Yes, StringComparison.InvariantCultureIgnoreCase))
                 {
                     string translatedSelfIntroduction =
                         await MessageTranslator.TranslateTextAsync(BotPersonality.BotSelfIntroduction,
                             userData.NativeLanguageIsoCode);
-                    await context.PostAsync($"{translatedSelfIntroduction}");
 
-                    string translatedUserNameQuestion =
-                        await MessageTranslator.TranslateTextAsync(BotPersonality.UserNameQuestion,
+                    var introductionResponseTask = context.PostAsync($"{translatedSelfIntroduction}");
+                    var translatedUserNameQuestionTask =
+                        MessageTranslator.TranslateTextAsync(BotPersonality.UserNameQuestion,
                             userData.NativeLanguageIsoCode);
-                    await context.PostAsync($"{translatedUserNameQuestion}");
+                    await Task.WhenAll(introductionResponseTask, translatedUserNameQuestionTask);
+
+                    await context.PostAsync(translatedUserNameQuestionTask.Result);
 
                     context.Wait(this.UserNameReceivedInNativeLanguageAsync);
                 }
-                else if (translatedNo.Equals(response, StringComparison.OrdinalIgnoreCase))
+                else
                 {
                     await context.PostAsync($"{BotPersonality.UserNameQuestion}");
-
                     context.Wait(this.UserNameReceivedAsync);
                 }
             }
@@ -171,10 +175,8 @@
                 UserData userData = _userDataRepository.GetUserData(context.Activity.From.Id);
 
                 string translatedTooManyAttemptMessage = await MessageTranslator.TranslateTextAsync(Shared.TooManyAttemptMessage, userData.NativeLanguageIsoCode);
-
-                await context.PostAsync($"{translatedTooManyAttemptMessage}");
-
-                await this.StartAsync(context);
+                await Task.WhenAll(context.PostAsync($"{translatedTooManyAttemptMessage}"),
+                    this.StartAsync(context));
             }
         }
     }

@@ -65,17 +65,25 @@
             }
         }
 
-        public static async Task<ICollection<string>> TranslatedChoices(IEnumerable<string> choices, string languageToTranslate)
+        public static async Task<IReadOnlyCollection<string>> TranslateTextAsync(IReadOnlyCollection<string> inputStrings, string targetLanguage)
         {
-            ICollection<string> translatedChoices = new Collection<string>();
-
-            foreach (string choice in choices)
+            if (inputStrings == null || !inputStrings.Any())
             {
-                string translatedChoice = await MessageTranslator.TranslateTextAsync(choice, languageToTranslate);
-                translatedChoices.Add(translatedChoice);
+                return new List<string>();
             }
 
-            return translatedChoices;
+            try
+            {
+                var results = await client.TranslateTextAsync(inputStrings, targetLanguage);
+                var translatedStrings = results.Select(result => result.TranslatedText);
+                return translatedStrings.ToList();
+            }
+            catch (Exception)
+            {
+                // TODO: Add logging.
+                return inputStrings;
+            }
+
         }
     }
 }

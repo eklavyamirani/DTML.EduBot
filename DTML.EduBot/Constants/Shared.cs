@@ -8,7 +8,7 @@ namespace DTML.EduBot.Constants
 {
     public class Shared
     {
-        public const int MaxAttempt = 2;
+        public const int MaxPromptAttempts = 2;
 
         public const string ClientNewLine = "<br/>";
         public const string NoMoreLessonsMessage = "That's all the lessons for today. Have a nice rest of your day!";

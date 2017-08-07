@@ -27,7 +27,7 @@
                 LevelChoices,
                 "Which level are you?",
                 Shared.DoNotUnderstand,
-                attempts: Shared.MaxAttempt);
+                attempts: Shared.MaxPromptAttempts);
 
             return Task.CompletedTask;
         }

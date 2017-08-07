@@ -57,7 +57,7 @@
                 lessonTitle,
                 $"{friendlyUserName} Which lesson would you like to start?",
                 Shared.DoNotUnderstand,
-                attempts: Shared.MaxAttempt);
+                attempts: Shared.MaxPromptAttempts);
 
             return Task.CompletedTask;
         }
