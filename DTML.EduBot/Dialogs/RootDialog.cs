@@ -7,7 +7,6 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Autofac;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
     using DTML.EduBot.Common;

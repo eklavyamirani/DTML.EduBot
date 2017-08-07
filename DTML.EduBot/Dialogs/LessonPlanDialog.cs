@@ -3,16 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
+    using AdaptiveCards;
+    using DTML.EduBot.Constants;
+    using DTML.EduBot.LessonPlan;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
-    using DTML.EduBot.LessonPlan;
-    using DTML.EduBot.Constants;
-    using System.Collections.ObjectModel;
     using UserData;
-    using Autofac;
-    using AdaptiveCards;
-    using System.Threading;
 
     [Serializable]
     public class LessonPlanDialog : IDialog<string>
