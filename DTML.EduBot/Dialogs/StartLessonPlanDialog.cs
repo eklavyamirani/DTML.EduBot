@@ -34,7 +34,7 @@
 
             IReadOnlyCollection<string> translatedResponses;
             string language;
-            if (context.UserData.TryGetValue(Constants.Shared.UserLanguageCodeKey, out language) && language != "en")
+            if (context.UserData.TryGetValue(Constants.Shared.UserLanguageCodeKey, out language) && language != MessageTranslator.DEFAULT_LANGUAGE)
             {
                 translatedResponses = await MessageTranslator.TranslateTextAsync(possibleResponses, language);
             }

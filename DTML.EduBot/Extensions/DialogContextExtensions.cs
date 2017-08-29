@@ -9,7 +9,7 @@
         public static async Task PostTranslatedAsync(this IDialogContext context, string message)
         {
             string language;
-            if (context.UserData.TryGetValue(Constants.Shared.UserLanguageCodeKey, out language) && language != "en")
+            if (context.UserData.TryGetValue(Constants.Shared.UserLanguageCodeKey, out language) && language != MessageTranslator.DEFAULT_LANGUAGE)
             {
                 var translatedMessage = await MessageTranslator.TranslateTextAsync(message, language);
                 await context.PostAsync(translatedMessage);
