@@ -196,6 +196,7 @@
     <Compile Include="Dialogs\UserInformation.cs" />
     <Compile Include="Dialogs\ChitChatDialog.cs" />
     <Compile Include="Dialogs\WhatIsDialog.cs" />
+    <Compile Include="Extensions\DialogContextExtensions.cs" />
     <Compile Include="Extensions\Require.cs" />
     <Compile Include="Extensions\Set.cs" />
     <Compile Include="Gamification\GamerProfile.cs" />

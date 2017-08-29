@@ -15,7 +15,7 @@
 
     public class MessageTranslator
     {
-        public static readonly string DEFAULT_LANGUAGE = "en";
+        public const string DEFAULT_LANGUAGE = "en";
         private static TranslationClient client = TranslationClient.Create();
 
         /// <summary>

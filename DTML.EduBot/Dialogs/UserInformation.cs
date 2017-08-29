@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Threading.Tasks;
-using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Builder.Luis;
-using Microsoft.Bot.Builder.Luis.Models;
-using Microsoft.Bot.Connector;
-using DTML.EduBot.Common;
-using DTML.EduBot.Constants;
-
 namespace DTML.EduBot.Dialogs
 {
+    using System.Threading.Tasks;
+    using Common;
+    using Constants;
+    using Extensions;
+    using Microsoft.Bot.Builder.Dialogs;
+    using Microsoft.Bot.Builder.Luis;
+    using Microsoft.Bot.Builder.Luis.Models;
+
     public partial class ChitChatDialog : QnaLuisDialog<object>
     {
         private const int InitiateLessonPlan = 0;
@@ -24,7 +21,6 @@ namespace DTML.EduBot.Dialogs
             string BotResponse = BotPersonality.GetRandomGenericResponse() + Shared.ClientNewLine;
             if (result.TryFindEntity(BotEntities.Name, out entity))
             {
-
                 ChatContext.Username = entity.Entity;
                 BotResponse = BotPersonality.BotResponseToUserName + " " + ChatContext.Username + "! " + Shared.ClientNewLine;
             }
@@ -33,7 +29,7 @@ namespace DTML.EduBot.Dialogs
                 BotResponse = BotPersonality.GetRandomGenericResponse();
             }
 
-            await context.PostAsync(BotResponse);
+            await context.PostTranslatedAsync(BotResponse);
             await EngageWithUser(context);
         }
 
@@ -41,11 +37,11 @@ namespace DTML.EduBot.Dialogs
         {
             if (random.Next(2) == InitiateLessonPlan)
             {
-                AskToStartLessonPlan(context);
+                await AskToStartLessonPlan(context);
             }
             else
             {
-                await context.PostAsync(BotPersonality.BuildAcquaintance());
+                await context.PostTranslatedAsync(BotPersonality.BuildAcquaintance());
             }
         }
     }

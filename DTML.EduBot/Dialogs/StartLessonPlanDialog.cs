@@ -1,9 +1,12 @@
 ﻿namespace DTML.EduBot.Dialogs
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
-    using DTML.EduBot.Common;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Builder.Luis.Models;
+    using Common;
+    using Extensions;
 
     public partial class ChitChatDialog : QnaLuisDialog<object>
     {
@@ -21,13 +24,30 @@
             return Task.CompletedTask;
         }
 
-        private void AskToStartLessonPlan(IDialogContext context)
+        private async Task AskToStartLessonPlan(IDialogContext context)
         {
+            var possibleResponses = new List<string>()
+            {
+                BotPersonality.GetStartLessonPlanQuestion(),
+                BotPersonality.BotResponseToGibberish
+            };
+
+            IReadOnlyCollection<string> translatedResponses;
+            string language;
+            if (context.UserData.TryGetValue(Constants.Shared.UserLanguageCodeKey, out language) && language != "en")
+            {
+                translatedResponses = await MessageTranslator.TranslateTextAsync(possibleResponses, language);
+            }
+            else
+            {
+                translatedResponses = possibleResponses;
+            }
+
             PromptDialog.Confirm(
                 context, 
                 TryStartLessonPlan, 
-                BotPersonality.GetStartLessonPlanQuestion(), 
-                BotPersonality.BotResponseToGibberish);
+                translatedResponses.ElementAtOrDefault(0) ?? string.Empty,
+                translatedResponses.ElementAtOrDefault(1) ?? string.Empty);
         }
 
         private async Task TryStartLessonPlan(IDialogContext context, IAwaitable<bool> result)
@@ -39,8 +59,8 @@
             }
             else
             {
-                await context.PostAsync(BotPersonality.BotResponseToDeclinedLessonPlan);
-                await context.PostAsync(BotPersonality.BuildAcquaintance());
+                await context.PostTranslatedAsync(BotPersonality.BotResponseToDeclinedLessonPlan);
+                await context.PostTranslatedAsync(BotPersonality.BuildAcquaintance());
             }
         }
 
