@@ -34,5 +34,6 @@ namespace DTML.EduBot.Constants
         public const string LevelThree = "3";
         public const string LevelFour = "4";
         public const string LevelFive = "5";
+        public const string UserLanguageCodeKey = "UserLanguageCode";
     }
 }
