@@ -4,6 +4,13 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Configuration;
+using System.Net.WebSockets;
+using System.Threading;
+using System.Linq;
+using System.Text;
+using Microsoft.Bot.Connector.DirectLine;
+using System.Collections.Generic;
+using DTML.EduBot.Common;
 
 namespace Edubot.WebTests
 {
@@ -35,6 +42,38 @@ namespace Edubot.WebTests
             var serializedResponse = await response.Content.ReadAsStringAsync();
             var data = JObject.Parse(serializedResponse);
             Assert.IsFalse(string.IsNullOrEmpty(data.Value<string>("conversationId")));
+        }
+
+        [TestMethod]
+        public async Task BotSendsIntroductionOnStartup()
+        {
+            var fakeSender = new ChannelAccount
+            {
+                Id = "0000-0000-0000-0000",
+                Name = "Unit Test"
+            };
+
+            var client = new DirectLineClient(_token);
+            var updateActivity = new Activity
+            {
+                Type = ActivityTypes.ConversationUpdate
+            };
+
+            updateActivity.MembersAdded = new List<ChannelAccount> {
+                fakeSender
+            };
+
+            updateActivity.From = fakeSender;
+
+            var conversation = await client.Conversations.StartConversationAsync();
+            var response = await client.Conversations.PostActivityAsync(conversation.ConversationId, updateActivity);
+            var activitySet = await client.Conversations.GetActivitiesAsync(conversation.ConversationId, null);
+            var receivedActivity = activitySet.Activities
+                .FirstOrDefault((activity) => activity.Conversation.Id == conversation.ConversationId 
+                                              && activity.From.Id != fakeSender.Id);
+
+            Assert.IsNotNull(receivedActivity);
+            Assert.AreEqual(BotPersonality.BotSelfIntroduction, receivedActivity.Text);
         }
     }
 }
