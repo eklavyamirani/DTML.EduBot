@@ -20,10 +20,7 @@
         private IUserDataRepository _userDataRepository;
         private static readonly IReadOnlyCollection<string> LevelChoices = new List<string> {
                 Shared.LevelOne,
-                Shared.LevelTwo,
-                Shared.LevelThree,
-                Shared.LevelFour,
-                Shared.LevelFive};
+                Shared.LevelTwo};
 
         public LessonPlanDialog(IUserDataRepository userDataRepository)
         {
@@ -42,7 +39,7 @@
             int i = 0;
             foreach (Lesson lesson in LessonPlanModule.LessonPlan.Lessons)
             {
-                if (i >= 5) break;
+                if (i >= 7) break;
 
                 lessonTitle.Add(lesson.LessonTitle);
                 i++;

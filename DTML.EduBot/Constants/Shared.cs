@@ -29,11 +29,12 @@ namespace DTML.EduBot.Constants
         public const string DoNotUnderstand = "I am sorry but I didn't understand that. I need you to select one of the options below";
         public const string ReadyForQuiz = "Are you ready for the quiz?";
 
-        public const string LevelOne = "1";
-        public const string LevelTwo = "2";
-        public const string LevelThree = "3";
+        public const string LevelOne = "Don't know English";
+        public const string LevelTwo = "I know some English";
+        public const string LevelThree = "I am an expert";
         public const string LevelFour = "4";
         public const string LevelFive = "5";
         public const string UserLanguageCodeKey = "UserLanguageCode";
+        public const string UserName = "UserName";
     }
 }

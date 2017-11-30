@@ -14,9 +14,7 @@
         private static readonly IReadOnlyCollection<string> LevelChoices = new List<String> {
                 Shared.LevelOne,
                 Shared.LevelTwo,
-                Shared.LevelThree,
-                Shared.LevelFour,
-                Shared.LevelFive};
+                Shared.LevelThree};
 
         private readonly LessonPlanDialog _lessonPlanDialog;
 
@@ -31,7 +29,7 @@
                 context,
                 this.AfterLevelSelected,
                 LevelChoices,
-                "Which level are you?",
+                "How much English do you already know?",
                 Shared.DoNotUnderstand,
                 attempts: Shared.MaxPromptAttempts);
 

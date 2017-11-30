@@ -18,6 +18,7 @@
     public class RootDialog : IDialog<string>
     {
         private readonly ChitChatDialog _chitChatDialog;
+        private readonly LevelDialog _levelDialog;
         private readonly IUserDataRepository _userDataRepository;
 
         private static readonly IReadOnlyCollection<string> YesNoChoices = new ReadOnlyCollection<string>
@@ -30,10 +31,11 @@
                 Shared.ChatWithBot,
                 Shared.StartTheLessonPlan});
 
-        public RootDialog(ChitChatDialog chitChatDialog, IUserDataRepository userDataRepository)
+        public RootDialog(ChitChatDialog chitChatDialog, LevelDialog _levelDialog, IUserDataRepository userDataRepository)
         {
             this._chitChatDialog = chitChatDialog;
             this._userDataRepository = userDataRepository;
+            this._levelDialog = _levelDialog;
         }
 
         public Task StartAsync(IDialogContext context)
@@ -45,23 +47,27 @@
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
             var userText = context.Activity.From.Name;
+            IMessageActivity messageActivity;
 
             try
             {
-                userText = (await result).Text;
+                messageActivity = (await result);
             }
             catch (Exception)
             {
+                messageActivity = null;
                 // Swallow exception for the demo purpose
                 // TODO log the exception
             }
 
             string detectedLanguageIsoCode = await MessageTranslator.IdentifyLangAsync(userText);
+            string userName = context.UserData.ContainsKey(Constants.Shared.UserName) ? context.UserData.GetValue<string>(Constants.Shared.UserName) : string.Empty;
             context.UserData.SetValue(Constants.Shared.UserLanguageCodeKey, detectedLanguageIsoCode);
             var userData = _userDataRepository.GetUserData(context.Activity.From.Id);
             if (userData == null)
             {
                 userData = new UserData();
+                userData.UserName = userName;
                 userData.UserId = context.Activity.From.Id;
                 userData.NativeLanguageIsoCode = detectedLanguageIsoCode;
             }
@@ -70,10 +76,15 @@
 
             if (MessageTranslator.DEFAULT_LANGUAGE.Equals(detectedLanguageIsoCode))
             {
-                await context.PostAsync(BotPersonality.UserNameQuestion);
-
-                // detected it's english language
-                context.Wait(this.UserNameReceivedAsync);
+                if (string.IsNullOrWhiteSpace(userName))
+                {
+                    await context.PostAsync(BotPersonality.UserNameQuestion);
+                    context.Wait(this.UserNameReceivedAsync);
+                }
+                else
+                {
+                    await context.Forward(_chitChatDialog, this.AfterChitChatComplete, messageActivity, CancellationToken.None);
+                }
             }
             else
             {
@@ -114,6 +125,7 @@
         private async Task UserNameReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
             var messageActivity = await result;
+            context.UserData.SetValue(Constants.Shared.UserName, messageActivity.Text);
             await context.Forward(_chitChatDialog, this.AfterChitChatComplete, messageActivity, CancellationToken.None);
         }
 
@@ -122,14 +134,15 @@
             IMessageActivity userText = await result;
             string userTextInEnglish = await MessageTranslator.TranslateTextAsync(userText.Text);
             userText.Text = userTextInEnglish;
+            context.UserData.SetValue(Constants.Shared.UserName, userTextInEnglish);
             await context.Forward(_chitChatDialog, this.AfterChitChatComplete, userText, CancellationToken.None);
         }
 
         private async Task AfterChitChatComplete(IDialogContext context, IAwaitable<object> result)
         {
+            string userName = context.UserData.ContainsKey(Constants.Shared.UserName) ? context.UserData.GetValue<string>(Constants.Shared.UserName) : string.Empty;
             // Chit chat should never end, error if we get here
-            await Task.WhenAll(context.PostTranslatedAsync("Sorry, I seem to be getting tired here, I'll take a power nap and get back to you!"),
-                        this.StartAsync(context));
+            await Task.WhenAll(context.PostTranslatedAsync($"OK, {userName}. What do you want to do now? Type, 'learn english' to start learning lessons"), this.StartAsync(context));
         }
 
         private async Task AfterDialogEnded(IDialogContext context, IAwaitable<object> result)
@@ -154,6 +167,7 @@
 
                 if (translatedResponse.Equals(Shared.Yes, StringComparison.InvariantCultureIgnoreCase))
                 {
+
                     string translatedSelfIntroduction =
                         await MessageTranslator.TranslateTextAsync(BotPersonality.BotSelfIntroduction,
                             userData.NativeLanguageIsoCode);
