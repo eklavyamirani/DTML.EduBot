@@ -1,6 +1,6 @@
-﻿using System;
-namespace DTML.EduBot.Dialogs
+﻿namespace DTML.EduBot.Dialogs
 {
+    using System;
     using System.Threading.Tasks;
     using Common;
     using Constants;
@@ -8,6 +8,7 @@ namespace DTML.EduBot.Dialogs
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Builder.Luis;
     using Microsoft.Bot.Builder.Luis.Models;
+    using System.Linq;
 
     public partial class ChitChatDialog : QnaLuisDialog<object>
     {
@@ -19,14 +20,48 @@ namespace DTML.EduBot.Dialogs
         {
             EntityRecommendation entity;
             string BotResponse = BotPersonality.GetRandomGenericResponse() + Shared.ClientNewLine;
+
             if (result.TryFindEntity(BotEntities.Name, out entity))
             {
+
                 ChatContext.Username = entity.Entity;
                 BotResponse = BotPersonality.BotResponseToUserName + " " + ChatContext.Username + "! " + Shared.ClientNewLine;
             }
-            else
+            else if (result.Entities.Any(e => e.Type == BotEntities.Hobby))
             {
-                BotResponse = BotPersonality.GetRandomGenericResponse();
+
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Animal))
+            {
+
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Place))
+            {
+
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Language))
+            {
+
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Family))
+            {
+
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Color))
+            {
+
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Subject))
+            {
+
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Food))
+            {
+
+            }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Drink))
+            {
+
             }
 
             await context.PostTranslatedAsync(BotResponse);
