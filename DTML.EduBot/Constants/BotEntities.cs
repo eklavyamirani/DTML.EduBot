@@ -8,6 +8,8 @@ namespace DTML.EduBot.Constants
     public static class BotEntities
     {
         public static string Name = "name";
+        public static string PlaceLive = "place_live";
+        public static string DTML = "dtml";
         public static string Age = "age";
         public static string Time = "time";
         public static string Date = "date";

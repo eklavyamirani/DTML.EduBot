@@ -48,9 +48,9 @@
                 return;
             }
 
-            var UserData = context.UserData.GetValue<DTML.EduBot.UserData.UserData>("UserDataRepositoryKey");
+            var UserData = context.UserData.ContainsKey("UserDataRepositoryKey") ? context.UserData.GetValue<DTML.EduBot.UserData.UserData>("UserDataRepositoryKey") : null;
 
-            if (!UserData.NativeLanguageIsoCode.Equals(MessageTranslator.DEFAULT_LANGUAGE))
+            if (UserData != null && !UserData.NativeLanguageIsoCode.Equals(MessageTranslator.DEFAULT_LANGUAGE))
             {
                 messageText = await MessageTranslator.TranslateTextAsync(messageText, MessageTranslator.DEFAULT_LANGUAGE);
             }

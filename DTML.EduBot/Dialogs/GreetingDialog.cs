@@ -29,7 +29,7 @@ namespace DTML.EduBot.Dialogs
                 await context.PostAsync(botresponse);
             }
             else {
-                await context.PostAsync(":)");
+                await context.PostTranslatedAsync("Hello...");
             }
         }
 

@@ -51,9 +51,9 @@
         }
                 
         private async Task AfterChitChatComplete(IDialogContext context, IAwaitable<object> result)
-        {
+        {            
             string userName = context.UserData.ContainsKey(Constants.Shared.UserName) ? context.UserData.GetValue<string>(Constants.Shared.UserName) : string.Empty;
-            await Task.WhenAll(context.PostTranslatedAsync($"OK, {userName}. What do you want to do now? Type 'learn english' to start learning lessons or ask me any question"), this.StartAsync(context));
+            await Task.WhenAll(context.PostTranslatedAsync($"OK {userName}, what do you want to do now? Type 'learn english' to start learning lessons or ask me any question"), this.StartAsync(context));
         }
 
         private async Task AfterDialogEnded(IDialogContext context, IAwaitable<object> result)

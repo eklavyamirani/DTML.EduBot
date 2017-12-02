@@ -14,6 +14,7 @@ namespace DTML.EduBot.Common
         public const string BotLanguageIntroduction = "My {0} is not very good, but I wil try...";
         public const string BotName = "Professor Edword Jr.";
         public const string UserNameQuestion = "What is your name?";
+        public const string Thankyou = "Thank you";
         public const string BotResponseUnrecognizedIntent = "I'm still learning just as you are, this is not something I know...";
         public const string BotResponseToGibberish = "Hmm, that doesn't sound right, can you please rephrase?";
         public const string BotResponseToUserName = "That's a nice name";

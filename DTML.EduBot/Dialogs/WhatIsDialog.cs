@@ -8,6 +8,10 @@ namespace DTML.EduBot.Dialogs
     using DTML.EduBot.Common;
     using DTML.EduBot.Extensions;
     using System;
+    using AdaptiveCards;
+    using System.Collections.Generic;
+    using Microsoft.Bot.Connector;
+    using System.Threading;
 
     public partial class ChitChatDialog : QnaLuisDialog<object>
     {
@@ -41,9 +45,52 @@ namespace DTML.EduBot.Dialogs
                 await context.PostTranslatedAsync($"Oh yeah, let me check my digital calendar. Today is... {date}");
             }
             else
+            if (result.Entities.Any(e => e.Type.Equals(BotEntities.PlaceLive, System.StringComparison.CurrentCultureIgnoreCase)))
+            {
+                await context.PostTranslatedAsync($"Well, I live on DTML.org website. Please visit me sometime.");
+            }
+            else
             {
                 await context.PostTranslatedAsync(BotPersonality.GetRandomGenericResponse());
             }
+        }
+
+        private async Task<bool> PostAdaptiveCard(IDialogContext context, string url, string title, string imageURL, string text)
+        {
+            List<ActionBase> answerOptions = new List<ActionBase>();
+            ActionBase action = new OpenUrlAction() { Title = title, Url = url };
+            answerOptions.Add(action);
+
+            AdaptiveCard adaptiveCard = new AdaptiveCard()
+            {
+                Body = new List<CardElement>()
+                {                   
+                    new TextBlock()
+                    {
+                        Text = text,
+                        Wrap = true
+                    },
+                    new Image()
+                    {
+                        Size = ImageSize.Large,
+                        Url  = imageURL,
+                        HorizontalAlignment= HorizontalAlignment.Center
+                    },
+                },
+                Actions = answerOptions
+            };
+
+            Attachment attachment = new Attachment()
+            {
+                ContentType = AdaptiveCard.ContentType,
+                Content = adaptiveCard
+            };
+
+            var reply = context.MakeMessage();
+            reply.Attachments.Add(attachment);
+
+            await context.PostAsync(reply, CancellationToken.None);
+            return true;
         }
     }
 }

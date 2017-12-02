@@ -183,7 +183,7 @@
   <ItemGroup>
     <Content Include="default.htm" />
     <Content Include="Global.asax" />
-    <Content Include="translation.json" />
+    <None Include="translation.json" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -201,7 +201,6 @@
     <Compile Include="Dialogs\BasicDialogModule.cs" />
     <Compile Include="Dialogs\BotQuestionsDialog.cs" />
     <Compile Include="Dialogs\LearnEnglishDialog.cs" />
-    <Compile Include="Dialogs\MeaningDialog.cs" />
     <Compile Include="Dialogs\NavigateDialog.cs" />
     <Compile Include="Dialogs\LevelDialog.cs" />
     <Compile Include="Dialogs\QuizDialog.cs" />
