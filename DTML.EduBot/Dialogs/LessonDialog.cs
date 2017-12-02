@@ -12,6 +12,8 @@
     using Microsoft.Bot.Connector;
     using Models;
     using System.Collections.ObjectModel;
+    using DTML.EduBot.Extensions;
+    using Helpers;
 
     [Serializable]
     public class LessonDialog : IDialog<string>
@@ -78,7 +80,7 @@
             var reply = context.MakeMessage();
             reply.Attachments.Add(attachment);
 
-            await context.PostAsync(reply, CancellationToken.None);
+            await context.PostLogAsync(null, reply);
             return true;
         }
 
@@ -113,12 +115,12 @@
 
             if (studentResponse.Answer != null && studentResponse.Answer.Equals(topic.CorrectAnswer, StringComparison.InvariantCultureIgnoreCase))
             {
-                await context.PostAsync(topic.CorrectAnswerBotResponse);
+                await context.PostLogAsync(topic.CorrectAnswerBotResponse);
                 context.Wait(this.CheckTypedAnswerAsync);
             }
             else
             {
-                await Task.WhenAll(context.PostAsync(topic.WrongAnswerBotResponse),
+                await Task.WhenAll(context.PostLogAsync(topic.WrongAnswerBotResponse),
                     this.StartAsync(context));
             }
         }
@@ -140,7 +142,7 @@
             }
             else
             {
-                await Task.WhenAll(context.PostAsync(topic.WrongAnswerBotResponse),
+                await Task.WhenAll(context.PostLogAsync(topic.WrongAnswerBotResponse),
                     this.StartAsync(context));
             }
         }
@@ -153,14 +155,14 @@
                 return;
             }
 
-            await context.PostAsync(Shared.CorrectAnswerMessage);
+            await context.PostLogAsync(Shared.CorrectAnswerMessage);
             await this.PostAudioInstruction(context, topic);
             context.Wait(CheckAudioExercise);
         }
 
         private async Task PostAudioInstruction(IDialogContext context, Topic topic)
         {
-            await context.PostAsync(Shared.RepeatAfterMe);
+            await context.PostLogAsync(Shared.RepeatAfterMe);
 
             // client handling at: https://github.com/eklavyamirani/BotFramework-WebChat/commit/a0cc2cf87563414c558691583788bbd8e8c8f6a2
             await context.SayAsync(topic.CorrectAnswer, topic.CorrectAnswer, new MessageOptions
@@ -185,7 +187,7 @@
                 return;
             }
 
-            await Task.WhenAll(context.PostAsync(Shared.CorrectAnswerMessage),
+            await Task.WhenAll(context.PostLogAsync(Shared.CorrectAnswerMessage),
                                this.WrapUpCurrentTopic(context));
         }
 
@@ -198,12 +200,12 @@
             {
                 topicMessage += "\U00002B50";
             }
-            await context.PostAsync(topicMessage);
+            await context.PostLogAsync(topicMessage);
 
             if (lesson.currentTopic >= lesson.Topics.Count - 1)
             // after finish last topic, ask if they want to take lesson's quiz
             {
-                await context.PostAsync(Shared.AllTopicsCompleteMessage);
+                await context.PostLogAsync(Shared.AllTopicsCompleteMessage);
                 PromptDialog.Choice(
                     context,
                     this.AfterWrapUpCurrentLesson,
@@ -230,13 +232,13 @@
                 }
                 else
                 {
-                    context.Done(Shared.LessonCompleteMessage);
+                    await context.DoneLogAsync(Shared.LessonCompleteMessage);
                 }
             }
             catch (TooManyAttemptsException)
             {
-                await context.PostAsync("It looks like you are not ready.");
-                context.Done(Shared.LessonCompleteMessage);
+                await context.PostLogAsync("It looks like you are not ready.");
+                await context.DoneLogAsync(Shared.LessonCompleteMessage);
             }
         }
 
@@ -244,7 +246,7 @@
         {
             // The current lesson finished. Plug in Analytics.
             var finalMessage = await result;
-            await context.PostAsync(finalMessage);
+            await context.PostLogAsync(finalMessage);
             context.Done(Shared.LessonCompleteMessage);
         }
 

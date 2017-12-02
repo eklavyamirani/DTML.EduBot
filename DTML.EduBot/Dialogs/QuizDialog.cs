@@ -11,6 +11,7 @@
     using Microsoft.Bot.Connector;
     using Models;
     using System.Collections.ObjectModel;
+    using DTML.EduBot.Extensions;
 
     [Serializable]
     public class QuizDialog : IDialog<string>
@@ -67,7 +68,7 @@
             var reply = context.MakeMessage();
             reply.Attachments.Add(attachment);
 
-            await context.PostAsync(reply, CancellationToken.None);
+            await context.PostLogAsync(null, reply);
             return true;
         }
 
@@ -93,7 +94,7 @@
             // if the answer given is correct
             if (studentAnswer != null && studentAnswer.Equals(question.CorrectAnswer, StringComparison.InvariantCultureIgnoreCase))
             {
-                await context.PostAsync(question.CorrectAnswerBotResponse);
+                await context.PostLogAsync(question.CorrectAnswerBotResponse);
 
                 // check if run out of questions
                 if (quiz.currentQuestion > quiz.Questions.Count - 1)
@@ -108,7 +109,7 @@
             }
             else
             {
-                await context.PostAsync(question.WrongAnswerBotResponse);
+                await context.PostLogAsync(question.WrongAnswerBotResponse);
                 await this.StartAsync(context);
             }
         }

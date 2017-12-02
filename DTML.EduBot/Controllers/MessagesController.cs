@@ -10,6 +10,7 @@
     using DTML.EduBot.Dialogs;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
+    using DTML.EduBot.Helpers;
 
     [BotAuthentication]
     public class MessagesController : ApiController
@@ -31,6 +32,7 @@
             {
                 if (activity.Type == ActivityTypes.Message)
                 {
+                    var message = activity as IMessageActivity;
                     await Conversation.SendAsync(activity, () => _rootDialog);
                 }
                 else
@@ -41,11 +43,13 @@
                 var response = Request.CreateResponse(HttpStatusCode.OK);
                 return response;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                e.Data.Add("id", activity.From.Id);
-                throw e;
+                Console.WriteLine(ex.Message);
+                //e.Data.Add("id", activity.From.Id);
+                //throw e;
             }
+            return null;
         }
 
         private async Task<Activity> HandleSystemMessageAsync(Activity message)
@@ -60,18 +64,8 @@
                 // Handle conversation state changes, like members being added and removed
                 // Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
                 // Not available in all channels
-
                 // Ensure the auto messages don't fire in group conversations and only when bot gets added to the conversation.
-                var isGroupConversation = message.Conversation.IsGroup.HasValue && message.Conversation.IsGroup.Value;
-                if (!isGroupConversation && message.MembersAdded.Any(member => member.Name == message.Recipient.Name))
-                {
-                    using (ConnectorClient connector = new ConnectorClient(new Uri(message.ServiceUrl)))
-                    {
-                        // TODO: start the root activity here.
-                        Activity reply = message.CreateReply(BotPersonality.BotSelfIntroduction);
-                        await connector.Conversations.ReplyToActivityAsync(reply);
-                    }
-                }
+                await ConversationHelper.LoadConversation(message);
             }
             else if (message.Type == ActivityTypes.ContactRelationUpdate)
             {

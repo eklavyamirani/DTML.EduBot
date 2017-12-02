@@ -70,8 +70,8 @@
 
             if (MessageTranslator.DEFAULT_LANGUAGE.Equals(detectedLanguageIsoCode))
             {
-                await context.PostAsync(BotPersonality.UserNameQuestion);
-
+                await context.PostLogAsync(BotPersonality.UserNameQuestion);
+                
                 // detected it's english language
                 context.Wait(this.UserNameReceivedAsync);
             }
