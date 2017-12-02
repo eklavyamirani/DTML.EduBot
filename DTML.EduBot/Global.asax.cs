@@ -8,6 +8,12 @@ namespace DTML.EduBot
     using Autofac.Integration.WebApi;
     using DTML.EduBot.Dialogs;
     using System;
+    using System.Configuration;
+    using Microsoft.Bot.Builder.Dialogs;
+    using Microsoft.Bot.Builder.Azure;
+    using Microsoft.Bot.Builder.Dialogs.Internals;
+    using Microsoft.Bot.Connector;
+    using DTML.Common.Helpers;
 
     public class WebApiApplication : System.Web.HttpApplication
     {
@@ -29,6 +35,24 @@ namespace DTML.EduBot
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
 
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", Server.MapPath("translation.json"));
+
+            var store = new TableBotDataStore(KeyVaultHelper.StorageConnectionString);
+
+            Conversation.UpdateContainer(
+            build =>
+            {
+                build.Register(c => store)
+                          .Keyed<IBotDataStore<BotData>>(AzureModule.Key_DataStore)
+                          .AsSelf()
+                          .SingleInstance();
+
+                build.Register(c => new CachingBotDataStore(store,
+                           CachingBotDataStoreConsistencyPolicy
+                           .ETagBasedConsistency))
+                           .As<IBotDataStore<BotData>>()
+                           .AsSelf()
+                           .InstancePerLifetimeScope();
+            });
         }
     }
 }

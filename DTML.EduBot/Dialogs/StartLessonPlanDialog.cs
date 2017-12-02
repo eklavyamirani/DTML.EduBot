@@ -7,6 +7,7 @@
     using Microsoft.Bot.Builder.Luis.Models;
     using Common;
     using Extensions;
+    using Helpers;
 
     public partial class ChitChatDialog : QnaLuisDialog<object>
     {
@@ -73,7 +74,6 @@
         {
             context.Wait(this.MessageReceived);
             return Task.CompletedTask;
-
         }
     }
 }

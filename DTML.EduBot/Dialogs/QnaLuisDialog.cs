@@ -9,6 +9,7 @@
     using Microsoft.Bot.Connector;
     using Microsoft.Bot.Builder.Luis;
     using Microsoft.Bot.Builder.Luis.Models;
+    using DTML.EduBot.Extensions;
 
     [Serializable]
     public abstract class QnaLuisDialog<TResult> : LuisDialog<TResult>
@@ -32,7 +33,7 @@
 
         protected virtual async Task QnaHandler(IDialogContext context, IQnaResult result)
         {
-            await context.PostAsync(result.Answer);
+            await context.PostLogAsync(result.Answer);
         }
 
         protected override async Task MessageReceived(IDialogContext context, IAwaitable<IMessageActivity> item)

@@ -11,6 +11,7 @@
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
     using UserData;
+    using DTML.EduBot.Extensions;
 
     [Serializable]
     public class LessonPlanDialog : IDialog<string>
@@ -120,7 +121,7 @@
                     var reply = context.MakeMessage();
                     reply.Attachments.Add(attachment);
 
-                    await context.PostAsync(reply, CancellationToken.None);
+                    await context.PostLogAsync(null, reply);
                 });
 
                 await Task.WhenAll(tasks);
@@ -128,7 +129,7 @@
 
             // The current lesson finished. Plug in Analytics.
             var finalMessage = await result;
-            await context.PostAsync(finalMessage);
+            await context.PostLogAsync(finalMessage);
 
             // Refactor
             var updatedUserData = _userDataRepository.GetUserData(context.Activity.From.Id);
