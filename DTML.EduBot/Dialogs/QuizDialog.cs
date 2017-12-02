@@ -91,7 +91,7 @@
             }
 
             // if the answer given is correct
-            if (studentAnswer != null && studentAnswer.Equals(question.CorrectAnswer, StringComparison.InvariantCultureIgnoreCase))
+            if (studentAnswer != null && question.CorrectAnswers.Any(answers => studentAnswer.Equals(answers, StringComparison.InvariantCultureIgnoreCase)))
             {
                 await context.PostAsync(question.CorrectAnswerBotResponse);
 

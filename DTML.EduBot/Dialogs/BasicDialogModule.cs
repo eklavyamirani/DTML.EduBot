@@ -12,6 +12,9 @@
             builder.RegisterType<LessonPlanDialog>();
             builder.RegisterType<ChitChatDialog>();
             builder.RegisterType<LevelDialog>();
+            builder.RegisterType<LearnEnglishDialog>();
+            builder.RegisterType<MeaningDialog>();
+            builder.RegisterType<NavigateDialog>();
         }
     }
 }

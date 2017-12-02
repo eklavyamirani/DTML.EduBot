@@ -10,9 +10,11 @@ namespace DTML.EduBot.Common
     {
         private static int Index = 0;
         public const string BotSelfIntroduction = "Hi I am " + BotName;
+        public const string BotSelfIntroductionStart = "Hi I am " + BotName+", ask me any question or type 'learn english' to start learning plan";
+        public const string BotLanguageIntroduction = "My {0} is not very good, but I wil try...";
         public const string BotName = "Professor Edword Jr.";
         public const string UserNameQuestion = "What is your name?";
-        public const string BotResponseUnrecognizedIntent = "I'm still learning just as you are, I will think and get back to you";
+        public const string BotResponseUnrecognizedIntent = "I'm still learning just as you are, this is not something I know...";
         public const string BotResponseToGibberish = "Hmm, that doesn't sound right, can you please rephrase?";
         public const string BotResponseToUserName = "That's a nice name";
         public const string BotResponseToDeclinedLessonPlan = "Aww! Okay let's keep chatting";

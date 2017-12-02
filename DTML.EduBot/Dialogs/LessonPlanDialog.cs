@@ -11,6 +11,7 @@
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
     using UserData;
+    using DTML.EduBot.Common;
 
     [Serializable]
     public class LessonPlanDialog : IDialog<string>
@@ -27,12 +28,13 @@
             _userDataRepository = userDataRepository;
         }
 
-        public Task StartAsync(IDialogContext context)
+        public async Task StartAsync(IDialogContext context)
         {
-            var _oldGamerProfile = GetUserGamerProfile(context.Activity.From.Id);
+            var _oldGamerProfile = GetUserGamerProfile(context);
             _userPointsBeforeLessonPlan = _oldGamerProfile.Points;
-            string friendlyUserName = context.Activity.From.Name;
-
+            var user = _userDataRepository.GetUserData(context);
+            string friendlyUserName = user?.UserName;
+            
             ICollection<string> lessonTitle = new List<string>();
 
             // get up to 5 lessons
@@ -41,19 +43,21 @@
             {
                 if (i >= 7) break;
 
+                //var lessonInNativaLanguage = await MessageTranslator.TranslateTextAsync(lesson.LessonTitle, user?.NativeLanguageIsoCode);
                 lessonTitle.Add(lesson.LessonTitle);
                 i++;
             }
+
+            var questionInNativeLanguage = await MessageTranslator.TranslateTextAsync($"Wich lesson would you like to start?", user?.NativeLanguageIsoCode);
 
             PromptDialog.Choice(
                 context,
                 this.AfterLessonSelected,
                 lessonTitle,
-                $"{friendlyUserName} Which lesson would you like to start?",
+                $"{questionInNativeLanguage}",
                 Shared.DoNotUnderstand,
                 attempts: Shared.MaxPromptAttempts);
 
-            return Task.CompletedTask;
         }
 
         private async Task AfterLessonSelected(IDialogContext context, IAwaitable<string> result)
@@ -81,7 +85,8 @@
         {
             // TODO: inject dependency
             var badgeRepository = new Gamification.BadgeRepository();
-            var updatedProfile = GetUserGamerProfile(context.Activity.From.Id);
+            var updatedProfile = GetUserGamerProfile(context);
+            var user = _userDataRepository.GetUserData(context);
             updatedProfile.Points += _pointsPerLesson;
             var newBadges = badgeRepository.GetEligibleBadges(updatedProfile, _userPointsBeforeLessonPlan);
             updatedProfile.Badges.AddRange(newBadges);
@@ -101,7 +106,7 @@
                             },
                             new TextBlock()
                             {
-                                Text = $"You unlocked {badge}",
+                                Text = await MessageTranslator.TranslateTextAsync($"You unlocked {badge}", user?.NativeLanguageIsoCode),
                                 Size = TextSize.Large,
                                 Wrap = true
                             }
@@ -128,15 +133,15 @@
             await context.PostAsync(finalMessage);
 
             // Refactor
-            var updatedUserData = _userDataRepository.GetUserData(context.Activity.From.Id);
+            var updatedUserData = _userDataRepository.GetUserData(context);
             updatedUserData.GamerProfile = updatedProfile;
-            _userDataRepository.UpdateUserData(updatedUserData);
+            _userDataRepository.UpdateUserData(updatedUserData, context);
             context.Done(string.Empty);
         }
 
-        private Gamification.GamerProfile GetUserGamerProfile(string userId)
+        private Gamification.GamerProfile GetUserGamerProfile(IDialogContext context)
         {
-            var userData = _userDataRepository.GetUserData(userId);
+            var userData = _userDataRepository.GetUserData(context);
             if (userData == null)
             {
                 userData = new UserData();

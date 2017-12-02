@@ -1,35 +1,29 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Microsoft.Bot.Builder.Internals.Fibers;
+using Microsoft.Bot.Builder.Dialogs;
 
 namespace DTML.EduBot.UserData
 {
     [Serializable]
     public class UserDataRepository : IUserDataRepository
     {
-        // TODO persist in database instead in memory
-        private IDictionary<string, UserData> userDataStore =
-            new ConcurrentDictionary<string, UserData>(Environment.ProcessorCount * 2, 101);
-
-        public void UpdateUserData(UserData userData)
+        private const string UserDataRepositoryKey = "UserDataRepositoryKey";
+        public void UpdateUserData(UserData userData, IDialogContext context)
         {
-            if (GetUserData(userData.UserId) == null)
+            if (userData != null)
             {
-                userDataStore.Add(userData.UserId, userData);
-            }
-            else
-            {
-                userDataStore.Remove(userData.UserId);
-                userDataStore.Add(userData.UserId, userData);
+                context.UserData.SetValue<UserData>(UserDataRepositoryKey, userData);
             }
         }
 
-        public UserData GetUserData(string userId)
+        public UserData GetUserData(IDialogContext context)
         {
             UserData userData = null;
 
-            if (!userDataStore.TryGetValue(userId, out userData))
+            if (!context.UserData.TryGetValue(UserDataRepositoryKey, out userData))
             {
                 return null;
             }

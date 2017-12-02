@@ -9,23 +9,25 @@
     using Microsoft.Bot.Builder.Luis;
     using Microsoft.Bot.Builder.Luis.Models;
     using System.Linq;
+    using DTML.EduBot.UserData;
 
     public partial class ChitChatDialog : QnaLuisDialog<object>
     {
         private const int InitiateLessonPlan = 0;
         private readonly Random random = new Random();
+        //private readonly IUserDataRepository _userDataRepository;
 
         [LuisIntent("UserInfo")]
         public async Task HandleUserInformation(IDialogContext context, LuisResult result)
         {
             EntityRecommendation entity;
             string BotResponse = BotPersonality.GetRandomGenericResponse() + Shared.ClientNewLine;
+           // var userData = _userDataRepository.GetUserData(context);
 
             if (result.TryFindEntity(BotEntities.Name, out entity))
             {
 
-                ChatContext.Username = entity.Entity;
-                BotResponse = BotPersonality.BotResponseToUserName + " " + ChatContext.Username + "! " + Shared.ClientNewLine;
+                BotResponse = BotPersonality.BotSelfIntroduction + Shared.ClientNewLine;
             }
             else if (result.Entities.Any(e => e.Type == BotEntities.Hobby))
             {

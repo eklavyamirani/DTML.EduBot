@@ -9,6 +9,7 @@
     using Microsoft.Bot.Connector;
     using Microsoft.Bot.Builder.Luis;
     using Microsoft.Bot.Builder.Luis.Models;
+    using DTML.EduBot.Common;
 
     [Serializable]
     public abstract class QnaLuisDialog<TResult> : LuisDialog<TResult>
@@ -45,6 +46,13 @@
                 var result = new LuisResult() { TopScoringIntent = intent };
                 await DispatchToIntentHandler(context, item, intent, result);
                 return;
+            }
+
+            var UserData = context.UserData.GetValue<DTML.EduBot.UserData.UserData>("UserDataRepositoryKey");
+
+            if (!UserData.NativeLanguageIsoCode.Equals(MessageTranslator.DEFAULT_LANGUAGE))
+            {
+                messageText = await MessageTranslator.TranslateTextAsync(messageText, MessageTranslator.DEFAULT_LANGUAGE);
             }
 
             // Modify request by the service to add attributes and then by the dialog to reflect the particular query

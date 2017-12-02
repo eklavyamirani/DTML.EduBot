@@ -7,14 +7,17 @@
     using Microsoft.Bot.Builder.Luis.Models;
     using Common;
     using Extensions;
+    using DTML.EduBot.UserData;
 
     public partial class ChitChatDialog : QnaLuisDialog<object>
     {
         private LevelDialog _levelDialog;
+        private IUserDataRepository userDataRepository;
 
-        public ChitChatDialog(LevelDialog levelDialog)
+        public ChitChatDialog(LevelDialog levelDialog, IUserDataRepository userDataRepository)
         {
             _levelDialog = levelDialog;
+            this.userDataRepository = userDataRepository;
         }
 
         [LuisIntent("LearnEnglish")]

@@ -10,15 +10,18 @@
     using DTML.EduBot.Dialogs;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
+    using DTML.EduBot.UserData;
 
     [BotAuthentication]
     public class MessagesController : ApiController
     {
         private readonly RootDialog _rootDialog;
+        private readonly IUserDataRepository _userDataRepository;
 
-        public MessagesController(RootDialog rootDialog)
+        public MessagesController(RootDialog rootDialog, IUserDataRepository userDataRepository)
         {
             _rootDialog = rootDialog;
+            _userDataRepository = userDataRepository;
         }
 
         /// <summary>
@@ -68,7 +71,7 @@
                     using (ConnectorClient connector = new ConnectorClient(new Uri(message.ServiceUrl)))
                     {
                         // TODO: start the root activity here.
-                        Activity reply = message.CreateReply(BotPersonality.BotSelfIntroduction);
+                        Activity reply = message.CreateReply(BotPersonality.BotSelfIntroductionStart);
                         await connector.Conversations.ReplyToActivityAsync(reply);
                     }
                 }

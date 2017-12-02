@@ -1,6 +1,7 @@
 ﻿{
   "lessons": [
     {
+      "lesson_level":  1,
       "lesson_title": "Yummy yummy food",
       "topics": [
         {
@@ -11,7 +12,7 @@
             "The sky",
             "An apple"
           ],
-          "correct_answer": "An apple"
+          "correct_answers": [ "An apple", "apple" ]
         },
         {
           "question": "Nice job! Try this one:",
@@ -21,7 +22,7 @@
             "A fish",
             "The milk"
           ],
-          "correct_answer": "The milk",
+          "correct_answers": [ "The milk", "milk" ],
           "correct_answer_bot_response": "Good! Now, can you type the word?",
           "wrong_answer_bot_response": "Oops, that's not right, try again",
           "pronounciation_phrase": "Nice! Here is how you say it, Repeat after me.",
@@ -36,7 +37,7 @@
             "The bread",
             "The milk"
           ],
-          "correct_answer": "The bread",
+          "correct_answers": [ "The bread", "bread" ],
           "correct_answer_bot_response": "Wow good job! Type it in now",
           "wrong_answer_bot_response": "Sorry, incorrect, try again",
           "pronounciation_phrase": "Good! Now repeat after me",
@@ -51,7 +52,7 @@
             "An egg",
             "A cat"
           ],
-          "correct_answer": "An egg",
+          "correct_answers": [ "An egg", "egg" ],
           "correct_answer_bot_response": "Correct! Now, can you type the word?",
           "wrong_answer_bot_response": "Oops, that's incorrect, try again",
           "pronounciation_phrase": "Nice! Here is how you say it, repeat after me.",
@@ -64,28 +65,28 @@
           {
             "question": "This is an ____",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/apple-158419_640.png",
-            "correct_answer": "apple",
+            "correct_answers": [ "apple", "an apple" ],
             "correct_answer_bot_response": "Correct!",
             "wrong_answer_bot_response": "Oops, that is incorrect."
           },
           {
             "question": "This is ___ ____",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/milk-2474993_640.jpg",
-            "correct_answer": "the milk",
-            "correct_answer_bot_response": "Correct!",
+            "correct_answers": [ "the milk" ],
+            "correct_answer_bot_response": "Great!",
             "wrong_answer_bot_response": "Oops, that's not right, try again"
           },
           {
             "question": "This is ___ ____",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/bread.jpg",
-            "correct_answer": "the bread",
-            "correct_answer_bot_response": "Correct!",
+            "correct_answers": [ "the bread" ],
+            "correct_answer_bot_response": "Yup, that's right!",
             "wrong_answer_bot_response": "Oops, that is incorrect."
           },
           {
             "question": "This is __ ___",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/egg.png",
-            "correct_answer": "an egg",
+            "correct_answers": [ "an egg" ],
             "correct_answer_bot_response": "Correct!",
             "wrong_answer_bot_response": "Oops, that is incorrect."
           }
@@ -93,6 +94,7 @@
       }
     },
     {
+      "lesson_level": 1,
       "lesson_title": "Fun with my fluffy farm friends",
       "topics": [
         {
@@ -103,7 +105,7 @@
             "A dog",
             "A fish"
           ],
-          "correct_answer": "A cat",
+          "correct_answers": [ "A cat", "cat" ],
           "correct_answer_bot_response": "Correct! Could you type the word?",
           "wrong_answer_bot_response": "Oops, that's not right, try again",
           "pronounciation_phrase": "Nice! Here is how you say it, repeat after me.",
@@ -118,7 +120,7 @@
             "The bread",
             "A fish"
           ],
-          "correct_answer": "A fish",
+          "correct_answers": [ "A fish", "fish" ],
           "correct_answer_bot_response": "Good! Now, can you type the word?",
           "wrong_answer_bot_response": "Hmm..Try again please",
           "pronounciation_phrase": "Good! Now lets repeat after me",
@@ -133,7 +135,7 @@
             "A dog",
             "A baby"
           ],
-          "correct_answer": "A dog",
+          "correct_answers": [ "a dog", "dog" ],
           "correct_answer_bot_response": "Good job! Can you type the word now?",
           "wrong_answer_bot_response": "Oops, that's not right, try again.",
           "pronounciation_phrase": "Good! Now repeat after me",
@@ -148,7 +150,7 @@
             "The bread",
             "A cow"
           ],
-          "correct_answer": "A cow",
+          "correct_answers": [ "a cow", "cow" ],
           "correct_answer_bot_response": "Nice work! Try typing the word now",
           "wrong_answer_bot_response": "Hmm...try again please",
           "pronounciation_phrase": "Nice! Here is how you say it, repeat after me.",
@@ -163,7 +165,7 @@
             "A dog",
             "A pig"
           ],
-          "correct_answer": "A pig",
+          "correct_answers": [ "a pig", "pig" ],
           "correct_answer_bot_response": "Super! Try typing the word now.",
           "wrong_answer_bot_response": "Hmm...try again please",
           "pronounciation_phrase": "Good! Now follow along with me please.",
@@ -178,7 +180,7 @@
             "The milk",
             "A chicken"
           ],
-          "correct_answer": "A chicken",
+          "correct_answers": [ "A chicken", "chicken" ],
           "correct_answer_bot_response": "Nice work! Try typing the word now",
           "wrong_answer_bot_response": "Hmm...try again please",
           "pronounciation_phrase": "Good! Now follow along with me please.",
@@ -193,7 +195,7 @@
             "A boy",
             "A bed"
           ],
-          "correct_answer": "A bird",
+          "correct_answers": [ "a bird", "bird" ],
           "correct_answer_bot_response": "Nice work! Try typing the word now",
           "wrong_answer_bot_response": "Hmm...try again please",
           "pronounciation_phrase": "Good job! Here is how you say it, repeat after me.",
@@ -206,28 +208,28 @@
           {
             "question": "The ___ likes to bark!",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/a%20dog.jpg",
-            "correct_answer": "dog",
+            "correct_answers": [ "dog" ],
             "correct_answer_bot_response": "Correct!",
             "wrong_answer_bot_response": "Oops, that is incorrect."
           },
           {
             "question": "This is a ____.",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/fish.jpg",
-            "correct_answer": "fish",
+            "correct_answers": [ "fish" ],
             "correct_answer_bot_response": "Correct!",
             "wrong_answer_bot_response": "Oops, that's not right, try again"
           },
           {
             "question": "This is a ___.",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/cow.png",
-            "correct_answer": "cow",
+            "correct_answers": [ "cow" ],
             "correct_answer_bot_response": "Correct!",
             "wrong_answer_bot_response": "Oops, that is incorrect."
           },
           {
             "question": "This is a ___.",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/pig.jpg",
-            "correct_answer": "pig",
+            "correct_answers": [ "pig" ],
             "correct_answer_bot_response": "Correct!",
             "wrong_answer_bot_response": "Oops, that is incorrect."
           }
@@ -235,41 +237,42 @@
       }
     },
     {
+      "lesson_level": 2,
       "lesson_title": "So many humans and people oh my!",
       "quiz": {
         "questions": [
           {
             "question": "The ________ are very noisy.",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/children.jpg",
-            "correct_answer": "children",
+            "correct_answers": [ "children" ],
             "correct_answer_bot_response": "Correct!",
             "wrong_answer_bot_response": "Oops, that is incorrect."
           },
           {
             "question": "The ____ likes to cry.",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/paternity-633453_640.jpg",
-            "correct_answer": "baby",
+            "correct_answers": [ "baby" ],
             "correct_answer_bot_response": "Correct!",
             "wrong_answer_bot_response": "Oops, that's not right, try again"
           },
           {
             "question": "My ______ is reading a book.",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/mother.jpg",
-            "correct_answer": "mother",
+            "correct_answers": [ "mother" ],
             "correct_answer_bot_response": "Correct!",
             "wrong_answer_bot_response": "Oops, that is incorrect."
           },
           {
             "question": "A ____ is singing a song.",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/girl.jpg",
-            "correct_answer": "girl",
+            "correct_answers": [ "girl" ],
             "correct_answer_bot_response": "Correct!",
             "wrong_answer_bot_response": "Oops, that is incorrect."
           },
           {
             "question": "The girl is talking to her ______.",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/father.jpg",
-            "correct_answer": "father",
+            "correct_answers": [ "father" ],
             "correct_answer_bot_response": "Correct!",
             "wrong_answer_bot_response": "Oops, that is incorrect."
           }
@@ -284,7 +287,7 @@
             "The girl",
             "A baby"
           ],
-          "correct_answer": "The boy",
+          "correct_answers": [ "The boy", "boy" ],
           "correct_answer_bot_response": "Correct! Could you type the word?",
           "wrong_answer_bot_response": "Sorry, incorrect, try again.",
           "pronounciation_phrase": "Good work! Here is how you say it. Repeat after me.",
@@ -299,7 +302,7 @@
             "A girl",
             "A dog"
           ],
-          "correct_answer": "My father",
+          "correct_answers": [ "My father", "father", "a father" ],
           "correct_answer_bot_response": "Good! Now, can you type the word?",
           "wrong_answer_bot_response": "oops, that's not right, try again",
           "pronounciation_phrase": "Nice! Here is how you say it, repeat after me.",
@@ -314,7 +317,7 @@
             "My father",
             "My mother"
           ],
-          "correct_answer": "My mother",
+          "correct_answers": [ "My mother", "mother", "mom", "a mother" ],
           "correct_answer_bot_response": "Wow good job! Type it in now.",
           "wrong_answer_bot_response": "Sorry, incorrect, try again.",
           "pronounciation_phrase": "Good! Now repeat after me",
@@ -329,7 +332,7 @@
             "A dog",
             "A girl"
           ],
-          "correct_answer": "A girl",
+          "correct_answers": [ "A girl", "girl" ],
           "correct_answer_bot_response": "Correct! Now, can you type the word?",
           "wrong_answer_bot_response": "Oops, that's not right, try again",
           "pronounciation_phrase": "Nice! Here is how you say it, repeat after me.",
@@ -344,7 +347,7 @@
             "A man",
             "An apple"
           ],
-          "correct_answer": "A man",
+          "correct_answers": [ "A man", "man", "human", "person", "a person", "a male", "male" ],
           "correct_answer_bot_response": "Good job! Could you type the word now?",
           "wrong_answer_bot_response": "Sorry, incorrect, try again",
           "pronounciation_phrase": "Good! Now repeat after me",
@@ -359,7 +362,7 @@
             "My father",
             "My sister"
           ],
-          "correct_answer": "My sister",
+          "correct_answers": [ "My sister", "sister", "a sister" ],
           "correct_answer_bot_response": "Correct! Now can you type the word?",
           "wrong_answer_bot_response": "Sorry, incorrect, please try again",
           "pronounciation_phrase": "Awesome! Please repeat after me.",
@@ -374,7 +377,7 @@
             "My sister",
             "My brother"
           ],
-          "correct_answer": "My brother",
+          "correct_answers": [ "My brother", "brother", "a brother" ],
           "correct_answer_bot_response": "Good! Now can you type the word?",
           "wrong_answer_bot_response": "Hmm...try again please",
           "pronounciation_phrase": "Great! Now lets repeat after me.",
@@ -389,7 +392,7 @@
             "A girl",
             "The children"
           ],
-          "correct_answer": "The children",
+          "correct_answers": [ "The children", "children", "kids" ],
           "correct_answer_bot_response": "Correct! Could you type the word?",
           "wrong_answer_bot_response": "Oops, that's not right, try again",
           "pronounciation_phrase": "Nice! Here is how you say it, repeat after me",
@@ -404,7 +407,7 @@
             "A robot",
             "My father"
           ],
-          "correct_answer": "A baby",
+          "correct_answers": [ "A baby", "baby" ],
           "correct_answer_bot_response": "Correct! Now can you type the word?",
           "wrong_answer_bot_response": "Sorry, incorrect, try again",
           "pronounciation_phrase": "Good work! Here is how you say it, repeat after me",
@@ -414,41 +417,42 @@
       ]
     },
     {
+      "lesson_level": 2,
       "lesson_title": "Extra fun and extra cool nouns!",
       "quiz": {
         "questions": [
           {
             "question": "I want to play with a ____",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/ball.png",
-            "correct_answer": "ball",
+            "correct_answers": [ "ball" ],
             "correct_answer_bot_response": "Correct!",
             "wrong_answer_bot_response": "Oops, that is incorrect."
           },
           {
             "question": "The girl wants to read ___ ____",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/book.jpg",
-            "correct_answer": "the book",
+            "correct_answers": [ "the book" ],
             "correct_answer_bot_response": "Correct!",
             "wrong_answer_bot_response": "Oops, that's not right, try again"
           },
           {
             "question": "At _____ I will go to sleep.",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/night.png",
-            "correct_answer": "night",
+            "correct_answers": [ "night" ],
             "correct_answer_bot_response": "Correct!",
             "wrong_answer_bot_response": "Oops, that is incorrect."
           },
           {
             "question": "I live in my ____.",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/house.png",
-            "correct_answer": "home",
+            "correct_answers": [ "home" ],
             "correct_answer_bot_response": "Correct!",
             "wrong_answer_bot_response": "Oops, that is incorrect."
           },
           {
             "question": "I sleep on my ___",
             "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/bed.png",
-            "correct_answer": "bed",
+            "correct_answers": [ "bed" ],
             "correct_answer_bot_response": "Correct!",
             "wrong_answer_bot_response": "Oops, that is incorrect."
           }
@@ -463,7 +467,7 @@
             "An apple",
             "The water"
           ],
-          "correct_answer": "The water",
+          "correct_answers": [ "The water", "water", "glass", "glass with water", "a glass" ],
           "correct_answer_bot_response": "Correct! Could you type the word?",
           "wrong_answer_bot_response": "Sorry, incorrect, try again.",
           "pronounciation_phrase": "Good work! Here is how you say it. Repeat after me.",
@@ -478,7 +482,7 @@
             "A cow",
             "A chicken"
           ],
-          "correct_answer": "A ball",
+          "correct_answers": [ "A ball" ],
           "correct_answer_bot_response": "Good job! Can you type the word now?",
           "wrong_answer_bot_response": "Oops, that's not correct, try again please.",
           "pronounciation_phrase": "Wonderful! Here is how you say it, follow along with me.",
@@ -493,7 +497,7 @@
             "The book",
             "The children"
           ],
-          "correct_answer": "The book",
+          "correct_answers": [ "The book" ],
           "correct_answer_bot_response": "Wow good job! Type it in now.",
           "wrong_answer_bot_response": "Sorry, incorrect, try again.",
           "pronounciation_phrase": "Good! Now repeat after me",
@@ -508,7 +512,7 @@
             "The boy",
             "My home"
           ],
-          "correct_answer": "My home",
+          "correct_answers": [ "My home" ],
           "correct_answer_bot_response": "Correct! Now, can you type the word?",
           "wrong_answer_bot_response": "Hmm...Try again please.",
           "pronounciation_phrase": "Awesome! Please repeat after me!",
@@ -523,7 +527,7 @@
             "Night",
             "A bed"
           ],
-          "correct_answer": "Night",
+          "correct_answers": [ "Night" ],
           "correct_answer_bot_response": "Good! Now, can you type the word?",
           "wrong_answer_bot_response": "Oops, that's not right, try again.",
           "pronounciation_phrase": "Great! Now lets repeat after me.",
@@ -538,7 +542,7 @@
             "A ball",
             "The paper"
           ],
-          "correct_answer": "The paper",
+          "correct_answers": [ "The paper", "paper" ],
           "correct_answer_bot_response": "Good job! Can you type the word now?",
           "wrong_answer_bot_response": "Hmm...try again please.",
           "pronounciation_phrase": "Wonderful! Here is how you say it, follow along with me!",
@@ -553,7 +557,7 @@
             "The bread",
             "A bird"
           ],
-          "correct_answer": "The picture",
+          "correct_answers": [ "The picture", "picture" ],
           "correct_answer_bot_response": "Nice work! Try typing the word yourself now.",
           "wrong_answer_bot_response": "Sorry, incorrect, try again",
           "pronounciation_phrase": "Nice! Here is how you say it, repeat after me.",
@@ -568,7 +572,7 @@
             "A ball",
             "A tree"
           ],
-          "correct_answer": "A tree",
+          "correct_answers": [ "A tree", "tree" ],
           "correct_answer_bot_response": "Super! Try typing the word now.",
           "wrong_answer_bot_response": "Hmm...try again please.",
           "pronounciation_phrase": "Good! Now follow along with me please.",
@@ -583,7 +587,7 @@
             "A bed",
             "The school"
           ],
-          "correct_answer": "The school",
+          "correct_answers": [ "The school", "school", "a school", "my school" ],
           "correct_answer_bot_response": "Correct! Now can you type the word?",
           "wrong_answer_bot_response": "Sorry, incorrect, try again",
           "pronounciation_phrase": "Good work! Here is how you say it, repeat after me",
@@ -598,7 +602,7 @@
             "A bed",
             "A bird"
           ],
-          "correct_answer": "A bed",
+          "correct_answers": [ "a bed", "bed" ],
           "correct_answer_bot_response": "Great! Could you type the word by yourself please?",
           "wrong_answer_bot_response": "Sorry, incorrect, try again",
           "pronounciation_phrase": "Good! Now please repeat after me.",

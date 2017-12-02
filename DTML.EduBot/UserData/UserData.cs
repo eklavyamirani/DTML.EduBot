@@ -11,6 +11,8 @@
 
         public string UserName { get; set; }
 
+        public string UserEnglishLevel{ get; set; }
+
         public string NativeLanguageIsoCode { get; set; }
 
         public Gamification.GamerProfile GamerProfile
