@@ -19,12 +19,10 @@
     {
         private readonly ChitChatDialog _chitChatDialog;
         private readonly LevelDialog _levelDialog;
-        private readonly IUserDataRepository _userDataRepository;
 
-        public RootDialog(ChitChatDialog chitChatDialog, LevelDialog _levelDialog, IUserDataRepository userDataRepository)
+        public RootDialog(ChitChatDialog chitChatDialog, LevelDialog _levelDialog)
         {
             this._chitChatDialog = chitChatDialog;
-            this._userDataRepository = userDataRepository;
             this._levelDialog = _levelDialog;
         }
 

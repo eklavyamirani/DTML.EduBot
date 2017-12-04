@@ -21,7 +21,7 @@
                 await Task.Delay(delay);
                 return;
             }
-            catch (Exception ex)
+            catch (Exception)
             { }
         }
 

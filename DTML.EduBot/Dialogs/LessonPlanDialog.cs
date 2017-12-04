@@ -18,21 +18,19 @@
     {
         private const ulong _pointsPerLesson = 10;
         private ulong _userPointsBeforeLessonPlan;
-        private IUserDataRepository _userDataRepository;
         private static readonly IReadOnlyCollection<string> LevelChoices = new List<string> {
                 Shared.LevelOne,
                 Shared.LevelTwo};
 
-        public LessonPlanDialog(IUserDataRepository userDataRepository)
+        public LessonPlanDialog()
         {
-            _userDataRepository = userDataRepository;
         }
 
         public async Task StartAsync(IDialogContext context)
         {
             var _oldGamerProfile = GetUserGamerProfile(context);
             _userPointsBeforeLessonPlan = _oldGamerProfile.Points;
-            var user = _userDataRepository.GetUserData(context);
+            var user = context.GetUserData();
             string friendlyUserName = user?.UserName;
             
             ICollection<string> lessonTitle = new List<string>();
@@ -86,7 +84,7 @@
             // TODO: inject dependency
             var badgeRepository = new Gamification.BadgeRepository();
             var updatedProfile = GetUserGamerProfile(context);
-            var user = _userDataRepository.GetUserData(context);
+            var user = context.GetUserData();
             updatedProfile.Points += _pointsPerLesson;
             var newBadges = badgeRepository.GetEligibleBadges(updatedProfile, _userPointsBeforeLessonPlan);
             updatedProfile.Badges.AddRange(newBadges);
@@ -133,15 +131,15 @@
             await context.PostAsync(finalMessage);
 
             // Refactor
-            var updatedUserData = _userDataRepository.GetUserData(context);
+            var updatedUserData = context.GetUserData();
             updatedUserData.GamerProfile = updatedProfile;
-            _userDataRepository.UpdateUserData(updatedUserData, context);
+            context.UpdateUserData(updatedUserData);
             context.Done(string.Empty);
         }
 
         private Gamification.GamerProfile GetUserGamerProfile(IDialogContext context)
         {
-            var userData = _userDataRepository.GetUserData(context);
+            var userData = context.GetUserData();
             return userData.GamerProfile;
         }
     }

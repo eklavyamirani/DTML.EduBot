@@ -30,7 +30,7 @@
         [LuisIntent("None")]
         public async Task HandleUnrecognizedIntent(IDialogContext context, LuisResult result)
         {
-            var userData = this.userDataRepository.GetUserData(context);
+            var userData = context.GetUserData();
             var detectedLanguage = await MessageTranslator.IdentifyLangAsync(result.Query);
             if (!detectedLanguage.Equals(userData.NativeLanguageIsoCode) && !detectedLanguage.Equals(MessageTranslator.DEFAULT_LANGUAGE))
             {
@@ -115,7 +115,7 @@
             try
             {
                 var detectedLanguage = context.UserData.GetValue<string>(Constants.Shared.UserLanguageCodeKey);
-                UserData userData = this.userDataRepository.GetUserData(context);
+                UserData userData = context.GetUserData();
                 var translatedResponse = await MessageTranslator.TranslateTextAsync(response);
 
                 if (translatedResponse.Equals(Shared.Yes, StringComparison.InvariantCultureIgnoreCase))
@@ -134,7 +134,7 @@
 
                     await context.PostTranslatedAsync(translatedUserNameQuestionTask.Result);
 
-                    this.userDataRepository.UpdateUserData(userData, context);
+                    context.UpdateUserData(userData);
                     context.Wait(this.UserNameReceivedInNativeLanguageAsync);
                 }
                 else
@@ -146,7 +146,7 @@
             }
             catch (TooManyAttemptsException)
             {
-                UserData userData = this.userDataRepository.GetUserData(context);
+                UserData userData = context.GetUserData();
 
                 string translatedTooManyAttemptMessage = await MessageTranslator.TranslateTextAsync(Shared.TooManyAttemptMessage, userData.NativeLanguageIsoCode);
                 await Task.WhenAll(context.PostTranslatedAsync($"{translatedTooManyAttemptMessage}"),

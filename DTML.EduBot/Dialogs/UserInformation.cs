@@ -72,14 +72,7 @@
 
         private async Task EngageWithUser(IDialogContext context)
         {
-            if (random.Next(2) == InitiateLessonPlan)
-            {
                 await AskToStartLessonPlan(context);
-            }
-            else
-            {
-                await context.PostTranslatedAsync(BotPersonality.BuildAcquaintance());
-            }
         }
     }
 }

@@ -6,7 +6,7 @@
     [Serializable]
     public class UserData
     {
-        private Gamification.GamerProfile _gamerProfile = new Gamification.GamerProfile();
+        private Gamification.GamerProfile _gamerProfile;
 
         public string UserId { get; set; }
 

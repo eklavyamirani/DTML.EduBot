@@ -9,31 +9,30 @@ using DTML.EduBot.Constants;
 
 namespace DTML.EduBot.UserData
 {
-    [Serializable]
-    public class UserDataRepository : IUserDataRepository
+    public static class UserDataExtension
     {
         private const string UserDataRepositoryKey = "UserDataRepositoryKey";
-        public void UpdateUserData(UserData userData, IDialogContext context)
+        public static void UpdateUserData(this IDialogContext context, UserData userData)
         {
             if (userData != null)
             {
                 try
                 {
-                    context.UserData.SetValue<UserData>(UserDataRepositoryKey, userData);
+                    context.PrivateConversationData.SetValue<UserData>(UserDataRepositoryKey, userData);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 { }
             }
         }
 
-        public UserData GetUserData(IDialogContext context)
+        public static UserData GetUserData(this IDialogContext context)
         {
             try
             {
                 UserData userData = null;
                 string userName = context.UserData.ContainsKey(Shared.UserName) ? context.UserData.GetValue<string>(Shared.UserName) : string.Empty;
 
-                if (!context.UserData.TryGetValue(UserDataRepositoryKey, out userData))
+                if (!context.PrivateConversationData.TryGetValue(UserDataRepositoryKey, out userData))
                 {
                     if (userData == null)
                     {
@@ -41,7 +40,7 @@ namespace DTML.EduBot.UserData
                         userData.UserName = userName;
                         userData.UserId = context.Activity.From.Id;
                         userData.NativeLanguageIsoCode = MessageTranslator.DEFAULT_LANGUAGE;
-                        this.UpdateUserData(userData, context);
+                        context.UpdateUserData(userData);
                     }
                 }
             }

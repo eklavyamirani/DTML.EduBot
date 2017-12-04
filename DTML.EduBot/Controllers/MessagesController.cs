@@ -11,6 +11,11 @@
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
     using DTML.EduBot.UserData;
+    using Autofac;
+    using Microsoft.Bot.Builder.Dialogs.Internals;
+    using Microsoft.Bot.Builder.Azure;
+    using Microsoft.IdentityModel.Protocols;
+    using System.Configuration;
 
     [BotAuthentication]
     public class MessagesController : ApiController
@@ -30,7 +35,14 @@
         {
                 if (activity.Type == ActivityTypes.Message)
                 {
-                    await Conversation.SendAsync(activity, () =>
+                    using (ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl)))
+                    {
+                        Activity typing = activity.CreateReply();
+                        typing.Type = ActivityTypes.Typing;
+                        await connector.Conversations.ReplyToActivityAsync(typing);
+                    }
+
+                await Conversation.SendAsync(activity, () =>
                        new ExceptionHandlerDialog<object>(
                           _rootDialog,
                           displayException: true));
@@ -66,11 +78,7 @@
                     if (!isGroupConversation && message.MembersAdded.Any(member => member.Name == message.Recipient.Name))
                     {
                         using (ConnectorClient connector = new ConnectorClient(new Uri(message.ServiceUrl)))
-                        {
-                            Activity typing = message.CreateReply();
-                            typing.Type = ActivityTypes.Typing;
-                            await connector.Conversations.ReplyToActivityAsync(typing);
-
+                        {                          
                             Activity reply = message.CreateReply(BotPersonality.BotSelfIntroductionStart);
                             await connector.Conversations.ReplyToActivityAsync(reply);
                         }

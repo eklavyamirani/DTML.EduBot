@@ -8,6 +8,10 @@ namespace DTML.EduBot
     using Autofac.Integration.WebApi;
     using DTML.EduBot.Dialogs;
     using System;
+    using Microsoft.Bot.Builder.Azure;
+    using Microsoft.Bot.Builder.Dialogs.Internals;
+    using Microsoft.Bot.Connector;
+    using System.Configuration;
 
     public class WebApiApplication : System.Web.HttpApplication
     {
@@ -19,9 +23,22 @@ namespace DTML.EduBot
 
             builder.RegisterModule(new LessonPlanModule());
             builder.RegisterModule(new BasicDialogModule());
-            builder.RegisterModule(new UserDataModule());
 
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+
+            var store = new TableBotDataStore(ConfigurationManager.AppSettings["StorageConnectionString"]);
+
+            builder.Register(c => store)
+                .Keyed<IBotDataStore<BotData>>(AzureModule.Key_DataStore)
+                .AsSelf()
+                .SingleInstance();
+
+            builder.Register(c => new CachingBotDataStore(store,
+                    CachingBotDataStoreConsistencyPolicy
+                    .ETagBasedConsistency))
+                    .As<IBotDataStore<BotData>>()
+                    .AsSelf()
+                    .InstancePerLifetimeScope();
 
             var config = GlobalConfiguration.Configuration;
 

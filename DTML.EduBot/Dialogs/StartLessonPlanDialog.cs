@@ -12,12 +12,10 @@
     public partial class ChitChatDialog : QnaLuisDialog<object>
     {
         private LevelDialog _levelDialog;
-        private IUserDataRepository userDataRepository;
 
-        public ChitChatDialog(LevelDialog levelDialog, IUserDataRepository userDataRepository)
+        public ChitChatDialog(LevelDialog levelDialog)
         {
             _levelDialog = levelDialog;
-            this.userDataRepository = userDataRepository;
         }
 
         [LuisIntent("LearnEnglish")]

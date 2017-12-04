@@ -14,6 +14,7 @@
             builder.RegisterType<LevelDialog>();
             builder.RegisterType<LearnEnglishDialog>();
             builder.RegisterType<NavigateDialog>();
+
         }
     }
 }
