@@ -30,7 +30,7 @@
         [LuisIntent("None")]
         public async Task HandleUnrecognizedIntent(IDialogContext context, LuisResult result)
         {
-            UserData userData = PopulateUserContext(context);
+            var userData = this.userDataRepository.GetUserData(context);
             var detectedLanguage = await MessageTranslator.IdentifyLangAsync(result.Query);
             if (!detectedLanguage.Equals(userData.NativeLanguageIsoCode) && !detectedLanguage.Equals(MessageTranslator.DEFAULT_LANGUAGE))
             {
@@ -41,22 +41,6 @@
             {
                 await context.PostTranslatedAsync(BotPersonality.BotResponseUnrecognizedIntent);
             }
-        }
-
-        private UserData PopulateUserContext(IDialogContext context)
-        {
-            string userName = context.UserData.ContainsKey(Shared.UserName) ? context.UserData.GetValue<string>(Shared.UserName) : string.Empty;
-            var userData = this.userDataRepository.GetUserData(context);
-            if (userData == null)
-            {
-                userData = new UserData();
-                userData.UserName = userName;
-                userData.UserId = context.Activity.From.Id;
-                userData.NativeLanguageIsoCode = MessageTranslator.DEFAULT_LANGUAGE;
-                this.userDataRepository.UpdateUserData(userData, context);
-            }
-
-            return userData;
         }
 
         private async Task SwitchLanguage(IDialogContext context, UserData userData, string locale)

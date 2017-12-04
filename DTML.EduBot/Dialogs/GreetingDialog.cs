@@ -21,15 +21,17 @@ namespace DTML.EduBot.Dialogs
             if (result.Entities.Any(e => e.Type == BotEntities.StartConversation))
             {
                 string botresponse = BotPersonality.GetRandomGreeting();
-                await context.PostAsync(botresponse);
+                await context.PostTranslatedAsync(botresponse);
+                await EngageWithUser(context);
             }
             else if (result.Entities.Any(e => e.Type == BotEntities.EndConversation))
             {
                 string botresponse = BotPersonality.GetRandomGoodbye();
-                await context.PostAsync(botresponse);
+                await context.PostTranslatedAsync(botresponse);
             }
             else {
                 await context.PostTranslatedAsync("Hello...");
+                await EngageWithUser(context);
             }
         }
 

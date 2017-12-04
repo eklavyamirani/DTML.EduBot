@@ -48,12 +48,14 @@
                 return;
             }
 
-            var UserData = context.UserData.ContainsKey("UserDataRepositoryKey") ? context.UserData.GetValue<DTML.EduBot.UserData.UserData>("UserDataRepositoryKey") : null;
+            DTML.EduBot.UserData.UserData UserData = null;
+            context.UserData.TryGetValue<DTML.EduBot.UserData.UserData>("UserDataRepositoryKey", out UserData);
 
             if (UserData != null && !UserData.NativeLanguageIsoCode.Equals(MessageTranslator.DEFAULT_LANGUAGE))
             {
-                messageText = await MessageTranslator.TranslateTextAsync(messageText, MessageTranslator.DEFAULT_LANGUAGE);
+                messageText = await MessageTranslator.TranslateTextAsync(messageText, MessageTranslator.DEFAULT_LANGUAGE);                
             }
+
 
             // Modify request by the service to add attributes and then by the dialog to reflect the particular query
             var tasks = this.services.Select(s => s.QueryAsync(ModifyLuisRequest(s.ModifyRequest(new LuisRequest(messageText))), context.CancellationToken)).ToArray();
@@ -76,7 +78,9 @@
 
             if (winner == null)
             {
-                throw new InvalidOperationException("No winning intent selected from Luis results.");
+                var intent = new IntentRecommendation() { Intent = string.Empty, Score = 1.0 };
+                var result = new LuisResult() { TopScoringIntent = intent };
+                await DispatchToIntentHandler(context, item, intent, result);
             }
 
             if (winner.Result.Dialog?.Status == DialogResponse.DialogStatus.Question)

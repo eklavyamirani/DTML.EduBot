@@ -142,11 +142,6 @@
         private Gamification.GamerProfile GetUserGamerProfile(IDialogContext context)
         {
             var userData = _userDataRepository.GetUserData(context);
-            if (userData == null)
-            {
-                userData = new UserData();
-            }
-
             return userData.GamerProfile;
         }
     }

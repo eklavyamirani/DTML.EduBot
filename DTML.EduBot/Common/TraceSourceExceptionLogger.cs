@@ -10,7 +10,6 @@ namespace DTML.EduBot.Common
     public class TraceSourceExceptionLogger : ExceptionLogger
     {
         private readonly TraceSource _traceSource;
-
         public TraceSourceExceptionLogger(TraceSource traceSource)
         {
             _traceSource = traceSource;

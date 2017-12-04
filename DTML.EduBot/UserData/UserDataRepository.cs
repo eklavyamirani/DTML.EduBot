@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Microsoft.Bot.Builder.Internals.Fibers;
 using Microsoft.Bot.Builder.Dialogs;
+using DTML.EduBot.Common;
+using DTML.EduBot.Constants;
 
 namespace DTML.EduBot.UserData
 {
@@ -15,20 +17,38 @@ namespace DTML.EduBot.UserData
         {
             if (userData != null)
             {
-                context.UserData.SetValue<UserData>(UserDataRepositoryKey, userData);
+                try
+                {
+                    context.UserData.SetValue<UserData>(UserDataRepositoryKey, userData);
+                }
+                catch (Exception ex)
+                { }
             }
         }
 
         public UserData GetUserData(IDialogContext context)
         {
-            UserData userData = null;
-
-            if (!context.UserData.TryGetValue(UserDataRepositoryKey, out userData))
+            try
             {
-                return null;
-            }
+                UserData userData = null;
+                string userName = context.UserData.ContainsKey(Shared.UserName) ? context.UserData.GetValue<string>(Shared.UserName) : string.Empty;
 
-            return userData;
+                if (!context.UserData.TryGetValue(UserDataRepositoryKey, out userData))
+                {
+                    if (userData == null)
+                    {
+                        userData = new UserData();
+                        userData.UserName = userName;
+                        userData.UserId = context.Activity.From.Id;
+                        userData.NativeLanguageIsoCode = MessageTranslator.DEFAULT_LANGUAGE;
+                        this.UpdateUserData(userData, context);
+                    }
+                }
+            }
+            catch
+            { }
+
+            return new UserData();
         }
     }
 }

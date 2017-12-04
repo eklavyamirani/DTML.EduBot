@@ -183,7 +183,6 @@
   <ItemGroup>
     <Content Include="default.htm" />
     <Content Include="Global.asax" />
-    <None Include="translation.json" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -200,6 +199,7 @@
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Dialogs\BasicDialogModule.cs" />
     <Compile Include="Dialogs\BotQuestionsDialog.cs" />
+    <Compile Include="Dialogs\ExceptionHandlerDialog.cs" />
     <Compile Include="Dialogs\LearnEnglishDialog.cs" />
     <Compile Include="Dialogs\NavigateDialog.cs" />
     <Compile Include="Dialogs\LevelDialog.cs" />
@@ -248,6 +248,7 @@
     </Content>
     <Content Include="LessonPlan\lesson_plan.json" />
     <None Include="Properties\PublishProfiles\dtml-edubot-staging - Web Deploy.pubxml" />
+    <Content Include="translation.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
