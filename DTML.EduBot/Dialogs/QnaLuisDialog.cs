@@ -9,6 +9,7 @@
     using Microsoft.Bot.Connector;
     using Microsoft.Bot.Builder.Luis;
     using Microsoft.Bot.Builder.Luis.Models;
+    using Microsoft.Bot.Builder.Dialogs.Internals;
 
     [Serializable]
     public abstract class QnaLuisDialog<TResult> : LuisDialog<TResult>

@@ -280,7 +280,6 @@
     </Content>
     <Content Include="LessonPlan\lesson_plan.json" />
     <None Include="Properties\PublishProfiles\dtml-edubot-staging - Web Deploy.pubxml" />
-    <Content Include="translation.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

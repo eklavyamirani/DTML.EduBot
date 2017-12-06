@@ -6,6 +6,8 @@ using Microsoft.Bot.Builder.Internals.Fibers;
 using Microsoft.Bot.Builder.Dialogs;
 using DTML.EduBot.Common;
 using DTML.EduBot.Constants;
+using Microsoft.Bot.Connector;
+using Microsoft.Bot.Builder.Dialogs.Internals;
 
 namespace DTML.EduBot.UserData
 {

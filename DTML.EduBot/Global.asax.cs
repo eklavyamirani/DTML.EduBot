@@ -12,6 +12,7 @@ namespace DTML.EduBot
     using Microsoft.Bot.Builder.Dialogs.Internals;
     using Microsoft.Bot.Connector;
     using System.Configuration;
+    using Microsoft.Bot.Builder.Dialogs;
 
     public class WebApiApplication : System.Web.HttpApplication
     {
@@ -27,18 +28,23 @@ namespace DTML.EduBot
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
             var store = new TableBotDataStore(ConfigurationManager.AppSettings["StorageConnectionString"]);
+            MicrosoftAppCredentials.TrustServiceUrl("directline.botframework.com ");
 
-            builder.Register(c => store)
+            Conversation.UpdateContainer(
+                 coversation =>
+                 {
+                 coversation.Register(c => store)
                 .Keyed<IBotDataStore<BotData>>(AzureModule.Key_DataStore)
                 .AsSelf()
                 .SingleInstance();
 
-            builder.Register(c => new CachingBotDataStore(store,
-                    CachingBotDataStoreConsistencyPolicy
-                    .ETagBasedConsistency))
-                    .As<IBotDataStore<BotData>>()
-                    .AsSelf()
-                    .InstancePerLifetimeScope();
+                 coversation.Register(c => new CachingBotDataStore(store,
+                 CachingBotDataStoreConsistencyPolicy
+                 .ETagBasedConsistency))
+                 .As<IBotDataStore<BotData>>()
+                 .AsSelf()
+                 .InstancePerLifetimeScope();
+                 });
 
             var config = GlobalConfiguration.Configuration;
 
