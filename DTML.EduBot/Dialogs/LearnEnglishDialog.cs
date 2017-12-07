@@ -9,12 +9,17 @@
     using DTML.EduBot.Qna;
     using Microsoft.Azure;
     using Attributes;
+    using DTML.EduBot.Utilities;
 
     [PreConfiguredLuisModel]
     [PreConfiguredQnaModel]
     [Serializable]
     public partial class LearnEnglishDialog : QnaLuisDialog<object>
     {
+        public LearnEnglishDialog(ILogger logger) : base(logger)
+        {
+        }
+
         [LuisIntent("LearnEnglish")]
         public async Task HandleLearnEnglishIntent(IDialogContext context, LuisResult result)
         {

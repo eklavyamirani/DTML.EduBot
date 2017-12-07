@@ -67,7 +67,6 @@
             }
 
             await context.PostTranslatedAsync(BotResponse);
-            await EngageWithUser(context);
         }
 
         private async Task EngageWithUser(IDialogContext context)

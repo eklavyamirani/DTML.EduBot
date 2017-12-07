@@ -13,6 +13,8 @@ namespace DTML.EduBot
     using Microsoft.Bot.Connector;
     using System.Configuration;
     using Microsoft.Bot.Builder.Dialogs;
+    using DTML.EduBot.Utilities;
+    using Microsoft.Bot.Builder.Internals.Fibers;
 
     public class WebApiApplication : System.Web.HttpApplication
     {
@@ -25,11 +27,18 @@ namespace DTML.EduBot
             builder.RegisterModule(new LessonPlanModule());
             builder.RegisterModule(new BasicDialogModule());
 
+            builder
+            .RegisterType<AzureTableLogger>()
+            .Keyed<ILogger>(FiberModule.Key_DoNotSerialize)
+            .AsSelf()
+            .As<ILogger>()
+            .SingleInstance();
+
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
             var store = new TableBotDataStore(ConfigurationManager.AppSettings["StorageConnectionString"]);
-            MicrosoftAppCredentials.TrustServiceUrl("directline.botframework.com ");
-
+            MicrosoftAppCredentials.TrustServiceUrl("directline.botframework.com");
+   
             Conversation.UpdateContainer(
                  coversation =>
                  {

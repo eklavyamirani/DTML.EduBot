@@ -11,12 +11,17 @@
     using Attributes;
     using System.Linq;
     using DTML.EduBot.Constants;
+    using DTML.EduBot.Utilities;
 
     [PreConfiguredLuisModel]
     [PreConfiguredQnaModel]
     [Serializable]
     public partial class NavigateDialog : QnaLuisDialog<object>
     {
+        public NavigateDialog(ILogger logger) : base(logger)
+        {
+        }
+
         [LuisIntent("Navigate")]
         public async Task HandleNavigateIntent(IDialogContext context, LuisResult result)
         {

@@ -232,7 +232,6 @@
     <Compile Include="Constants\Shared.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Dialogs\BasicDialogModule.cs" />
-    <Compile Include="Dialogs\BotQuestionsDialog.cs" />
     <Compile Include="Dialogs\ExceptionHandlerDialog.cs" />
     <Compile Include="Dialogs\LearnEnglishDialog.cs" />
     <Compile Include="Dialogs\NavigateDialog.cs" />
@@ -273,6 +272,8 @@
     <Compile Include="Qna\QnaService.cs" />
     <Compile Include="UserData\UserData.cs" />
     <Compile Include="Extensions\UserDataExtension.cs" />
+    <Compile Include="Utilities\AzureTableLogger.cs" />
+    <Compile Include="Utilities\ILogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

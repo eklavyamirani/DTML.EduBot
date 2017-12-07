@@ -22,7 +22,6 @@ namespace DTML.EduBot.Dialogs
             {
                 string botresponse = BotPersonality.GetRandomGreeting();
                 await context.PostTranslatedAsync(botresponse);
-                await EngageWithUser(context);
             }
             else if (result.Entities.Any(e => e.Type == BotEntities.EndConversation))
             {
@@ -31,7 +30,6 @@ namespace DTML.EduBot.Dialogs
             }
             else {
                 await context.PostTranslatedAsync("Hello...");
-                await EngageWithUser(context);
             }
         }
 
@@ -39,7 +37,6 @@ namespace DTML.EduBot.Dialogs
         public async Task Courtesy(IDialogContext context, LuisResult result)
         {
             await context.PostTranslatedAsync(BotPersonality.GetRandomGenericResponse());
-            await EngageWithUser(context);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace DTML.EduBot.Dialogs
 {
     using Attributes;
+    using Autofac.Integration.WebApi;
     using Common;
     using DTML.EduBot.Constants;
     using DTML.EduBot.UserData;
@@ -15,6 +16,7 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Web.Http;
 
     [PreConfiguredLuisModel]
     [PreConfiguredQnaModel]
@@ -32,6 +34,9 @@
         {
             var userData = context.GetUserData();
             var detectedLanguage = await MessageTranslator.IdentifyLangAsync(result.Query);
+            
+            await _logger.Log(context.Activity.From.Id, result.Query, "UnrecognizedIntent");
+
             if (!detectedLanguage.Equals(userData.NativeLanguageIsoCode) && !detectedLanguage.Equals(MessageTranslator.DEFAULT_LANGUAGE))
             {
                 context.UserData.SetValue(Constants.Shared.UserLanguageCodeKey, detectedLanguage);
@@ -40,6 +45,7 @@
             else
             {
                 await context.PostTranslatedAsync(BotPersonality.BotResponseUnrecognizedIntent);
+                await EngageWithUser(context);
             }
         }
 

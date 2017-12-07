@@ -10,15 +10,18 @@
     using Microsoft.Bot.Builder.Luis;
     using Microsoft.Bot.Builder.Luis.Models;
     using Microsoft.Bot.Builder.Dialogs.Internals;
+    using DTML.EduBot.Utilities;
 
     [Serializable]
     public abstract class QnaLuisDialog<TResult> : LuisDialog<TResult>
     {
         protected readonly QnaService qnaService;
-        protected const int QNA_THRESHOLD = 80;
+        protected const int QNA_THRESHOLD = 60;
+        protected static ILogger _logger;
 
-        public QnaLuisDialog()
+        public QnaLuisDialog(ILogger logger)
         {
+            _logger = logger;
             qnaService = MakeQnaServiceFromAttributes();
         }
 
@@ -50,11 +53,15 @@
 
             // Modify request by the service to add attributes and then by the dialog to reflect the particular query
             var tasks = this.services.Select(s => s.QueryAsync(ModifyLuisRequest(s.ModifyRequest(new LuisRequest(messageText))), context.CancellationToken)).ToArray();
-            var qnaTask = qnaService.QueryAsync(message.Text, context.CancellationToken);
-            var results = Task.WhenAll(tasks);
+            try
+            {
+                var qnaTask = qnaService.QueryAsync(message.Text, context.CancellationToken);
+                var results = Task.WhenAll(tasks);
 
-            await Task.WhenAll(results, qnaTask);
-            var qnaResult = qnaTask.Result;
+                await Task.WhenAll(results, qnaTask);
+                var qnaResult = qnaTask.Result;
+         
+
             var winners = from result in results.Result.Select((value, index) => new { value, index })
                           let resultWinner = BestIntentFrom(result.value)
                           where resultWinner != null
@@ -85,6 +92,9 @@
             {
                 await DispatchToIntentHandler(context, item, winner.BestIntent, winner.Result);
             }
+            }
+            catch (Exception ex)
+            { Console.Write(ex.Message); }
         }
     }
 }
