@@ -11,18 +11,24 @@
     using Microsoft.Bot.Builder.Luis.Models;
     using Microsoft.Bot.Builder.Dialogs.Internals;
     using DTML.EduBot.Utilities;
+    using System.Collections.ObjectModel;
+    using System.Collections.Generic;
 
     [Serializable]
     public abstract class QnaLuisDialog<TResult> : LuisDialog<TResult>
     {
         protected readonly QnaService qnaService;
-        protected const int QNA_THRESHOLD = 60;
+        protected const int QNA_THRESHOLD = 30;
         protected static ILogger _logger;
+
+        protected IDictionary<string,string> keyPhrases = new Dictionary<string, string>();
 
         public QnaLuisDialog(ILogger logger)
         {
             _logger = logger;
             qnaService = MakeQnaServiceFromAttributes();
+            keyPhrases.Add("learn english", "LearnEnglish");
+            keyPhrases.Add("start learning", "LearnEnglish");
         }
 
         private QnaService MakeQnaServiceFromAttributes()
@@ -43,9 +49,19 @@
         {
             var message = await item;
             var messageText = await GetLuisQueryTextAsync(context, message);
+
             if (messageText == null)
             {
                 var intent = new IntentRecommendation() { Intent = string.Empty, Score = 1.0 };
+                var result = new LuisResult() { TopScoringIntent = intent };
+                await DispatchToIntentHandler(context, item, intent, result);
+                return;
+            }
+
+            if (keyPhrases.ContainsKey(messageText.ToLowerInvariant()))
+            {
+                //TODO: Handle translation
+                var intent = new IntentRecommendation() { Intent = keyPhrases[messageText.ToLowerInvariant()], Score = 1.0 };
                 var result = new LuisResult() { TopScoringIntent = intent };
                 await DispatchToIntentHandler(context, item, intent, result);
                 return;

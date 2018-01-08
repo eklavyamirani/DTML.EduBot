@@ -71,14 +71,16 @@ namespace DTML.EduBot.Utilities
         {
             public string message { get; set; }
             public string eventType { get; set; }
+            public string detectedLanguage { get; set; }
+            public string userId { get; set; }
 
             public string date { get; set; }
 
-            public LogEntry(string userid)
+            public LogEntry(string rowKey)
             {
                 var key = DateTime.Now;
                 PartitionKey = key.Day.ToString(CultureInfo.InvariantCulture) + key.Month.ToString(CultureInfo.InvariantCulture) + key.Year.ToString(CultureInfo.InvariantCulture);
-                RowKey = userid;
+                RowKey = rowKey;
             }
 
             public LogEntry() { }

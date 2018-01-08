@@ -17,6 +17,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using System.Web.Http;
+    using static DTML.EduBot.Utilities.AzureTableLogger;
 
     [PreConfiguredLuisModel]
     [PreConfiguredQnaModel]
@@ -34,8 +35,9 @@
         {
             var userData = context.GetUserData();
             var detectedLanguage = await MessageTranslator.IdentifyLangAsync(result.Query);
-            
-            await _logger.Log(context.Activity.From.Id, result.Query, "UnrecognizedIntent");
+
+            var log = new LogEntry(Guid.NewGuid().ToString()) { userId = context.Activity.From.Id, message = result.Query, detectedLanguage = detectedLanguage, eventType = "UnrecognizedIntent" };
+            await _logger.Log(log);
 
             if (!detectedLanguage.Equals(userData.NativeLanguageIsoCode) && !detectedLanguage.Equals(MessageTranslator.DEFAULT_LANGUAGE))
             {

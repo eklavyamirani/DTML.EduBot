@@ -28,6 +28,11 @@ namespace DTML.EduBot.Dialogs
                 string botresponse = BotPersonality.GetRandomGoodbye();
                 await context.PostTranslatedAsync(botresponse);
             }
+            else if (result.Entities.Any(e => e.Type == BotEntities.Name))
+            {
+                var name = result.Entities.First(e => e.Type == BotEntities.Name);
+                await context.PostTranslatedAsync($"Hello, {name?.Entity}. Nice to meet you!");
+            }
             else {
                 await context.PostTranslatedAsync("Hello...");
             }
