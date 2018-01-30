@@ -1,63 +1,615 @@
-﻿{  
-    "lessons":[  
-        {  
-          "lesson_title":"A few words every day",
-          "topics": [
-            {
-              "question": "Lets start off with 10 questions. Please identify the image below:",
-              "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/paternity-633453_640.jpg",
-              "answer_options": [
-                "A baby",
-                "A robot",
-                "A computer"
-              ],
-              "correct_answer": "A baby"
-            },
-            {
-              "question": "Nice job! Try this one:",
-              "image_url": "https://static.pexels.com/photos/39803/pexels-photo-39803.jpeg",
-              "answer_options": [
-                "The TELEPHONE",
-                "The SKY",
-                "An APPLE"
-              ],
-              "correct_answer": "An APPLE",
-              "correct_answer_bot_response": "Good! Now, can you type the word?",
-              "wrong_answer_bot_response": "Oops, that's not right, try again",
-              "pronounciation_phrase": "Nice! Here is how you say it, Repeat after me."
-            },
-            {
-              "question": "Good job! Lets keep going. Can you tell me what this is?",
-              "image_url": "http://www.naturalheightgrowth.com/wp-content/uploads/2016/06/milk-006.jpg",
-              "answer_options": [
-                "A BOY",
-                "A FISH",
-                "THE MILK"
-              ],
-              "correct_answer": "THE MILK",
-              "correct_answer_bot_response": "Wow good job! Type it in now",
-              "wrong_answer_bot_response": "Sorry, incorrect, try again",
-              "pronounciation_phrase": "Good! Now repeat after me"
-            }
+﻿{
+  "lessons": [
+    {
+      "lesson_level":  1,
+      "lesson_title": "Yummy yummy food",
+      "topics": [
+        {
+          "question": "Please tell me what the picture shows",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/apple-158419_640.png",
+          "answer_options": [
+            "The telephone",
+            "The sky",
+            "An apple"
           ],
-          "quiz": {
-            "questions": [
-              {
-                "question": "This is an:",
-                "image_url": "https://static.pexels.com/photos/39803/pexels-photo-39803.jpeg",
-                "correct_answer": "apple",
-                "correct_answer_bot_response": "Correct!",
-                "wrong_answer_bot_response": "Oops, that's not right, try again"
-              },
-              {
-                "question": "This is a:",
-                "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/paternity-633453_640.jpg",
-                "correct_answer": "baby",
-                "correct_answer_bot_response": "Right!",
-                "wrong_answer_bot_response": "Oops, that's not right, try again"
-              }
-            ]
-          }
+          "correct_answers": [ "An apple", "apple" ]
+        },
+        {
+          "question": "Nice job! Try this one:",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/milk-2474993_640.jpg",
+          "answer_options": [
+            "A boy",
+            "A fish",
+            "The milk"
+          ],
+          "correct_answers": [ "The milk", "milk" ],
+          "correct_answer_bot_response": "Good! Now, can you type the word?",
+          "wrong_answer_bot_response": "Oops, that's not right, try again",
+          "pronounciation_phrase": "Nice! Here is how you say it, Repeat after me.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Good job! Lets keep going. Can you tell me what this is?",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/bread.jpg",
+          "answer_options": [
+            "A dog",
+            "The bread",
+            "The milk"
+          ],
+          "correct_answers": [ "The bread", "bread" ],
+          "correct_answer_bot_response": "Wow good job! Type it in now",
+          "wrong_answer_bot_response": "Sorry, incorrect, try again",
+          "pronounciation_phrase": "Good! Now repeat after me",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Keep up the good work! Lets try another one:",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/egg.png",
+          "answer_options": [
+            "The bread",
+            "An egg",
+            "A cat"
+          ],
+          "correct_answers": [ "An egg", "egg" ],
+          "correct_answer_bot_response": "Correct! Now, can you type the word?",
+          "wrong_answer_bot_response": "Oops, that's incorrect, try again",
+          "pronounciation_phrase": "Nice! Here is how you say it, repeat after me.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
         }
-    ]
+      ],
+      "quiz": {
+        "questions": [
+          {
+            "question": "This is an ____",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/apple-158419_640.png",
+            "correct_answers": [ "apple", "an apple" ],
+            "correct_answer_bot_response": "Correct!",
+            "wrong_answer_bot_response": "Oops, that is incorrect."
+          },
+          {
+            "question": "This is ___ ____",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/milk-2474993_640.jpg",
+            "correct_answers": [ "the milk" ],
+            "correct_answer_bot_response": "Great!",
+            "wrong_answer_bot_response": "Oops, that's not right, try again"
+          },
+          {
+            "question": "This is ___ ____",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/bread.jpg",
+            "correct_answers": [ "the bread" ],
+            "correct_answer_bot_response": "Yup, that's right!",
+            "wrong_answer_bot_response": "Oops, that is incorrect."
+          },
+          {
+            "question": "This is __ ___",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/egg.png",
+            "correct_answers": [ "an egg" ],
+            "correct_answer_bot_response": "Correct!",
+            "wrong_answer_bot_response": "Oops, that is incorrect."
+          }
+        ]
+      }
+    },
+    {
+      "lesson_level": 1,
+      "lesson_title": "Fun with my fluffy farm friends",
+      "topics": [
+        {
+          "question": "Please tell me what this image shows",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/cat.jpg",
+          "answer_options": [
+            "A cat",
+            "A dog",
+            "A fish"
+          ],
+          "correct_answers": [ "A cat", "cat" ],
+          "correct_answer_bot_response": "Correct! Could you type the word?",
+          "wrong_answer_bot_response": "Oops, that's not right, try again",
+          "pronounciation_phrase": "Nice! Here is how you say it, repeat after me.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Nice job! Try this one:",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/fish.jpg",
+          "answer_options": [
+            "A ball",
+            "The bread",
+            "A fish"
+          ],
+          "correct_answers": [ "A fish", "fish" ],
+          "correct_answer_bot_response": "Good! Now, can you type the word?",
+          "wrong_answer_bot_response": "Hmm..Try again please",
+          "pronounciation_phrase": "Good! Now lets repeat after me",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Good job! Lets keep going. Can you tell me what this is?",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/a%20dog.jpg",
+          "answer_options": [
+            "A boy",
+            "A dog",
+            "A baby"
+          ],
+          "correct_answers": [ "a dog", "dog" ],
+          "correct_answer_bot_response": "Good job! Can you type the word now?",
+          "wrong_answer_bot_response": "Oops, that's not right, try again.",
+          "pronounciation_phrase": "Good! Now repeat after me",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Keep up the good work! Lets try another one.",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/cow.png",
+          "answer_options": [
+            "A bear",
+            "The bread",
+            "A cow"
+          ],
+          "correct_answers": [ "a cow", "cow" ],
+          "correct_answer_bot_response": "Nice work! Try typing the word now",
+          "wrong_answer_bot_response": "Hmm...try again please",
+          "pronounciation_phrase": "Nice! Here is how you say it, repeat after me.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Good job! Can you tell me what this is?",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/pig.jpg",
+          "answer_options": [
+            "A cat",
+            "A dog",
+            "A pig"
+          ],
+          "correct_answers": [ "a pig", "pig" ],
+          "correct_answer_bot_response": "Super! Try typing the word now.",
+          "wrong_answer_bot_response": "Hmm...try again please",
+          "pronounciation_phrase": "Good! Now follow along with me please.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Great! Lets try another one.",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/a%20chicken.png",
+          "answer_options": [
+            "A bird",
+            "The milk",
+            "A chicken"
+          ],
+          "correct_answers": [ "A chicken", "chicken" ],
+          "correct_answer_bot_response": "Nice work! Try typing the word now",
+          "wrong_answer_bot_response": "Hmm...try again please",
+          "pronounciation_phrase": "Good! Now follow along with me please.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Wonderful! Can you tell me what this is?",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/bird.jpg",
+          "answer_options": [
+            "A bird",
+            "A boy",
+            "A bed"
+          ],
+          "correct_answers": [ "a bird", "bird" ],
+          "correct_answer_bot_response": "Nice work! Try typing the word now",
+          "wrong_answer_bot_response": "Hmm...try again please",
+          "pronounciation_phrase": "Good job! Here is how you say it, repeat after me.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        }
+      ],
+      "quiz": {
+        "questions": [
+          {
+            "question": "The ___ likes to bark!",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/a%20dog.jpg",
+            "correct_answers": [ "dog" ],
+            "correct_answer_bot_response": "Correct!",
+            "wrong_answer_bot_response": "Oops, that is incorrect."
+          },
+          {
+            "question": "This is a ____.",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/fish.jpg",
+            "correct_answers": [ "fish" ],
+            "correct_answer_bot_response": "Correct!",
+            "wrong_answer_bot_response": "Oops, that's not right, try again"
+          },
+          {
+            "question": "This is a ___.",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/cow.png",
+            "correct_answers": [ "cow" ],
+            "correct_answer_bot_response": "Correct!",
+            "wrong_answer_bot_response": "Oops, that is incorrect."
+          },
+          {
+            "question": "This is a ___.",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/pig.jpg",
+            "correct_answers": [ "pig" ],
+            "correct_answer_bot_response": "Correct!",
+            "wrong_answer_bot_response": "Oops, that is incorrect."
+          }
+        ]
+      }
+    },
+    {
+      "lesson_level": 2,
+      "lesson_title": "So many humans and people oh my!",
+      "quiz": {
+        "questions": [
+          {
+            "question": "The ________ are very noisy.",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/children.jpg",
+            "correct_answers": [ "children" ],
+            "correct_answer_bot_response": "Correct!",
+            "wrong_answer_bot_response": "Oops, that is incorrect."
+          },
+          {
+            "question": "The ____ likes to cry.",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/paternity-633453_640.jpg",
+            "correct_answers": [ "baby" ],
+            "correct_answer_bot_response": "Correct!",
+            "wrong_answer_bot_response": "Oops, that's not right, try again"
+          },
+          {
+            "question": "My ______ is reading a book.",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/mother.jpg",
+            "correct_answers": [ "mother" ],
+            "correct_answer_bot_response": "Correct!",
+            "wrong_answer_bot_response": "Oops, that is incorrect."
+          },
+          {
+            "question": "A ____ is singing a song.",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/girl.jpg",
+            "correct_answers": [ "girl" ],
+            "correct_answer_bot_response": "Correct!",
+            "wrong_answer_bot_response": "Oops, that is incorrect."
+          },
+          {
+            "question": "The girl is talking to her ______.",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/father.jpg",
+            "correct_answers": [ "father" ],
+            "correct_answer_bot_response": "Correct!",
+            "wrong_answer_bot_response": "Oops, that is incorrect."
+          }
+        ]
+      },
+      "topics": [
+        {
+          "question": "Please tell me what this image shows",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/boy.jpg",
+          "answer_options": [
+            "The boy",
+            "The girl",
+            "A baby"
+          ],
+          "correct_answers": [ "The boy", "boy" ],
+          "correct_answer_bot_response": "Correct! Could you type the word?",
+          "wrong_answer_bot_response": "Sorry, incorrect, try again.",
+          "pronounciation_phrase": "Good work! Here is how you say it. Repeat after me.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Nice job! Try this one:",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/father.jpg",
+          "answer_options": [
+            "My father",
+            "A girl",
+            "A dog"
+          ],
+          "correct_answers": [ "My father", "father", "a father" ],
+          "correct_answer_bot_response": "Good! Now, can you type the word?",
+          "wrong_answer_bot_response": "oops, that's not right, try again",
+          "pronounciation_phrase": "Nice! Here is how you say it, repeat after me.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Good job! Lets keep going. Can you tell me what this is?",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/mother.jpg",
+          "answer_options": [
+            "A cat",
+            "My father",
+            "My mother"
+          ],
+          "correct_answers": [ "My mother", "mother", "mom", "a mother" ],
+          "correct_answer_bot_response": "Wow good job! Type it in now.",
+          "wrong_answer_bot_response": "Sorry, incorrect, try again.",
+          "pronounciation_phrase": "Good! Now repeat after me",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Keep up the good work! Lets try another one.",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/girl.jpg",
+          "answer_options": [
+            "A boy",
+            "A dog",
+            "A girl"
+          ],
+          "correct_answers": [ "A girl", "girl" ],
+          "correct_answer_bot_response": "Correct! Now, can you type the word?",
+          "wrong_answer_bot_response": "Oops, that's not right, try again",
+          "pronounciation_phrase": "Nice! Here is how you say it, repeat after me.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Good job! Can you tell me what this is?",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/man.jpg",
+          "answer_options": [
+            "A chicken",
+            "A man",
+            "An apple"
+          ],
+          "correct_answers": [ "A man", "man", "human", "person", "a person", "a male", "male" ],
+          "correct_answer_bot_response": "Good job! Could you type the word now?",
+          "wrong_answer_bot_response": "Sorry, incorrect, try again",
+          "pronounciation_phrase": "Good! Now repeat after me",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Great! Lets try another one.",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/sister.jpg",
+          "answer_options": [
+            "My mother",
+            "My father",
+            "My sister"
+          ],
+          "correct_answers": [ "My sister", "sister", "a sister" ],
+          "correct_answer_bot_response": "Correct! Now can you type the word?",
+          "wrong_answer_bot_response": "Sorry, incorrect, please try again",
+          "pronounciation_phrase": "Awesome! Please repeat after me.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Wonderful! Can you tell me what this is?",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/brother.jpg",
+          "answer_options": [
+            "A baby",
+            "My sister",
+            "My brother"
+          ],
+          "correct_answers": [ "My brother", "brother", "a brother" ],
+          "correct_answer_bot_response": "Good! Now can you type the word?",
+          "wrong_answer_bot_response": "Hmm...try again please",
+          "pronounciation_phrase": "Great! Now lets repeat after me.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Wonderful! Can you tell me what this is?",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/children.jpg",
+          "answer_options": [
+            "A boy",
+            "A girl",
+            "The children"
+          ],
+          "correct_answers": [ "The children", "children", "kids" ],
+          "correct_answer_bot_response": "Correct! Could you type the word?",
+          "wrong_answer_bot_response": "Oops, that's not right, try again",
+          "pronounciation_phrase": "Nice! Here is how you say it, repeat after me",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Super! Lets try another one.",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/paternity-633453_640.jpg",
+          "answer_options": [
+            "A baby",
+            "A robot",
+            "My father"
+          ],
+          "correct_answers": [ "A baby", "baby" ],
+          "correct_answer_bot_response": "Correct! Now can you type the word?",
+          "wrong_answer_bot_response": "Sorry, incorrect, try again",
+          "pronounciation_phrase": "Good work! Here is how you say it, repeat after me",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        }
+      ]
+    },
+    {
+      "lesson_level": 2,
+      "lesson_title": "Extra fun and extra cool nouns!",
+      "quiz": {
+        "questions": [
+          {
+            "question": "I want to play with a ____",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/ball.png",
+            "correct_answers": [ "ball" ],
+            "correct_answer_bot_response": "Correct!",
+            "wrong_answer_bot_response": "Oops, that is incorrect."
+          },
+          {
+            "question": "The girl wants to read ___ ____",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/book.jpg",
+            "correct_answers": [ "the book" ],
+            "correct_answer_bot_response": "Correct!",
+            "wrong_answer_bot_response": "Oops, that's not right, try again"
+          },
+          {
+            "question": "At _____ I will go to sleep.",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/night.png",
+            "correct_answers": [ "night" ],
+            "correct_answer_bot_response": "Correct!",
+            "wrong_answer_bot_response": "Oops, that is incorrect."
+          },
+          {
+            "question": "I live in my ____.",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/house.png",
+            "correct_answers": [ "home" ],
+            "correct_answer_bot_response": "Correct!",
+            "wrong_answer_bot_response": "Oops, that is incorrect."
+          },
+          {
+            "question": "I sleep on my ___",
+            "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/bed.png",
+            "correct_answers": [ "bed" ],
+            "correct_answer_bot_response": "Correct!",
+            "wrong_answer_bot_response": "Oops, that is incorrect."
+          }
+        ]
+      },
+      "topics": [
+        {
+          "question": "Please tell me what this image shows",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/water.jpg",
+          "answer_options": [
+            "The milk",
+            "An apple",
+            "The water"
+          ],
+          "correct_answers": [ "The water", "water", "glass", "glass with water", "a glass" ],
+          "correct_answer_bot_response": "Correct! Could you type the word?",
+          "wrong_answer_bot_response": "Sorry, incorrect, try again.",
+          "pronounciation_phrase": "Good work! Here is how you say it. Repeat after me.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Nice job! Try this one:",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/ball.png",
+          "answer_options": [
+            "A ball",
+            "A cow",
+            "A chicken"
+          ],
+          "correct_answers": [ "A ball" ],
+          "correct_answer_bot_response": "Good job! Can you type the word now?",
+          "wrong_answer_bot_response": "Oops, that's not correct, try again please.",
+          "pronounciation_phrase": "Wonderful! Here is how you say it, follow along with me.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Good job! Lets keep going. Can you tell me what this is?",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/book.jpg",
+          "answer_options": [
+            "A baby",
+            "The book",
+            "The children"
+          ],
+          "correct_answers": [ "The book" ],
+          "correct_answer_bot_response": "Wow good job! Type it in now.",
+          "wrong_answer_bot_response": "Sorry, incorrect, try again.",
+          "pronounciation_phrase": "Good! Now repeat after me",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Keep up the good work! Lets try another one.",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/house.png",
+          "answer_options": [
+            "A tree",
+            "The boy",
+            "My home"
+          ],
+          "correct_answers": [ "My home" ],
+          "correct_answer_bot_response": "Correct! Now, can you type the word?",
+          "wrong_answer_bot_response": "Hmm...Try again please.",
+          "pronounciation_phrase": "Awesome! Please repeat after me!",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Good job! Can you tell me what this is?",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/night.png",
+          "answer_options": [
+            "A ball",
+            "Night",
+            "A bed"
+          ],
+          "correct_answers": [ "Night" ],
+          "correct_answer_bot_response": "Good! Now, can you type the word?",
+          "wrong_answer_bot_response": "Oops, that's not right, try again.",
+          "pronounciation_phrase": "Great! Now lets repeat after me.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Great! Lets try another one.",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/paper.jpg",
+          "answer_options": [
+            "The bread",
+            "A ball",
+            "The paper"
+          ],
+          "correct_answers": [ "The paper", "paper" ],
+          "correct_answer_bot_response": "Good job! Can you type the word now?",
+          "wrong_answer_bot_response": "Hmm...try again please.",
+          "pronounciation_phrase": "Wonderful! Here is how you say it, follow along with me!",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Wonderful! Can you tell me what this is?",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/picture.jpg",
+          "answer_options": [
+            "The picture",
+            "The bread",
+            "A bird"
+          ],
+          "correct_answers": [ "The picture", "picture" ],
+          "correct_answer_bot_response": "Nice work! Try typing the word yourself now.",
+          "wrong_answer_bot_response": "Sorry, incorrect, try again",
+          "pronounciation_phrase": "Nice! Here is how you say it, repeat after me.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Keep up the good work! Lets try another one.",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/tree.png",
+          "answer_options": [
+            "A fish",
+            "A ball",
+            "A tree"
+          ],
+          "correct_answers": [ "A tree", "tree" ],
+          "correct_answer_bot_response": "Super! Try typing the word now.",
+          "wrong_answer_bot_response": "Hmm...try again please.",
+          "pronounciation_phrase": "Good! Now follow along with me please.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Super! Lets try another one.",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/school.jpg",
+          "answer_options": [
+            "My home",
+            "A bed",
+            "The school"
+          ],
+          "correct_answers": [ "The school", "school", "a school", "my school" ],
+          "correct_answer_bot_response": "Correct! Now can you type the word?",
+          "wrong_answer_bot_response": "Sorry, incorrect, try again",
+          "pronounciation_phrase": "Good work! Here is how you say it, repeat after me",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        },
+        {
+          "question": "Nice job! Try this one.",
+          "image_url": "https://dtml4cs.blob.core.windows.net/images/LessonImages/bed.png",
+          "answer_options": [
+            "A tree",
+            "A bed",
+            "A bird"
+          ],
+          "correct_answers": [ "a bed", "bed" ],
+          "correct_answer_bot_response": "Great! Could you type the word by yourself please?",
+          "wrong_answer_bot_response": "Sorry, incorrect, try again",
+          "pronounciation_phrase": "Good! Now please repeat after me.",
+          "next_topic_phrase": "I got it",
+          "stay_on_current_topic_phrase": "Say it again"
+        }
+      ]
+    }
+  ]
 }

@@ -46,7 +46,6 @@ namespace DTML.EduBot.Gamification
 
         public List<string> GetEligibleBadges(GamerProfile profile, ulong startingSeedPoints)
         {
-            Require.NotNull(profile, nameof(profile));
             var badges = Badges.Where(badge => badge.Points > startingSeedPoints && badge.Points <= profile.Points)
                 .Select(badge => badge.Title);
 

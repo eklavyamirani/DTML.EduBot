@@ -12,9 +12,11 @@
     using Microsoft.Bot.Connector;
     using Models;
     using System.Collections.ObjectModel;
+    using Microsoft.Bot.Builder.Luis;
+    using DTML.EduBot.Extensions;
 
     [Serializable]
-    public class LessonDialog : IDialog<string>
+    public class LessonDialog : LuisDialog<string>
     {
         private readonly int MAX_ATTEMPT = 2;
         private Lesson lesson;
@@ -29,7 +31,7 @@
             this.lesson = lesson;
         }
 
-        public async Task StartAsync(IDialogContext context)
+        public override async Task StartAsync(IDialogContext context)
         {
             var wasSuccess = await PostAdaptiveCard(context);
             if (!wasSuccess)
@@ -63,7 +65,8 @@
                     new Image()
                     {
                         Size = ImageSize.Large,
-                        Url  = nextTopic.ImageUrl
+                        Url  = nextTopic.ImageUrl,
+                        HorizontalAlignment= HorizontalAlignment.Center
                     },
                 },
                 Actions = answerOptions
@@ -104,21 +107,21 @@
         {
             dynamic response = ExtractMessageValue(result);
             StudentResponse studentResponse = StudentResponse.FromDynamic(response);
-            
+
             var topic = lesson.Topics.ElementAtOrDefault(lesson.currentTopic);
             if (topic == null)
             {
                 return;
             }
 
-            if (studentResponse.Answer != null && studentResponse.Answer.Equals(topic.CorrectAnswer, StringComparison.InvariantCultureIgnoreCase))
+            if (studentResponse.Answer != null && topic.CorrectAnswers.Any(a => a.Equals(studentResponse.Answer, StringComparison.InvariantCultureIgnoreCase)))
             {
-                await context.PostAsync(topic.CorrectAnswerBotResponse);
+                await context.PostTranslatedAsync(topic.CorrectAnswerBotResponse);
                 context.Wait(this.CheckTypedAnswerAsync);
             }
             else
             {
-                await Task.WhenAll(context.PostAsync(topic.WrongAnswerBotResponse),
+                await Task.WhenAll(context.PostTranslatedAsync(topic.WrongAnswerBotResponse),
                     this.StartAsync(context));
             }
         }
@@ -134,13 +137,13 @@
                 return;
             }
 
-            if (studentResponse.Answer != null && studentResponse.Answer.Equals(topic.CorrectAnswer, StringComparison.InvariantCultureIgnoreCase))
+            if (studentResponse.Answer != null && topic.CorrectAnswers.Any(a => a.Equals(studentResponse.Answer, StringComparison.InvariantCultureIgnoreCase)))
             {
                 await this.PronounceLearnedPhrase(context, result);
             }
             else
             {
-                await Task.WhenAll(context.PostAsync(topic.WrongAnswerBotResponse),
+                await Task.WhenAll(context.PostTranslatedAsync(topic.WrongAnswerBotResponse),
                     this.StartAsync(context));
             }
         }
@@ -161,9 +164,7 @@
         private async Task PostAudioInstruction(IDialogContext context, Topic topic)
         {
             await context.PostAsync(Shared.RepeatAfterMe);
-
-            // client handling at: https://github.com/eklavyamirani/BotFramework-WebChat/commit/a0cc2cf87563414c558691583788bbd8e8c8f6a2
-            await context.SayAsync(topic.CorrectAnswer, topic.CorrectAnswer, new MessageOptions
+            await context.SayAsync(topic.CorrectAnswers.First(), topic.CorrectAnswers.First(), new MessageOptions
             {
                 InputHint = "expectingInput"
             });
@@ -179,7 +180,7 @@
                 return;
             }
 
-            if (response == null || !topic.CorrectAnswer.Equals(response.Text, StringComparison.InvariantCultureIgnoreCase))
+            if (response == null || !topic.CorrectAnswers.Any(a=> a.Equals(response.Text, StringComparison.InvariantCultureIgnoreCase)))
             {
                 await this.PostAudioInstruction(context, topic);
                 return;
@@ -198,7 +199,7 @@
             {
                 topicMessage += "\U00002B50";
             }
-            await context.PostAsync(topicMessage);
+            await context.PostTranslatedAsync(topicMessage);
 
             if (lesson.currentTopic >= lesson.Topics.Count - 1)
             // after finish last topic, ask if they want to take lesson's quiz
@@ -235,7 +236,7 @@
             }
             catch (TooManyAttemptsException)
             {
-                await context.PostAsync("It looks like you are not ready.");
+                await context.PostTranslatedAsync("It looks like you are not ready.");
                 context.Done(Shared.LessonCompleteMessage);
             }
         }

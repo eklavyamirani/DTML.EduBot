@@ -16,8 +16,8 @@ namespace DTML.EduBot.LessonPlan
         [JsonProperty("image_url", Required = Required.Always)]
         public string ImageUrl { get; set; }
 
-        [JsonProperty("correct_answer", Required = Required.Always)]
-        public string CorrectAnswer { get; set; }
+        [JsonProperty("correct_answers", Required = Required.Always)]
+        public List<string> CorrectAnswers { get; set; }
 
         [DefaultValue("Correct! Now, can you type the word?")]
         [JsonProperty("correct_answer_bot_response", DefaultValueHandling = DefaultValueHandling.Populate)]

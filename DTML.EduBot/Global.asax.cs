@@ -8,6 +8,13 @@ namespace DTML.EduBot
     using Autofac.Integration.WebApi;
     using DTML.EduBot.Dialogs;
     using System;
+    using Microsoft.Bot.Builder.Azure;
+    using Microsoft.Bot.Builder.Dialogs.Internals;
+    using Microsoft.Bot.Connector;
+    using System.Configuration;
+    using Microsoft.Bot.Builder.Dialogs;
+    using DTML.EduBot.Utilities;
+    using Microsoft.Bot.Builder.Internals.Fibers;
 
     public class WebApiApplication : System.Web.HttpApplication
     {
@@ -19,9 +26,34 @@ namespace DTML.EduBot
 
             builder.RegisterModule(new LessonPlanModule());
             builder.RegisterModule(new BasicDialogModule());
-            builder.RegisterModule(new UserDataModule());
+
+            builder
+            .RegisterType<AzureTableLogger>()
+            .Keyed<ILogger>(FiberModule.Key_DoNotSerialize)
+            .AsSelf()
+            .As<ILogger>()
+            .SingleInstance();
 
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+
+            var store = new TableBotDataStore(ConfigurationManager.AppSettings["StorageConnectionString"]);
+            MicrosoftAppCredentials.TrustServiceUrl("directline.botframework.com");
+   
+            Conversation.UpdateContainer(
+                 coversation =>
+                 {
+                 coversation.Register(c => store)
+                .Keyed<IBotDataStore<BotData>>(AzureModule.Key_DataStore)
+                .AsSelf()
+                .SingleInstance();
+
+                 coversation.Register(c => new CachingBotDataStore(store,
+                 CachingBotDataStoreConsistencyPolicy
+                 .ETagBasedConsistency))
+                 .As<IBotDataStore<BotData>>()
+                 .AsSelf()
+                 .InstancePerLifetimeScope();
+                 });
 
             var config = GlobalConfiguration.Configuration;
 

@@ -7,12 +7,14 @@
     using Microsoft.Bot.Builder.Luis.Models;
     using Common;
     using Extensions;
+    using DTML.EduBot.UserData;
+    using DTML.EduBot.Utilities;
 
     public partial class ChitChatDialog : QnaLuisDialog<object>
     {
         private LevelDialog _levelDialog;
 
-        public ChitChatDialog(LevelDialog levelDialog)
+        public ChitChatDialog(LevelDialog levelDialog, ILogger logger) : base(logger)
         {
             _levelDialog = levelDialog;
         }

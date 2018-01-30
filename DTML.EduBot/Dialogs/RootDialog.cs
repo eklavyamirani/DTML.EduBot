@@ -18,22 +18,12 @@
     public class RootDialog : IDialog<string>
     {
         private readonly ChitChatDialog _chitChatDialog;
-        private readonly IUserDataRepository _userDataRepository;
+        private readonly LevelDialog _levelDialog;
 
-        private static readonly IReadOnlyCollection<string> YesNoChoices = new ReadOnlyCollection<string>
-            (new List<String> {
-                Shared.Yes,
-                Shared.No});
-
-        private static readonly IReadOnlyCollection<string> DialogChoices = new ReadOnlyCollection<string>
-            (new List<String> {
-                Shared.ChatWithBot,
-                Shared.StartTheLessonPlan});
-
-        public RootDialog(ChitChatDialog chitChatDialog, IUserDataRepository userDataRepository)
+        public RootDialog(ChitChatDialog chitChatDialog, LevelDialog _levelDialog)
         {
             this._chitChatDialog = chitChatDialog;
-            this._userDataRepository = userDataRepository;
+            this._levelDialog = _levelDialog;
         }
 
         public Task StartAsync(IDialogContext context)
@@ -44,145 +34,31 @@
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
-            var userText = context.Activity.From.Name;
+            IMessageActivity messageActivity;
 
             try
             {
-                userText = (await result).Text;
+                messageActivity = (await result);
             }
             catch (Exception)
             {
-                // Swallow exception for the demo purpose
-                // TODO log the exception
+                return;
             }
 
-            string detectedLanguageIsoCode = await MessageTranslator.IdentifyLangAsync(userText);
-            context.UserData.SetValue(Constants.Shared.UserLanguageCodeKey, detectedLanguageIsoCode);
-            var userData = _userDataRepository.GetUserData(context.Activity.From.Id);
-            if (userData == null)
-            {
-                userData = new UserData();
-                userData.UserId = context.Activity.From.Id;
-                userData.NativeLanguageIsoCode = detectedLanguageIsoCode;
-            }
-
-            _userDataRepository.UpdateUserData(userData);
-
-            if (MessageTranslator.DEFAULT_LANGUAGE.Equals(detectedLanguageIsoCode))
-            {
-                await context.PostAsync(BotPersonality.UserNameQuestion);
-
-                // detected it's english language
-                context.Wait(this.UserNameReceivedAsync);
-            }
-            else
-            {
-                // detected user language
-
-                CultureInfo[] allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
-                CultureInfo detectedCulture =
-                   allCultures
-                        .FirstOrDefault(cultureInfo => (detectedLanguageIsoCode.Contains(cultureInfo.TwoLetterISOLanguageName)));
-
-                string detectedLanguageName = CultureInfo.GetCultureInfo(MessageTranslator.DEFAULT_LANGUAGE).DisplayName;
-
-                if (detectedCulture != null)
-                {
-                    detectedLanguageName = detectedCulture.DisplayName;
-                }
-
-                var translationInputTextlist = new List<string>(capacity: 4);
-                translationInputTextlist.AddRange(YesNoChoices);
-                translationInputTextlist.AddRange(new string[] { $"Do you want to switch to {detectedLanguageName}", Shared.DoNotUnderstand });
-
-                var translatedList = await MessageTranslator.TranslateTextAsync(translationInputTextlist, detectedLanguageIsoCode);
-                var translatedSwitchQuestion = translatedList.ElementAt(2);
-                var translatedDontUnderstand = translatedList.ElementAt(3);
-                var translatedChoices = translatedList.Take(2);
-
-                PromptDialog.Choice(
-                    context,
-                    this.AfterChoosingLanguageSwitch,
-                    translatedChoices,
-                    translatedSwitchQuestion,
-                    translatedDontUnderstand,
-                    attempts: Shared.MaxPromptAttempts
-                );
-            }
+                await context.Forward(_chitChatDialog, this.AfterChitChatComplete, messageActivity, CancellationToken.None);
         }
-
-        private async Task UserNameReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
-        {
-            var messageActivity = await result;
-            await context.Forward(_chitChatDialog, this.AfterChitChatComplete, messageActivity, CancellationToken.None);
-        }
-
-        private async Task UserNameReceivedInNativeLanguageAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
-        {
-            IMessageActivity userText = await result;
-            string userTextInEnglish = await MessageTranslator.TranslateTextAsync(userText.Text);
-            userText.Text = userTextInEnglish;
-            await context.Forward(_chitChatDialog, this.AfterChitChatComplete, userText, CancellationToken.None);
-        }
-
+                
         private async Task AfterChitChatComplete(IDialogContext context, IAwaitable<object> result)
-        {
-            // Chit chat should never end, error if we get here
-            await Task.WhenAll(context.PostTranslatedAsync("Sorry, I seem to be getting tired here, I'll take a power nap and get back to you!"),
-                        this.StartAsync(context));
+        {            
+            string userName = context.UserData.ContainsKey(Constants.Shared.UserName) ? context.UserData.GetValue<string>(Constants.Shared.UserName) : string.Empty;
+            await Task.WhenAll(context.PostTranslatedAsync($"OK {userName}, what do you want to do now? Type 'learn english' to start learning lessons or ask me any question"), this.StartAsync(context));
         }
 
         private async Task AfterDialogEnded(IDialogContext context, IAwaitable<object> result)
         {
-            // BUG: this actually waits for user to respond. Needs to be proactive.
-            await this.StartAsync(context);
+            await AfterChitChatComplete(context, result);
         }
 
-        private async Task AfterChoosingLanguageSwitch(IDialogContext context, IAwaitable<object> result)
-        {
-            var response = await result as string;
-            if (response == null)
-            {
-                await this.StartAsync(context);
-                return;
-            }
-
-            try
-            {
-                UserData userData = _userDataRepository.GetUserData(context.Activity.From.Id);
-                var translatedResponse = await MessageTranslator.TranslateTextAsync(response);
-
-                if (translatedResponse.Equals(Shared.Yes, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    string translatedSelfIntroduction =
-                        await MessageTranslator.TranslateTextAsync(BotPersonality.BotSelfIntroduction,
-                            userData.NativeLanguageIsoCode);
-
-                    var introductionResponseTask = context.PostTranslatedAsync($"{translatedSelfIntroduction}");
-                    var translatedUserNameQuestionTask =
-                        MessageTranslator.TranslateTextAsync(BotPersonality.UserNameQuestion,
-                            userData.NativeLanguageIsoCode);
-                    await Task.WhenAll(introductionResponseTask, translatedUserNameQuestionTask);
-
-                    await context.PostTranslatedAsync(translatedUserNameQuestionTask.Result);
-
-                    context.Wait(this.UserNameReceivedInNativeLanguageAsync);
-                }
-                else
-                {
-                    context.UserData.SetValue(Constants.Shared.UserLanguageCodeKey, MessageTranslator.DEFAULT_LANGUAGE);
-                    await context.PostTranslatedAsync($"{BotPersonality.UserNameQuestion}");
-                    context.Wait(this.UserNameReceivedAsync);
-                }
-            }
-            catch (TooManyAttemptsException)
-            {
-                UserData userData = _userDataRepository.GetUserData(context.Activity.From.Id);
-
-                string translatedTooManyAttemptMessage = await MessageTranslator.TranslateTextAsync(Shared.TooManyAttemptMessage, userData.NativeLanguageIsoCode);
-                await Task.WhenAll(context.PostTranslatedAsync($"{translatedTooManyAttemptMessage}"),
-                    this.StartAsync(context));
-            }
-        }
+       
     }
 }
