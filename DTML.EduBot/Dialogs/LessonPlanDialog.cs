@@ -46,7 +46,7 @@
                 i++;
             }
 
-            var questionInNativeLanguage = await MessageTranslator.TranslateTextAsync($"Wich lesson would you like to start?", user?.NativeLanguageIsoCode);
+            var questionInNativeLanguage = await MessageTranslator.TranslateTextAsync($"Which lesson would you like to start?", user?.NativeLanguageIsoCode);
 
             PromptDialog.Choice(
                 context,
