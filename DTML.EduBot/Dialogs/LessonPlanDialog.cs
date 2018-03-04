@@ -81,6 +81,9 @@
 
         private async Task AfterLessonFinished(IDialogContext context, IAwaitable<string> result)
         {
+            var selection = await result;
+            var selectedLesson = LessonPlanModule.LessonPlan.Lessons.FirstOrDefault(lesson => selection.Equals(lesson.LessonTitle));
+
             // TODO: inject dependency
             var badgeRepository = new Gamification.BadgeRepository();
             var updatedProfile = GetUserGamerProfile(context);
@@ -88,6 +91,9 @@
             updatedProfile.Points += _pointsPerLesson;
             var newBadges = badgeRepository.GetEligibleBadges(updatedProfile, _userPointsBeforeLessonPlan);
             updatedProfile.Badges.AddRange(newBadges);
+
+            var nm = new NotificationManager();
+            nm.RecordEvent(EventType.GameCompleted.ToString(), selectedLesson?.LessonTitle, "LessonPlan", user.UserName);
 
             if (newBadges != null && newBadges.Any())
             {

@@ -45,6 +45,13 @@ namespace Edubot.WebTests
         }
 
         [TestMethod]
+        public void NotificationTester()
+        {
+            NotificationManager nm = new NotificationManager();
+            nm.RecordEvent(EventType.GameCompleted.ToString(), "111".ToString(), null, "test");
+        }
+
+        [TestMethod]
         public async Task BotSendsIntroductionOnStartup()
         {
             var fakeSender = new ChannelAccount

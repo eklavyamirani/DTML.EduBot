@@ -199,6 +199,7 @@
             {
                 topicMessage += "\U00002B50";
             }
+
             await context.PostTranslatedAsync(topicMessage);
 
             if (lesson.currentTopic >= lesson.Topics.Count - 1)

@@ -12,6 +12,8 @@
     using Models;
     using System.Collections.ObjectModel;
     using DTML.EduBot.Extensions;
+    using DTML.EduBot.Common;
+    using DTML.EduBot.UserData;
 
     [Serializable]
     public class QuizDialog : IDialog<string>
@@ -102,6 +104,10 @@
                 if (quiz.currentQuestion > quiz.Questions.Count - 1)
                 {
                     context.Done("Congrats! You passed the quiz.");
+
+                    var user = context.GetUserData();
+                    var nm = new NotificationManager();
+                    nm.RecordEvent(EventType.GameCompleted.ToString(), quiz.Questions.Count.ToString(), "Quizz", user.UserName);
                 }
                 else
                 {

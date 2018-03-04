@@ -226,6 +226,8 @@
     <Compile Include="Attributes\PreConfiguredLuisModelAttribute.cs" />
     <Compile Include="Attributes\PreConfiguredQnaModelAttribute.cs" />
     <Compile Include="Common\BotPersonality.cs" />
+    <Compile Include="Common\Interfaces\INotificationManager.cs" />
+    <Compile Include="Common\NotificationManager.cs" />
     <Compile Include="Common\MessageTranslator.cs" />
     <Compile Include="Common\TraceSourceExceptionLogger.cs" />
     <Compile Include="Constants\BotEntities.cs" />
