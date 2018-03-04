@@ -14,6 +14,8 @@
     using System.Collections.ObjectModel;
     using Microsoft.Bot.Builder.Luis;
     using DTML.EduBot.Extensions;
+    using DTML.EduBot.Common;
+    using DTML.EduBot.UserData;
 
     [Serializable]
     public class LessonDialog : LuisDialog<string>
@@ -225,6 +227,10 @@
         {
             try
             {
+                var user = context.GetUserData();
+                var nm = new NotificationManager();
+                nm.RecordEvent(EventType.GameCompleted.ToString(), lesson.LessonTitle, "LessonPlan", user.UserName);
+
                 var selection = await result as string;
                 if (selection.Equals(Shared.Yes, StringComparison.InvariantCultureIgnoreCase))
                 {

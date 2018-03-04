@@ -92,9 +92,6 @@
             var newBadges = badgeRepository.GetEligibleBadges(updatedProfile, _userPointsBeforeLessonPlan);
             updatedProfile.Badges.AddRange(newBadges);
 
-            var nm = new NotificationManager();
-            nm.RecordEvent(EventType.GameCompleted.ToString(), selectedLesson?.LessonTitle, "LessonPlan", user.UserName);
-
             if (newBadges != null && newBadges.Any())
             {
                 var tasks = newBadges.Select(async badge =>
