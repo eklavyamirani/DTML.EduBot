@@ -1,9 +1,11 @@
-﻿using Microsoft.Bot.Builder.Dialogs;
+﻿using DTML.EduBot.Common.Interfaces;
+using Microsoft.Bot.Builder.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using static DTML.EduBot.Common.AzureTableLogger;
 
 namespace DTML.EduBot.Dialogs
 {
@@ -11,14 +13,12 @@ namespace DTML.EduBot.Dialogs
     public class ExceptionHandlerDialog<T> : IDialog<object>
     {
         private readonly IDialog<T> _dialog;
-        private readonly bool _displayException;
-        private readonly int _stackTraceLength;
+        private ILogger _logger;
 
-        public ExceptionHandlerDialog(IDialog<T> dialog, bool displayException, int stackTraceLength = 500)
+        public ExceptionHandlerDialog(IDialog<T> dialog, ILogger logger)
         {
             _dialog = dialog;
-            _displayException = displayException;
-            _stackTraceLength = stackTraceLength;
+            _logger = logger;
         }
 
         public async Task StartAsync(IDialogContext context)
@@ -29,8 +29,7 @@ namespace DTML.EduBot.Dialogs
             }
             catch (Exception e)
             {
-                if (_displayException)
-                    await DisplayException(context, e).ConfigureAwait(false);
+              await LogException(context, e).ConfigureAwait(false);
             }
         }
 
@@ -42,14 +41,13 @@ namespace DTML.EduBot.Dialogs
             }
             catch (Exception e)
             {
-                if (_displayException)
-                    await DisplayException(context, e).ConfigureAwait(false);
+               await LogException(context, e).ConfigureAwait(false);
             }
         }
 
-        private async Task DisplayException(IDialogContext context, Exception e)
+        private async Task LogException(IDialogContext context, Exception e)
         {
-
+            
             var stackTrace = e.StackTrace;
             if (stackTrace.Length > _stackTraceLength)
                 stackTrace = stackTrace.Substring(0, _stackTraceLength) + "…";
@@ -59,7 +57,7 @@ namespace DTML.EduBot.Dialogs
 
             var exceptionStr = $"**{message}**  \n\n{stackTrace}";
 
-            await context.PostAsync(exceptionStr).ConfigureAwait(false);
+            await _logger.Log(new LogEntry { message = exceptionStr, date = DateTime.Now.ToShortDateString(), eventType = "Exception" });
         }
     }
 }

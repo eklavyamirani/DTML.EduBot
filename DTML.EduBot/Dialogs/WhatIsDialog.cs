@@ -1,8 +1,8 @@
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Bot.Builder.Dialogs;
 namespace DTML.EduBot.Dialogs
 {
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Builder.Luis.Models;
     using DTML.EduBot.Constants;
     using DTML.EduBot.Common;

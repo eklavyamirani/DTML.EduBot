@@ -1,14 +1,12 @@
-﻿using Microsoft.WindowsAzure.Storage;
+﻿using DTML.EduBot.Common.Interfaces;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
-namespace DTML.EduBot.Utilities
+namespace DTML.EduBot.Common
 {
     public class AzureTableLogger : ILogger
     {

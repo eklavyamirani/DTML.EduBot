@@ -9,7 +9,7 @@
     using DTML.EduBot.Qna;
     using Microsoft.Azure;
     using Attributes;
-    using DTML.EduBot.Utilities;
+    using DTML.EduBot.Common.Interfaces;
 
     [PreConfiguredLuisModel]
     [PreConfiguredQnaModel]

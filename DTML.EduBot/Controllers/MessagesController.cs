@@ -33,27 +33,26 @@
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
-                if (activity.Type == ActivityTypes.Message)
+            if (activity.Type == ActivityTypes.Message)
+            {
+                using (ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl)))
                 {
-                    using (ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl)))
-                    {
-                        Activity typing = activity.CreateReply();
-                        typing.Type = ActivityTypes.Typing;
-                        await connector.Conversations.ReplyToActivityAsync(typing);
-                    }
+                    Activity typing = activity.CreateReply();
+                    typing.Type = ActivityTypes.Typing;
+                    await connector.Conversations.ReplyToActivityAsync(typing);
+                }
 
                 await Conversation.SendAsync(activity, () =>
                        new ExceptionHandlerDialog<object>(
                           _rootDialog,
-                          displayException: true));
-                }
-                else
-                {
-                    await HandleSystemMessageAsync(activity);
-                }             
+                          new AzureTableLogger()));
+            }
+            else
+            {
+                await HandleSystemMessageAsync(activity);
+            }
 
-            var response = Request.CreateResponse(HttpStatusCode.OK);
-            return response;
+            return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted);
         }
 
         private async Task<Activity> HandleSystemMessageAsync(Activity message)
@@ -78,7 +77,7 @@
                     if (!isGroupConversation && message.MembersAdded.Any(member => member.Name == message.Recipient.Name))
                     {
                         using (ConnectorClient connector = new ConnectorClient(new Uri(message.ServiceUrl)))
-                        {                          
+                        {
                             Activity reply = message.CreateReply(BotPersonality.BotSelfIntroductionStart);
                             await connector.Conversations.ReplyToActivityAsync(reply);
                         }

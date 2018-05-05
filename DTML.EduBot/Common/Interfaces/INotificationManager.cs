@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace DTML.EduBot.Common
+namespace DTML.EduBot.Common.Interfaces
 {
     public interface INotificationManager
     {

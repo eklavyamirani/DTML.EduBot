@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DTML.EduBot.Common.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -10,7 +11,7 @@ namespace DTML.EduBot.Common
 {
     public class NotificationManager : INotificationManager
     {
-        string url = "https://dtml.org/Activity/RecordUserActivityServerToServer/?apiKey={0}&token={1}&userName={2}&source=bot&eventMessage={3}&eventType={4}&eventData={5}";
+        string url = "https://dtml.org/Activity/RecordUserActivityServerToServer/?apiKey={0}&token={1}&userName={2}&source=edubot&eventMessage={3}&eventType={4}&eventData={5}";
         public void RecordEvent(string eventType, string eventLabel, string evenMessage, string eventUser)
         {
             try

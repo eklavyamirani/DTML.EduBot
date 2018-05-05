@@ -11,7 +11,7 @@
     using Attributes;
     using System.Linq;
     using DTML.EduBot.Constants;
-    using DTML.EduBot.Utilities;
+    using DTML.EduBot.Common.Interfaces;
 
     [PreConfiguredLuisModel]
     [PreConfiguredQnaModel]

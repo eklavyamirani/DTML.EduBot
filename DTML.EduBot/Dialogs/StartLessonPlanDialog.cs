@@ -8,7 +8,7 @@
     using Common;
     using Extensions;
     using DTML.EduBot.UserData;
-    using DTML.EduBot.Utilities;
+    using DTML.EduBot.Common.Interfaces;
 
     public partial class ChitChatDialog : QnaLuisDialog<object>
     {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using static DTML.EduBot.Utilities.AzureTableLogger;
+using static DTML.EduBot.Common.AzureTableLogger;
 
-namespace DTML.EduBot.Utilities
+namespace DTML.EduBot.Common.Interfaces
 {
     public interface ILogger
     {

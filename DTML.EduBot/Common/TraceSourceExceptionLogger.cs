@@ -1,28 +1,25 @@
-﻿using System;
+﻿using DTML.EduBot.Common.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Http.ExceptionHandling;
+using static DTML.EduBot.Common.AzureTableLogger;
 
 namespace DTML.EduBot.Common
 {
     public class TraceSourceExceptionLogger : ExceptionLogger
     {
-        private readonly TraceSource _traceSource;
-        public TraceSourceExceptionLogger(TraceSource traceSource)
+        private readonly ILogger _logger;
+        public TraceSourceExceptionLogger(ILogger logger)
         {
-            _traceSource = traceSource;
+            _logger = logger;
         }
 
         public override void Log(ExceptionLoggerContext context)
         {
-            _traceSource.TraceEvent(TraceEventType.Error, 1,
-                "Unhandled exception processing {0} for {1}: {2}, w/ user ID: {3}",
-                context.Request.Method,
-                context.Request.RequestUri,
-                context.Exception,
-                context.Exception.Data["id"]);
+            _logger.Log(new LogEntry { message = "TraceSourceExceptionLogger: "+context.Exception.ToString(), date = DateTime.Now.ToShortDateString(), eventType = "Exception" });
         }
     }
 }

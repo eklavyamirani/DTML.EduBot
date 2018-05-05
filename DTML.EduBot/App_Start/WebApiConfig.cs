@@ -37,8 +37,7 @@ namespace DTML.EduBot
             );
 
             config.Services.Add(typeof(IExceptionLogger),
-                new TraceSourceExceptionLogger(new
-                TraceSource("MyTraceSource", SourceLevels.All)));
+                new TraceSourceExceptionLogger(new AzureTableLogger()));
         }
     }
 }

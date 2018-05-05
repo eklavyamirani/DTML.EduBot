@@ -10,9 +10,9 @@
     using Microsoft.Bot.Builder.Luis;
     using Microsoft.Bot.Builder.Luis.Models;
     using Microsoft.Bot.Builder.Dialogs.Internals;
-    using DTML.EduBot.Utilities;
     using System.Collections.ObjectModel;
     using System.Collections.Generic;
+    using DTML.EduBot.Common.Interfaces;
 
     [Serializable]
     public abstract class QnaLuisDialog<TResult> : LuisDialog<TResult>
