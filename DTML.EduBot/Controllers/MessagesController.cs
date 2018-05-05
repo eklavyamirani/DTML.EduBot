@@ -16,15 +16,18 @@
     using Microsoft.Bot.Builder.Azure;
     using Microsoft.IdentityModel.Protocols;
     using System.Configuration;
+    using DTML.EduBot.Common.Interfaces;
 
     [BotAuthentication]
     public class MessagesController : ApiController
     {
         private readonly RootDialog _rootDialog;
+        private readonly ILogger _logger;
 
-        public MessagesController(RootDialog rootDialog)
+        public MessagesController(RootDialog rootDialog, ILogger logger)
         {
             _rootDialog = rootDialog;
+            _logger = logger;
         }
 
         /// <summary>
@@ -41,11 +44,11 @@
                     typing.Type = ActivityTypes.Typing;
                     await connector.Conversations.ReplyToActivityAsync(typing);
                 }
-
+              
                 await Conversation.SendAsync(activity, () =>
                        new ExceptionHandlerDialog<object>(
                           _rootDialog,
-                          new AzureTableLogger()));
+                          _logger));
             }
             else
             {

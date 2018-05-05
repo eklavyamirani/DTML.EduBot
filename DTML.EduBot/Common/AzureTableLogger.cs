@@ -8,11 +8,16 @@ using System.Threading.Tasks;
 
 namespace DTML.EduBot.Common
 {
+    [Serializable]
     public class AzureTableLogger : ILogger
     {
+        [NonSerialized]
         private CloudStorageAccount storageAccount;
+        [NonSerialized]
         private CloudTableClient tableClient;
+        [NonSerialized]
         private CloudTable table;
+
 
         public AzureTableLogger()
         {
@@ -38,7 +43,7 @@ namespace DTML.EduBot.Common
             }
             catch (Exception)
             {
-             // Do nothing...
+                // Do nothing...
             }
         }
 
@@ -63,26 +68,26 @@ namespace DTML.EduBot.Common
         {
             throw new NotImplementedException();
         }
+    }
 
-        [Serializable]
-        public class LogEntry : TableEntity
+    [Serializable]
+    public class LogEntry : TableEntity
+    {
+        public string message { get; set; }
+        public string eventType { get; set; }
+        public string detectedLanguage { get; set; }
+        public string userId { get; set; }
+
+        public string date { get; set; }
+
+        public LogEntry(string rowKey)
         {
-            public string message { get; set; }
-            public string eventType { get; set; }
-            public string detectedLanguage { get; set; }
-            public string userId { get; set; }
-
-            public string date { get; set; }
-
-            public LogEntry(string rowKey)
-            {
-                var key = DateTime.Now;
-                PartitionKey = key.Day.ToString(CultureInfo.InvariantCulture) + key.Month.ToString(CultureInfo.InvariantCulture) + key.Year.ToString(CultureInfo.InvariantCulture);
-                RowKey = rowKey;
-            }
-
-            public LogEntry() { }
+            var key = DateTime.Now;
+            PartitionKey = key.Day.ToString(CultureInfo.InvariantCulture) + key.Month.ToString(CultureInfo.InvariantCulture) + key.Year.ToString(CultureInfo.InvariantCulture);
+            RowKey = rowKey;
         }
 
+        public LogEntry() { }
     }
+
 }

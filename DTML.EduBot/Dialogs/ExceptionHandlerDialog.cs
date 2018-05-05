@@ -1,11 +1,8 @@
-﻿using DTML.EduBot.Common.Interfaces;
+﻿using DTML.EduBot.Common;
+using DTML.EduBot.Common.Interfaces;
 using Microsoft.Bot.Builder.Dialogs;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using static DTML.EduBot.Common.AzureTableLogger;
 
 namespace DTML.EduBot.Dialogs
 {
@@ -49,15 +46,13 @@ namespace DTML.EduBot.Dialogs
         {
             
             var stackTrace = e.StackTrace;
-            if (stackTrace.Length > _stackTraceLength)
-                stackTrace = stackTrace.Substring(0, _stackTraceLength) + "…";
             stackTrace = stackTrace.Replace(Environment.NewLine, "  \n");
 
             var message = e.Message.Replace(Environment.NewLine, "  \n");
 
             var exceptionStr = $"**{message}**  \n\n{stackTrace}";
 
-            await _logger.Log(new LogEntry { message = exceptionStr, date = DateTime.Now.ToShortDateString(), eventType = "Exception" });
+            await _logger.Log(new LogEntry(Guid.NewGuid().ToString()) { message = "ExceptionHandlerDialog:"+exceptionStr, date = DateTime.Now.ToShortDateString(), eventType = "Exception" });
         }
     }
 }

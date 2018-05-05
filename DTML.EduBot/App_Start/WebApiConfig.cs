@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
 using DTML.EduBot.Common;
 using System.Diagnostics;
+using DTML.EduBot.Common.Interfaces;
 
 namespace DTML.EduBot
 {
@@ -36,8 +37,10 @@ namespace DTML.EduBot
                 defaults: new { id = RouteParameter.Optional }
             );
 
+            ILogger _e = new AzureTableLogger();
+
             config.Services.Add(typeof(IExceptionLogger),
-                new TraceSourceExceptionLogger(new AzureTableLogger()));
+                new TraceSourceExceptionLogger());
         }
     }
 }
