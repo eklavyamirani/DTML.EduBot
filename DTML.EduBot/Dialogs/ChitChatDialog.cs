@@ -82,32 +82,6 @@
             );
         }
 
-        private async Task AskUserName(IDialogContext context, IAwaitable<object> result)
-        {
-            await context.PostTranslatedAsync(BotPersonality.UserNameQuestion);
-            context.Wait(this.UserNameReceivedAsync);
-        }
-
-        private async Task UserNameReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
-        {
-            var messageActivity = await result;
-            context.UserData.SetValue(Constants.Shared.UserName, messageActivity.Text);
-            await context.PostAsync(BotPersonality.BotResponseToUserName);
-            await context.PostAsync($"OK, {messageActivity.Text}. What do you want to do now?");
-            await this.StartAsync(context);
-        }
-
-        private async Task UserNameReceivedInNativeLanguageAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
-        {
-            IMessageActivity userText = await result;
-            string userTextInEnglish = await MessageTranslator.TranslateTextAsync(userText.Text);
-            userText.Text = userTextInEnglish;
-            context.UserData.SetValue(Constants.Shared.UserName, userText.Text);
-            await context.PostTranslatedAsync(BotPersonality.BotResponseToUserName);
-            await context.PostTranslatedAsync($"OK, {userText.Text}. What do you want to do now?");
-            await this.StartAsync(context);
-        }
-
         private async Task AfterChoosingLanguageSwitch(IDialogContext context, IAwaitable<object> result)
         {
             var response = await result as string;
@@ -140,14 +114,9 @@
                     await context.PostTranslatedAsync(translatedUserNameQuestionTask.Result);
 
                     context.UpdateUserData(userData);
-                    context.Wait(this.UserNameReceivedInNativeLanguageAsync);
+                    await EngageWithUser(context);
                 }
-                else
-                {
-                    context.UserData.SetValue(Constants.Shared.UserLanguageCodeKey, MessageTranslator.DEFAULT_LANGUAGE);
-                    await context.PostTranslatedAsync($"{BotPersonality.UserNameQuestion}");
-                    context.Wait(this.UserNameReceivedAsync);
-                }
+
             }
             catch (TooManyAttemptsException)
             {

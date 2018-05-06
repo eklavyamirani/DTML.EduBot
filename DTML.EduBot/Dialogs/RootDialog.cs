@@ -6,6 +6,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Threading;
+    using System.Web;
     using System.Threading.Tasks;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
@@ -19,11 +20,13 @@
     {
         private readonly ChitChatDialog _chitChatDialog;
         private readonly LevelDialog _levelDialog;
+        private readonly AuthenticateDialog _auth;
 
-        public RootDialog(ChitChatDialog chitChatDialog, LevelDialog _levelDialog)
+        public RootDialog(ChitChatDialog chitChatDialog, LevelDialog _levelDialog, AuthenticateDialog auth)
         {
             this._chitChatDialog = chitChatDialog;
             this._levelDialog = _levelDialog;
+            this._auth = auth;
         }
 
         public Task StartAsync(IDialogContext context)
@@ -44,8 +47,16 @@
             {
                 return;
             }
-
+            
+            if (string.IsNullOrWhiteSpace(messageActivity.From.Name) || "guest".Equals(messageActivity.From.Name, StringComparison.InvariantCultureIgnoreCase) || "user".Equals(messageActivity.From.Name, StringComparison.InvariantCultureIgnoreCase))
+            {
+                await context.Forward(_auth, this.AfterAuthDialogEnded, messageActivity, CancellationToken.None);
+            }
+            else
+            {
+                context.UserData.SetValue<string>(Constants.Shared.UserName, messageActivity.From.Name);
                 await context.Forward(_chitChatDialog, this.AfterChitChatComplete, messageActivity, CancellationToken.None);
+            }
         }
                 
         private async Task AfterChitChatComplete(IDialogContext context, IAwaitable<object> result)
@@ -59,6 +70,11 @@
             await AfterChitChatComplete(context, result);
         }
 
-       
+        private Task AfterAuthDialogEnded(IDialogContext context, IAwaitable<object> result)
+        {
+            return Task.FromResult(0);
+        }
+
+
     }
 }

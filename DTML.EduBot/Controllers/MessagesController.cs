@@ -22,11 +22,13 @@
     public class MessagesController : ApiController
     {
         private readonly RootDialog _rootDialog;
+        private readonly AuthenticateDialog _login;
         private readonly ILogger _logger;
 
-        public MessagesController(RootDialog rootDialog, ILogger logger)
+        public MessagesController(RootDialog rootDialog, AuthenticateDialog login, ILogger logger)
         {
             _rootDialog = rootDialog;
+            _login = login;
             _logger = logger;
         }
 
@@ -36,24 +38,24 @@
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
-            if (activity.Type == ActivityTypes.Message)
-            {
-                using (ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl)))
+                if (activity.Type == ActivityTypes.Message)
                 {
-                    Activity typing = activity.CreateReply();
-                    typing.Type = ActivityTypes.Typing;
-                    await connector.Conversations.ReplyToActivityAsync(typing);
-                }
-              
+                    using (ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl)))
+                    {
+                        Activity typing = activity.CreateReply();
+                        typing.Type = ActivityTypes.Typing;
+                        await connector.Conversations.ReplyToActivityAsync(typing);
+                    }
+
                 await Conversation.SendAsync(activity, () =>
-                       new ExceptionHandlerDialog<object>(
-                          _rootDialog,
-                          _logger));
-            }
-            else
-            {
-                await HandleSystemMessageAsync(activity);
-            }
+                               new ExceptionHandlerDialog<object>(
+                                  _rootDialog,
+                                  _logger));
+                }
+                else
+                {
+                    await HandleSystemMessageAsync(activity);
+                }            
 
             return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted);
         }
@@ -71,20 +73,20 @@
                 }
                 else if (message.Type == ActivityTypes.ConversationUpdate)
                 {
-                    // Handle conversation state changes, like members being added and removed
-                    // Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
-                    // Not available in all channels
+                        // Handle conversation state changes, like members being added and removed
+                        // Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
+                        // Not available in all channels
 
-                    // Ensure the auto messages don't fire in group conversations and only when bot gets added to the conversation.
-                    var isGroupConversation = message.Conversation.IsGroup.HasValue && message.Conversation.IsGroup.Value;
-                    if (!isGroupConversation && message.MembersAdded.Any(member => member.Name == message.Recipient.Name))
-                    {
-                        using (ConnectorClient connector = new ConnectorClient(new Uri(message.ServiceUrl)))
+                        // Ensure the auto messages don't fire in group conversations and only when bot gets added to the conversation.
+                        var isGroupConversation = message.Conversation.IsGroup.HasValue && message.Conversation.IsGroup.Value;
+                        if (!isGroupConversation && message.MembersAdded.Any(member => member.Name == message.Recipient.Name))
                         {
-                            Activity reply = message.CreateReply(BotPersonality.BotSelfIntroductionStart);
-                            await connector.Conversations.ReplyToActivityAsync(reply);
+                            using (ConnectorClient connector = new ConnectorClient(new Uri(message.ServiceUrl)))
+                            {
+                                Activity reply = message.CreateReply(BotPersonality.BotSelfIntroductionStart);
+                                await connector.Conversations.ReplyToActivityAsync(reply);
+                            }
                         }
-                    }
                 }
                 else if (message.Type == ActivityTypes.ContactRelationUpdate)
                 {

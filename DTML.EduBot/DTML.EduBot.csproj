@@ -226,6 +226,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Attributes\PreConfiguredLuisModelAttribute.cs" />
     <Compile Include="Attributes\PreConfiguredQnaModelAttribute.cs" />
+    <Compile Include="Common\ActivityLogger.cs" />
     <Compile Include="Common\BotPersonality.cs" />
     <Compile Include="Common\Interfaces\INotificationManager.cs" />
     <Compile Include="Common\NotificationManager.cs" />
@@ -236,6 +237,7 @@
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Dialogs\BasicDialogModule.cs" />
     <Compile Include="Dialogs\ExceptionHandlerDialog.cs" />
+    <Compile Include="Dialogs\AuthenticateDialog.cs" />
     <Compile Include="Dialogs\LearnEnglishDialog.cs" />
     <Compile Include="Dialogs\NavigateDialog.cs" />
     <Compile Include="Dialogs\LevelDialog.cs" />

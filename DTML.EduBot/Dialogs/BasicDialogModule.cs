@@ -7,7 +7,7 @@
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-
+            builder.RegisterType<AuthenticateDialog>();
             builder.RegisterType<RootDialog>();
             builder.RegisterType<LessonPlanDialog>();
             builder.RegisterType<ChitChatDialog>();

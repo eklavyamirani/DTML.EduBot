@@ -16,6 +16,7 @@ namespace DTML.EduBot
     using Microsoft.Bot.Builder.Internals.Fibers;
     using DTML.EduBot.Common;
     using DTML.EduBot.Common.Interfaces;
+    using Microsoft.Bot.Builder.History;
 
     public class WebApiApplication : System.Web.HttpApplication
     {
@@ -49,7 +50,8 @@ namespace DTML.EduBot
                      .ETagBasedConsistency);
 
             MicrosoftAppCredentials.TrustServiceUrl("directline.botframework.com");
-            
+
+            builder.RegisterType<AzureActivityLogger>().As<IActivityLogger>().InstancePerDependency();
 
             Conversation.UpdateContainer(
                  coversation =>
@@ -64,6 +66,8 @@ namespace DTML.EduBot
                      .AsSelf()
                      .InstancePerLifetimeScope();
                  });
+
+
 
             var config = GlobalConfiguration.Configuration;
 
