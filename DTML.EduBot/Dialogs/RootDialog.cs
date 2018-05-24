@@ -47,16 +47,9 @@
             {
                 return;
             }
-            
-            if (string.IsNullOrWhiteSpace(messageActivity.From.Name) || "guest".Equals(messageActivity.From.Name, StringComparison.InvariantCultureIgnoreCase) || "user".Equals(messageActivity.From.Name, StringComparison.InvariantCultureIgnoreCase))
-            {
-                await context.Forward(_auth, this.AfterAuthDialogEnded, messageActivity, CancellationToken.None);
-            }
-            else
-            {
-                context.UserData.SetValue<string>(Constants.Shared.UserName, messageActivity.From.Name);
-                await context.Forward(_chitChatDialog, this.AfterChitChatComplete, messageActivity, CancellationToken.None);
-            }
+          
+           context.UserData.SetValue<string>(Constants.Shared.UserName, messageActivity.From.Name);
+           await context.Forward(_chitChatDialog, this.AfterChitChatComplete, messageActivity, CancellationToken.None);
         }
                 
         private async Task AfterChitChatComplete(IDialogContext context, IAwaitable<object> result)

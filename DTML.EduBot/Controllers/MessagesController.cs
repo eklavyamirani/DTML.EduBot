@@ -22,13 +22,11 @@
     public class MessagesController : ApiController
     {
         private readonly RootDialog _rootDialog;
-        private readonly AuthenticateDialog _login;
         private readonly ILogger _logger;
 
-        public MessagesController(RootDialog rootDialog, AuthenticateDialog login, ILogger logger)
+        public MessagesController(RootDialog rootDialog, ILogger logger)
         {
             _rootDialog = rootDialog;
-            _login = login;
             _logger = logger;
         }
 
