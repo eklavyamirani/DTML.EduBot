@@ -4,7 +4,7 @@
 Repository for the DTML EduBot 
 
 Example of the bot in action:
-![English Teacher Bot](https://dtml.org/Home/Edubot)
+[English Teacher Bot](https://dtml.org/Home/Edubot)
 
 To Setup:
 1. Git clone this repository
