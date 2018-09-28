@@ -14,9 +14,7 @@
         private static readonly IReadOnlyCollection<string> LevelChoices = new List<String> {
                 Shared.LevelOne,
                 Shared.LevelTwo,
-                Shared.LevelThree,
-                Shared.LevelFour,
-                Shared.LevelFive};
+                Shared.LevelThree};
 
         private readonly LessonPlanDialog _lessonPlanDialog;
 
@@ -25,17 +23,27 @@
             _lessonPlanDialog = lessonPlanDialog;
         }
 
-        public Task StartAsync(IDialogContext context)
+        public async Task StartAsync(IDialogContext context)
         {
-            PromptDialog.Choice(
-                context,
-                this.AfterLevelSelected,
-                LevelChoices,
-                "Which level are you?",
-                Shared.DoNotUnderstand,
-                attempts: Shared.MaxPromptAttempts);
+            if (!context.UserData.ContainsKey("level"))
+            {
+                var question = await DTML.EduBot.Common.MessageTranslator.TranslateTextAsync("How much English do you already know?");
 
-            return Task.CompletedTask;
+                PromptDialog.Choice(
+                    context,
+                    this.AfterLevelSelected,
+                    LevelChoices,
+                    question,
+                    Shared.DoNotUnderstand,
+                    attempts: Shared.MaxPromptAttempts);
+            }
+
+            else
+            {
+                IAwaitable<string> result = new AwaitableFromItem<string>(context.UserData.GetValue<string>("level"));
+                await AfterLevelSelected(context, result);
+            }
+
         }
 
         private async Task AfterLevelSelected(IDialogContext context, IAwaitable<string> result)
@@ -43,6 +51,7 @@
             try
             {
                 var selection = await result;
+                context.UserData.SetValue<string>("level", selection);
                 context.Call(_lessonPlanDialog, this.AfterLevelFinished);
             }
             catch (TooManyAttemptsException)

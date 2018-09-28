@@ -24,8 +24,8 @@
             get { return this.answerOptions; }
         }
 
-        [JsonProperty("correct_answer", Required = Required.Always)]
-        public string CorrectAnswer { get; set; }
+        [JsonProperty("correct_answers", Required = Required.Always)]
+        public ICollection<string> CorrectAnswers { get; set; }
 
         [DefaultValue("Correct! Now, can you type the word?")]
         [JsonProperty("correct_answer_bot_response", DefaultValueHandling = DefaultValueHandling.Populate)]

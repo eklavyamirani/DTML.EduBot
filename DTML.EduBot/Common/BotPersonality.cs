@@ -10,9 +10,12 @@ namespace DTML.EduBot.Common
     {
         private static int Index = 0;
         public const string BotSelfIntroduction = "Hi I am " + BotName;
+        public const string BotSelfIntroductionStart = "Hi I am " + BotName+", ask me any question or type 'learn english' to start learning plan";
+        public const string BotLanguageIntroduction = "My {0} is not very good, but I wil try...";
         public const string BotName = "Professor Edword Jr.";
         public const string UserNameQuestion = "What is your name?";
-        public const string BotResponseUnrecognizedIntent = "I'm still learning just as you are, I will think and get back to you";
+        public const string Thankyou = "Thank you";
+        public const string BotResponseUnrecognizedIntent = "I'm still learning just as you are, this is not something I know...";
         public const string BotResponseToGibberish = "Hmm, that doesn't sound right, can you please rephrase?";
         public const string BotResponseToUserName = "That's a nice name";
         public const string BotResponseToDeclinedLessonPlan = "Aww! Okay let's keep chatting";
@@ -26,7 +29,24 @@ namespace DTML.EduBot.Common
                 "Good to see you my friend, \n How are you doing?"
             };
 
-         private readonly static IReadOnlyList<string> AcquaintanceQs = new List<string>
+        private readonly static IReadOnlyList<string> BotGoodbye = new List<string>
+            {
+               "Goodbye now!\n",
+               "Talk to you soon!\n",
+               "It was nice talking to you! See you later!\n",
+               "It was nice see you again! Goodbye!\n",
+               "Talk to you again!\n"
+            };
+
+        private readonly static IReadOnlyList<string> StartLesson = new List<string>
+            {
+               "Let's get started on your lessons!\n",
+               "Let's begin your lessons!\n",
+               "So you want to learn English? Let's begin.\n",
+               "Lesson Time. Let's get started.\n"
+            };
+
+        private readonly static IReadOnlyList<string> AcquaintanceQs = new List<string>
             {
                 "Which is your favourite animal?",
                 "What is your favorite color?",
@@ -55,6 +75,20 @@ namespace DTML.EduBot.Common
         {
             int RandIndex = (int) (DateTime.UtcNow.Ticks % BotGreeting.Count);
             return (BotGreeting[RandIndex]);
+        }
+
+        internal static string GetRandomGoodbye()
+        {
+            Random RandomNum = new Random();
+            int RandIndex = RandomNum.Next(BotGoodbye.Count);
+            return (BotGoodbye[RandIndex]);
+        }
+
+        internal static string GetRandomStartLesson()
+        {
+            Random RandomNum = new Random();
+            int RandIndex = RandomNum.Next(StartLesson.Count);
+            return (StartLesson[RandIndex]);
         }
 
         public static string BuildAcquaintance()

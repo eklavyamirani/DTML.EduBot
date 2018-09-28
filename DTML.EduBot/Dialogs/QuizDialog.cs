@@ -11,6 +11,7 @@
     using Microsoft.Bot.Connector;
     using Models;
     using System.Collections.ObjectModel;
+    using DTML.EduBot.Extensions;
 
     [Serializable]
     public class QuizDialog : IDialog<string>
@@ -36,6 +37,8 @@
 
         private async Task<bool> PostAdaptiveCard(IDialogContext context)
         {
+            await context.PostTypingAsync();
+
             var nextQuestion = quiz.Questions.ElementAtOrDefault(quiz.currentQuestion);
             if (nextQuestion == null)
             {
@@ -73,7 +76,7 @@
 
         private async Task CheckAnswerOptionsAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
-            var studentAnswer = "";
+            var studentAnswer = string.Empty;
             try
             {
                 studentAnswer = (await result).Text;
@@ -91,7 +94,7 @@
             }
 
             // if the answer given is correct
-            if (studentAnswer != null && studentAnswer.Equals(question.CorrectAnswer, StringComparison.InvariantCultureIgnoreCase))
+            if (studentAnswer != null && question.CorrectAnswers.Any(answers => studentAnswer.Equals(answers, StringComparison.InvariantCultureIgnoreCase)))
             {
                 await context.PostAsync(question.CorrectAnswerBotResponse);
 
@@ -108,7 +111,7 @@
             }
             else
             {
-                await context.PostAsync(question.WrongAnswerBotResponse);
+                await context.PostTranslatedAsync(question.WrongAnswerBotResponse);
                 await this.StartAsync(context);
             }
         }

@@ -10,6 +10,12 @@
     using DTML.EduBot.Dialogs;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
+    using DTML.EduBot.UserData;
+    using Autofac;
+    using Microsoft.Bot.Builder.Dialogs.Internals;
+    using Microsoft.Bot.Builder.Azure;
+    using Microsoft.IdentityModel.Protocols;
+    using System.Configuration;
 
     [BotAuthentication]
     public class MessagesController : ApiController
@@ -27,64 +33,72 @@
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
-            try
-            {
                 if (activity.Type == ActivityTypes.Message)
                 {
-                    await Conversation.SendAsync(activity, () => _rootDialog);
+                    using (ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl)))
+                    {
+                        Activity typing = activity.CreateReply();
+                        typing.Type = ActivityTypes.Typing;
+                        await connector.Conversations.ReplyToActivityAsync(typing);
+                    }
+
+                await Conversation.SendAsync(activity, () =>
+                       new ExceptionHandlerDialog<object>(
+                          _rootDialog,
+                          displayException: true));
                 }
                 else
                 {
                     await HandleSystemMessageAsync(activity);
-                }
+                }             
 
-                var response = Request.CreateResponse(HttpStatusCode.OK);
-                return response;
-            }
-            catch (Exception e)
-            {
-                e.Data.Add("id", activity.From.Id);
-                throw e;
-            }
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            return response;
         }
 
         private async Task<Activity> HandleSystemMessageAsync(Activity message)
         {
-            if (message.Type == ActivityTypes.DeleteUserData)
-            {
-                // Implement user deletion here
-                // If we handle user deletion, return a real message
-            }
-            else if (message.Type == ActivityTypes.ConversationUpdate)
-            {
-                // Handle conversation state changes, like members being added and removed
-                // Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
-                // Not available in all channels
+            if (message == null) return null;
 
-                // Ensure the auto messages don't fire in group conversations and only when bot gets added to the conversation.
-                var isGroupConversation = message.Conversation.IsGroup.HasValue && message.Conversation.IsGroup.Value;
-                if (!isGroupConversation && message.MembersAdded.Any(member => member.Name == message.Recipient.Name))
+            try
+            {
+                if (message.Type == ActivityTypes.DeleteUserData)
                 {
-                    using (ConnectorClient connector = new ConnectorClient(new Uri(message.ServiceUrl)))
+                    // Implement user deletion here
+                    // If we handle user deletion, return a real message
+                }
+                else if (message.Type == ActivityTypes.ConversationUpdate)
+                {
+                    // Handle conversation state changes, like members being added and removed
+                    // Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
+                    // Not available in all channels
+
+                    // Ensure the auto messages don't fire in group conversations and only when bot gets added to the conversation.
+                    var isGroupConversation = message.Conversation.IsGroup.HasValue && message.Conversation.IsGroup.Value;
+                    if (!isGroupConversation && message.MembersAdded.Any(member => member.Name == message.Recipient.Name))
                     {
-                        // TODO: start the root activity here.
-                        Activity reply = message.CreateReply(BotPersonality.BotSelfIntroduction);
-                        await connector.Conversations.ReplyToActivityAsync(reply);
+                        using (ConnectorClient connector = new ConnectorClient(new Uri(message.ServiceUrl)))
+                        {                          
+                            Activity reply = message.CreateReply(BotPersonality.BotSelfIntroductionStart);
+                            await connector.Conversations.ReplyToActivityAsync(reply);
+                        }
                     }
                 }
+                else if (message.Type == ActivityTypes.ContactRelationUpdate)
+                {
+                    // Handle add/remove from contact lists
+                    // Activity.From + Activity.Action represent what happened
+                }
+                else if (message.Type == ActivityTypes.Typing)
+                {
+                    // Handle knowing tha the user is typing
+                }
+                else if (message.Type == ActivityTypes.Ping)
+                {
+                }
             }
-            else if (message.Type == ActivityTypes.ContactRelationUpdate)
-            {
-                // Handle add/remove from contact lists
-                // Activity.From + Activity.Action represent what happened
-            }
-            else if (message.Type == ActivityTypes.Typing)
-            {
-                // Handle knowing tha the user is typing
-            }
-            else if (message.Type == ActivityTypes.Ping)
-            {
-            }
+            catch
+            { }
 
             return null;
         }
