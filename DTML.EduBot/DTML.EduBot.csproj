@@ -260,7 +260,9 @@
     <Compile Include="LessonPlan\Quiz.cs" />
     <Compile Include="LessonPlan\QuizQuestion.cs" />
     <Compile Include="LessonPlan\Topic.cs" />
+    <Compile Include="Models\BotCourseModel.cs" />
     <Compile Include="Models\StudentResponse.cs" />
+    <Compile Include="Models\Words.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Qna\IQnaModel.cs" />
     <Compile Include="Qna\IQnaRequest.cs" />
@@ -272,6 +274,7 @@
     <Compile Include="Qna\QnaService.cs" />
     <Compile Include="UserData\UserData.cs" />
     <Compile Include="Extensions\UserDataExtension.cs" />
+    <Compile Include="Utilities\LessonPlanHelper.cs" />
     <Compile Include="Utilities\AzureTableLogger.cs" />
     <Compile Include="Utilities\ILogger.cs" />
   </ItemGroup>

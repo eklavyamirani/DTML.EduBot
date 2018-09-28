@@ -14,6 +14,8 @@
     using System.Collections.ObjectModel;
     using Microsoft.Bot.Builder.Luis;
     using DTML.EduBot.Extensions;
+    using DTML.EduBot.Utilities;
+    using System.Configuration;
 
     [Serializable]
     public class LessonDialog : LuisDialog<string>
@@ -45,13 +47,30 @@
 
         private async Task<bool> PostAdaptiveCard(IDialogContext context)
         {
+            ExtendedWordCollection lessons = LessonPlanHelper.GetLessonPlanAsync<ExtendedWordCollection>(lesson.APIUrl).Result;
+            
+            foreach(var word in lessons.words)
+            {
+                Topic topic = new Topic()
+                {
+                     Question = "Please tell me what the picture shows?",
+                     CorrectAnswers = new List<string>() { word.word },
+                     CorrectAnswerBotResponse = "Correct! Now, can you type the word?",
+                     WrongAnswerBotResponse = "Sorry, incorrect, try again",
+                     PronounciationPhrase = "Good work! Here is how you say it, Repeat after me.",
+                     ImageUrl = String.Format(ConfigurationManager.AppSettings["WordImageAPI"], word.image)
+                };
+
+                lesson.Topics.Add(topic);
+            }
+
             var nextTopic = lesson.Topics.ElementAtOrDefault(lesson.currentTopic);
             if (nextTopic == null)
             {
                 return false;
             }
 
-            List<ActionBase> answerOptions = PopulateActionBasesFromAnswerOptions(nextTopic.AnswerOptions);
+            List<ActionBase> answerOptions = PopulateActionBasesFromAnswerOptions(lessons.words, nextTopic.CorrectAnswers.FirstOrDefault());
 
             AdaptiveCard adaptiveCard = new AdaptiveCard()
             {
@@ -85,22 +104,42 @@
             return true;
         }
 
-        private List<ActionBase> PopulateActionBasesFromAnswerOptions(ICollection<string> answerOptions)
+        private ICollection<string> GenerateAnswers(IEnumerable<Word> words, string word)
+        {
+            throw new NotImplementedException();
+        }
+
+        private List<ActionBase> PopulateActionBasesFromAnswerOptions(IEnumerable<DTML.EduBot.Models.Word> answerOptions, string answer)
         {
             List<ActionBase> actionBases = new List<ActionBase>();
+            var answers1 = answerOptions.Where(q => !q.word.Equals(answer)).Take(2);
 
-            foreach (string answer in answerOptions)
+            foreach (var ans in answers1)
             {
                 actionBases.Add(
+                    new SubmitAction()
+                    {
+                        Title = ans.word,
+                        DataJson = "{\"answer\": \"" + ans.word + "\"}"
+                    }
+                );
+            }
+
+            actionBases.Add(
                     new SubmitAction()
                     {
                         Title = answer,
                         DataJson = "{\"answer\": \"" + answer + "\"}"
                     }
                 );
-            }
 
-            return actionBases;
+            return Randomize(actionBases).ToList();
+        }
+
+        public static IEnumerable<T> Randomize<T>(IEnumerable<T> source)
+        {
+            Random rnd = new Random();
+            return source.OrderBy<T, int>((item) => rnd.Next());
         }
 
         private async Task CheckAnswerOptionsAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
