@@ -1,17 +1,10 @@
 ﻿namespace DTML.EduBot.Common
 {
+    using Google.Cloud.Translation.V2;
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Linq;
-    using System.Net.Http;
-    using System.Net.Http.Headers;
-    using System.Configuration;
     using System.Threading.Tasks;
-    using System.Web;
-    using System.Xml.Linq;
-    using Google.Cloud.Translation.V2;
-    using Google.Apis.Auth.OAuth2;
 
     public class MessageTranslator
     {

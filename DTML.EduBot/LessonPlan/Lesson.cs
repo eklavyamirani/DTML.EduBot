@@ -13,6 +13,9 @@ namespace DTML.EduBot.LessonPlan
         [JsonProperty("lesson_title", Required = Required.Always)]
         public string LessonTitle { get; set; }
 
+        [JsonProperty("api_url", Required = Required.Always)]
+        public string APIUrl { get; set; }
+
         [JsonProperty("topics", Required = Required.Always)]
         public ICollection<Topic> Topics
         {

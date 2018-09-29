@@ -8,9 +8,23 @@ namespace DTML.EduBot
     using Autofac.Integration.WebApi;
     using DTML.EduBot.Dialogs;
     using System;
+    using Microsoft.Bot.Builder.Azure;
+    using Microsoft.Bot.Builder.Dialogs.Internals;
+    using Microsoft.Bot.Connector;
+    using System.Configuration;
+    using Microsoft.Bot.Builder.Dialogs;
+    using Microsoft.Bot.Builder.Internals.Fibers;
+    using DTML.EduBot.Common;
+    using DTML.EduBot.Common.Interfaces;
+    using Microsoft.Bot.Builder.History;
 
     public class WebApiApplication : System.Web.HttpApplication
     {
+        protected void Application_Error()
+        {
+            var e = Server.GetLastError();
+        }
+
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
@@ -19,9 +33,41 @@ namespace DTML.EduBot
 
             builder.RegisterModule(new LessonPlanModule());
             builder.RegisterModule(new BasicDialogModule());
-            builder.RegisterModule(new UserDataModule());
+
+            builder
+            .RegisterType<AzureTableLogger>()
+            .Keyed<ILogger>(FiberModule.Key_DoNotSerialize)
+            .AsSelf()
+            .As<ILogger>()
+            .SingleInstance();
 
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+            builder.RegisterModule(new AzureModule(Assembly.GetExecutingAssembly()));
+
+            var store = new TableBotDataStore(ConfigurationManager.AppSettings["StorageConnectionString"]);
+            var cache = new CachingBotDataStore(store,
+                     CachingBotDataStoreConsistencyPolicy
+                     .ETagBasedConsistency);
+
+            MicrosoftAppCredentials.TrustServiceUrl("directline.botframework.com");
+
+            builder.RegisterType<AzureActivityLogger>().As<IActivityLogger>().InstancePerDependency();
+
+            Conversation.UpdateContainer(
+                 coversation =>
+                 {
+                     coversation.Register(c => store)
+                    .Keyed<IBotDataStore<BotData>>(AzureModule.Key_DataStore)
+                    .AsSelf()
+                    .SingleInstance();
+
+                     coversation.Register(c => cache)
+                     .As<IBotDataStore<BotData>>()
+                     .AsSelf()
+                     .InstancePerLifetimeScope();
+                 });
+
+
 
             var config = GlobalConfiguration.Configuration;
 

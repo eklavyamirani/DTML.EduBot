@@ -11,30 +11,27 @@
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
     using UserData;
+    using DTML.EduBot.Common;
 
     [Serializable]
     public class LessonPlanDialog : IDialog<string>
     {
         private const ulong _pointsPerLesson = 10;
         private ulong _userPointsBeforeLessonPlan;
-        private IUserDataRepository _userDataRepository;
         private static readonly IReadOnlyCollection<string> LevelChoices = new List<string> {
                 Shared.LevelOne,
-                Shared.LevelTwo,
-                Shared.LevelThree,
-                Shared.LevelFour,
-                Shared.LevelFive};
+                Shared.LevelTwo};
 
-        public LessonPlanDialog(IUserDataRepository userDataRepository)
+        public LessonPlanDialog()
         {
-            _userDataRepository = userDataRepository;
         }
 
-        public Task StartAsync(IDialogContext context)
+        public async Task StartAsync(IDialogContext context)
         {
-            var _oldGamerProfile = GetUserGamerProfile(context.Activity.From.Id);
+            var _oldGamerProfile = GetUserGamerProfile(context);
             _userPointsBeforeLessonPlan = _oldGamerProfile.Points;
-            string friendlyUserName = context.Activity.From.Name;
+            var user = context.GetUserData();
+            string friendlyUserName = user?.UserName;
 
             ICollection<string> lessonTitle = new List<string>();
 
@@ -42,21 +39,23 @@
             int i = 0;
             foreach (Lesson lesson in LessonPlanModule.LessonPlan.Lessons)
             {
-                if (i >= 5) break;
+                if (i >= 7) break;
 
+                //var lessonInNativaLanguage = await MessageTranslator.TranslateTextAsync(lesson.LessonTitle, user?.NativeLanguageIsoCode);
                 lessonTitle.Add(lesson.LessonTitle);
                 i++;
             }
+
+            var questionInNativeLanguage = await MessageTranslator.TranslateTextAsync($"Which lesson would you like to start?", user?.NativeLanguageIsoCode);
 
             PromptDialog.Choice(
                 context,
                 this.AfterLessonSelected,
                 lessonTitle,
-                $"{friendlyUserName} Which lesson would you like to start?",
+                $"{questionInNativeLanguage}",
                 Shared.DoNotUnderstand,
                 attempts: Shared.MaxPromptAttempts);
 
-            return Task.CompletedTask;
         }
 
         private async Task AfterLessonSelected(IDialogContext context, IAwaitable<string> result)
@@ -84,7 +83,8 @@
         {
             // TODO: inject dependency
             var badgeRepository = new Gamification.BadgeRepository();
-            var updatedProfile = GetUserGamerProfile(context.Activity.From.Id);
+            var updatedProfile = GetUserGamerProfile(context);
+            var user = context.GetUserData();
             updatedProfile.Points += _pointsPerLesson;
             var newBadges = badgeRepository.GetEligibleBadges(updatedProfile, _userPointsBeforeLessonPlan);
             updatedProfile.Badges.AddRange(newBadges);
@@ -104,7 +104,7 @@
                             },
                             new TextBlock()
                             {
-                                Text = $"You unlocked {badge}",
+                                Text = await MessageTranslator.TranslateTextAsync($"You unlocked {badge}", user?.NativeLanguageIsoCode),
                                 Size = TextSize.Large,
                                 Wrap = true
                             }
@@ -131,20 +131,15 @@
             await context.PostAsync(finalMessage);
 
             // Refactor
-            var updatedUserData = _userDataRepository.GetUserData(context.Activity.From.Id);
+            var updatedUserData = context.GetUserData();
             updatedUserData.GamerProfile = updatedProfile;
-            _userDataRepository.UpdateUserData(updatedUserData);
+            context.UpdateUserData(updatedUserData);
             context.Done(string.Empty);
         }
 
-        private Gamification.GamerProfile GetUserGamerProfile(string userId)
+        private Gamification.GamerProfile GetUserGamerProfile(IDialogContext context)
         {
-            var userData = _userDataRepository.GetUserData(userId);
-            if (userData == null)
-            {
-                userData = new UserData();
-            }
-
+            var userData = context.GetUserData();
             return userData.GamerProfile;
         }
     }

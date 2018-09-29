@@ -295,3 +295,4 @@ __pycache__/
 *.xsd.cs
 /DTML.EduBot/Web.Secrets.Config
 /DTML.EduBot/translation.json
+/Edubot.WebTests/App.config
