@@ -32,7 +32,7 @@
             _userPointsBeforeLessonPlan = _oldGamerProfile.Points;
             var user = context.GetUserData();
             string friendlyUserName = user?.UserName;
-            
+
             ICollection<string> lessonTitle = new List<string>();
 
             // get up to 5 lessons
@@ -81,9 +81,6 @@
 
         private async Task AfterLessonFinished(IDialogContext context, IAwaitable<string> result)
         {
-            var selection = await result;
-            var selectedLesson = LessonPlanModule.LessonPlan.Lessons.FirstOrDefault(lesson => selection.Equals(lesson.LessonTitle));
-
             // TODO: inject dependency
             var badgeRepository = new Gamification.BadgeRepository();
             var updatedProfile = GetUserGamerProfile(context);

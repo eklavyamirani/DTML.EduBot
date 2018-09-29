@@ -3,10 +3,14 @@ using System.Web;
 using DTML.EduBot.Dialogs;
 using DTML.EduBot.LessonPlan;
 using Newtonsoft.Json;
+using System.Configuration;
 
 namespace DTML.EduBot
 {
     using Autofac;
+    using DTML.EduBot.Models;
+    using DTML.EduBot.Utilities;
+    using System.Collections.Generic;
 
     public class LessonPlanModule : Module
     {
@@ -21,14 +25,13 @@ namespace DTML.EduBot
 
         private LessonPlan.LessonPlan LoadLessonPlan()
         {
+            string lessonPlanAPI = ConfigurationManager.AppSettings["LessonServiceAPI"];
             LessonPlan.LessonPlan lessonPlan = new LessonPlan.LessonPlan();
+            List<BotCourseModel> lessons = LessonPlanHelper.GetLessonPlanAsync<List<BotCourseModel>>(lessonPlanAPI).Result;
 
-            string lessonPlanPath = HttpContext.Current.Server.MapPath("~/LessonPlan/lesson_plan.json");
-
-            using (StreamReader reader = new StreamReader(lessonPlanPath))
+            foreach (BotCourseModel lesson in lessons)
             {
-                string lessonPlanJson = reader.ReadToEnd();
-                lessonPlan = JsonConvert.DeserializeObject<LessonPlan.LessonPlan>(lessonPlanJson);
+                lessonPlan.Lessons.Add(new Lesson() { LessonTitle = lesson.Name, currentTopic = lesson.AssignmentId, APIUrl = lesson.APIUrl });
             }
 
             return lessonPlan;
